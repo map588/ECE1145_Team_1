@@ -1,5 +1,7 @@
 package hotciv.standard;
 
+import hotciv.framework.Player;
+import hotciv.framework.Position;
 import hotciv.framework.Game;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,10 +23,20 @@ public class city_tests {
     game = new GameImpl();
   }
 
-  // FRS p. 455 states that 'Red is the first player to take a turn'.
+
   @Test
-  public void cityPopulation_isOne() {;
-    assertThat(game, is(notNullValue()));
+  public void redAndBlueCities() {
+    Position posRED = new Position(1,1);    // location 1 for red city
+    Position posBLUE = new Position(1,4);   // location 2 for blue city
+
+    assertThat(game.getCityAt(posRED).getOwner(), is(Player.RED));
+    assertThat(game.getCityAt(posBLUE).getOwner(), is(Player.BLUE));
   }
 
+  @Test
+  public void cityPopulationIsOne() {;
+    assertThat(game, is(notNullValue()));
+    Position pos = new Position(1,1);
+    assertThat(game.getCityAt(pos).getSize(), is(1));
+  }
 }
