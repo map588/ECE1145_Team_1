@@ -37,7 +37,7 @@ public class Position {
    * @param r the row
    * @param c the column
   */
-  public Position(int r, int c) { 
+  public Position(int c, int r) {
     this.r = r; this.c = c; 
   }
 
@@ -62,7 +62,7 @@ public class Position {
   }
 
   public int hashCode() {
-   return Objects.hash(r, c);
+   return Objects.hash(c, r);
   }
 
   public String toString() {

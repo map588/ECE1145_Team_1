@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 import hotciv.framework.Game;
+import hotciv.framework.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,5 +60,10 @@ public class game_tests {
     assertThat(game.numberOfPlayers, is(2));
   }
 
+  @Test
+  public void player2IsBlue() {
+    game.endOfTurn();
+    assertThat(game.getPlayerInTurn(), is(Player.BLUE));
+  }
 
 }
