@@ -30,6 +30,12 @@ import hotciv.framework.*;
 */
 
 public class GameImpl implements Game {
+
+  //space for local variables
+  public int numberOfPlayers = 2;  //Local variable to hold a count of the number of players -TPD
+
+
+
   public Tile getTileAt( Position p ) {
     return null;
   }
