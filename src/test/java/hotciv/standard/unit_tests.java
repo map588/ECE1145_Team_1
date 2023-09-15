@@ -1,5 +1,7 @@
 package hotciv.standard;
 
+
+import hotciv.framework.Position;
 import hotciv.framework.Game;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hotciv.framework.GameConstants.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -48,4 +51,13 @@ public class unit_tests {
   }
 
 
+  @Test
+  public void startingUnits() {
+    Position posArcher = new Position(0,2);
+    Position posSettler = new Position(3,4);
+    Position posLegion = new Position(2,3);
+    assertThat(game.getUnitAt(posArcher).getTypeString(), is(ARCHER));
+    assertThat(game.getUnitAt(posSettler).getTypeString(), is(SETTLER));
+    assertThat(game.getUnitAt(posLegion).getTypeString(), is(LEGION));
+  }
 }
