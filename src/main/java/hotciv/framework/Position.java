@@ -1,5 +1,7 @@
 package hotciv.framework;
 
+import java.util.Objects;
+
 /** Position on the world map.
     
     Responsibilities:
@@ -60,10 +62,9 @@ public class Position {
   }
 
   public int hashCode() {
-    // works ok for positions up to columns == 479
-    return 479*r+c;
+   return Objects.hash(r, c);
   }
-  
+
   public String toString() {
     return "["+r+","+c+"]";
   }

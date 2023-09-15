@@ -2,6 +2,12 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+
+import static hotciv.framework.GameConstants.*;
+
+
 /** Skeleton implementation of HotCiv.
  
    This source code is from the book 
@@ -31,36 +37,96 @@ import hotciv.framework.*;
 
 public class GameImpl implements Game {
 
-  //space for local variables
-  public int numberOfPlayers = 2;  //Local variable to hold a count of the number of players -TPD
+    public int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
 
+    private int year;
+
+    private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
+
+    private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
+
+    private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
+
+    private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
+
+
+
+    //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
+    public GameImpl() {   //Constructor for GameImpl
+        this.numberOfPlayers = 2;
+        this.Players = new ArrayDeque<Player>(numberOfPlayers);
+
+        //This line looks gross but IntelliJ was complaining when I used a for loop
+        //It populates the Players queue in order depending on the number of players
+        Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
+
+        //Default constructor makes PLAINS tiles
+        for (int i = 0; i < WORLDSIZE; i++)
+            for (int j = 0; j < WORLDSIZE; j++)
+                world[i][j] = new TileImpl();
+
+        //set the special tiles
+        world[1][0].setTerrain(OCEANS);
+        world[0][1].setTerrain(HILLS);
+        world[2][2].setTerrain(MOUNTAINS);
+
+
+        this.year = -4000;
+
+ }
 
 
   public Tile getTileAt( Position p ) {
-    return null;
+    return world[p.getColumn()][p.getRow()];
   }
   public Unit getUnitAt( Position p ) {
-    return null;
+    return this.units[p.getColumn()][p.getRow()];
   }
+
+  //This will be changed later to account for the conditions needed to buy and place units -MAP
+  public boolean setUnitAt( Position p, String unitType, Player owner ) {
+    this.units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
+    return true;
+  }
+
   public City getCityAt( Position p ) {
-    return null;
+    return cities[p.getColumn()][p.getRow()];
   }
+
+  //Same as above, will be changed later -MAP
+  public boolean setCityAt( Position p, Player owner ) {
+    this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
+    return true;
+  }
+
   public Player getPlayerInTurn() {
-    return null;
+    return Players.peekFirst();
   }
+
+  //current bodge for RED to win after 3000 BC
   public Player getWinner() {
-    return null;
+    if( year >= -3000 ) {
+      return Player.RED;
+    }else
+        return null;
   }
+
   public int getAge() {
-    return 0;
+    return year;
   }
   public boolean moveUnit( Position from, Position to ) {
-
+    if(units[from.getColumn()][from.getRow()] != null) {
+        units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
+        units[from.getColumn()][from.getRow()] = null;
+        return true;
+    }
     return false;
   }
-  public void endOfTurn() {
+    public void endOfTurn() {
+        Players.addLast(Players.removeFirst());  //rotate
+        year += 100;
+    }
 
-  }
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {
 
   }

@@ -51,13 +51,13 @@ public class game_tests {
   @Test
   public void shouldBeRedAsStartingPlayer() {
     assertThat(game, is(notNullValue()));
-    // TODO: reenable the assert below to get started...
-    // assertThat(game.getPlayerInTurn(), is(Player.RED));
+    assertThat(game.getPlayerInTurn(), is(Player.RED));
   }
-
 
   @Test
   public void shouldBe2Players() {
     assertThat(game.numberOfPlayers, is(2));
   }
+
+
 }
