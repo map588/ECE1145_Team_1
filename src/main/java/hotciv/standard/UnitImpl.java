@@ -15,18 +15,9 @@ public class UnitImpl implements Unit {
     private int attack;
 
 
-    //Every type equality will need this annoying check so I pulled it out into a method -MAP
-    private boolean set_unit_type(String type){
-        try{
+    public UnitImpl(String type, Player owner) {
+        if (valid_unit_type(type)) {
             this.type = unitType.valueOf(type);
-            return true;
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid unit type: " + type);
-        }
-    }
-
-    public UnitImpl(String type, Player owner){
-        if(this.set_unit_type(type)){
             this.owner = owner;
             this.moveCount = 1;
             this.defense = 0;
@@ -42,7 +33,7 @@ public class UnitImpl implements Unit {
      * may define more strings to be valid.
      */
     public String getTypeString() {
-        return null;
+        return this.type.toString();
     }
 
     /**
@@ -51,7 +42,7 @@ public class UnitImpl implements Unit {
      * @return the player that controls this unit.
      */
     public Player getOwner() {
-        return null;
+        return this.owner;
     }
 
     /**
@@ -64,7 +55,7 @@ public class UnitImpl implements Unit {
      * @return the move count
      */
     public int getMoveCount() {
-        return 0;
+        return this.moveCount;
     }
 
     /**
@@ -73,7 +64,7 @@ public class UnitImpl implements Unit {
      * @return defensive strength
      */
     public int getDefensiveStrength() {
-        return 0;
+        return this.defense;
     }
 
     /**
@@ -82,6 +73,22 @@ public class UnitImpl implements Unit {
      * @return attack strength
      */
     public int getAttackingStrength() {
-        return 0;
+        return this.attack;
     }
+
+
+//-------- Validity check functions --------//
+
+
+//Every type equality will need this annoying check so I pulled it out into a method -MAP
+public static boolean valid_unit_type(String type){
+    try{
+        unitType.valueOf(type);
+    } catch (IllegalArgumentException e) {
+        return false;
+    }
+
+    return true;
+}
+
 }

@@ -3,22 +3,25 @@ import hotciv.framework.City;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 
-public class CityImpl implements City{
+public class CityImpl implements City {
 
-   private Player owner;
-   private int production_rate;
-   private int treasury;
-   private int population;
+    private Player owner;
+    private int production_rate;
+    private int treasury;
+    private int population;
+    private int growth_rate;
 
-   private String current_production;
-   private String workforce_focus;
+    private String current_production;
+    private String workforce_focus;
 
-    public CityImpl(Player owner){
+    public CityImpl(Player owner) {
         this.owner = owner;
-        production_rate = 6;
+        production_rate = 6; //temp
         treasury = 0;
-        population = 1;
+        population = 1;  //temp
+        growth_rate = 0; //temp
     }
+
 
     /**
      * return the owner of this city.
@@ -35,7 +38,7 @@ public class CityImpl implements City{
      * @return population size.
      */
     public int getSize() {
-        return population;
+        return this.population;
     }
 
     /**
@@ -48,7 +51,7 @@ public class CityImpl implements City{
      * in the city treasury
      */
     public int getTreasury() {
-        return 0;
+        return this.treasury;
     }
 
     /**
@@ -58,8 +61,9 @@ public class CityImpl implements City{
      * see GameConstants for valid values.
      */
     public String getProduction() {
-        return null;
+        return this.current_production;
     }
+
     /**
      * return the work force's focus in this city.
      *
@@ -67,18 +71,20 @@ public class CityImpl implements City{
      * for valid return values.
      */
     public String getWorkforceFocus() {
-        return null;
+        return this.workforce_focus;
     }
+
+    // --------------------- Mutator methods ------------------------------
 
     /**
      * change the production of this city.
      *
      * @param unitType a string type defining the unit under production,
-     * see GameConstants for valid values.
+     *                 see GameConstants for valid values.
      */
     public void changeProductionInCity(String unitType) {
-        private enum unitType {
-            archer, legion, settler, workboat, caravel
+        if (valid_production_type(unitType)) {
+            this.current_production = unitType;
         }
     }
 
@@ -86,9 +92,36 @@ public class CityImpl implements City{
      * change the focus of this city.
      *
      * @param balance a string type defining the focus, see GameConstants
-     * for valid return values.
+     *                for valid return values.
      */
     public void changeWorkForceFocusInCity(String balance) {
-
+        if (valid_focus_type(balance)){
+            this.workforce_focus = balance;
+        }
     }
+
+
+    private void increment_round() {
+        this.treasury += this.production_rate;
+        this.population += growth_rate;
+    }
+
+    // --------------------- Private helper methods ------------------------------
+    private enum focusType {
+        production, food
+    }
+
+    public static boolean valid_focus_type(String type) {
+        try {
+            CityImpl.focusType.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean valid_production_type(String unitType) {
+        return UnitImpl.valid_unit_type(unitType);
+    }
+
 }
