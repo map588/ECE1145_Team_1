@@ -15,13 +15,23 @@ public class UnitImpl implements Unit {
     private int attack;
 
 
-    public UnitImpl(String type, Player owner){
+    //Every type equality will need this annoying check so I pulled it out into a method -MAP
+    private boolean set_unit_type(String type){
         try{
             this.type = unitType.valueOf(type);
+            return true;
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid unit type: " + type);
         }
-        this.owner = owner;
+    }
+
+    public UnitImpl(String type, Player owner){
+        if(this.set_unit_type(type)){
+            this.owner = owner;
+            this.moveCount = 1;
+            this.defense = 0;
+            this.attack = 0;
+        }
     }
 
     /**
