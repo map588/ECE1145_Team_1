@@ -66,4 +66,28 @@ public class game_tests {
     assertThat(game.getPlayerInTurn(), is(Player.BLUE));
   }
 
+  @Test
+  public void gameStartIs4000BC() {
+      assertThat(game.getAge(), is(-4000));
+  }
+
+  @Test
+  public void progress100yearsEveryTurn() {
+    int turn1 = game.getAge();
+    game.endOfTurn();
+    int turn2 = game.getAge();
+
+    assertThat((turn2 - turn1), is(100));
+  }
+
+
+  @Test
+  public void redWinsif3000BC() {
+    for (int i = 0; i < 10; i++) {
+      game.endOfTurn();
+    }
+    assertThat(game.getAge(), is(-3000));
+    assertThat(game.getWinner(), is(Player.RED));
+  }
+
 }

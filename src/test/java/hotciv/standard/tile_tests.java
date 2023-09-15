@@ -76,6 +76,6 @@ public class tile_tests {
    }
 
    @Test
-  public void shouldDefinetelyBeRemoved() {
+  public void shouldDefinitelyBeRemoved() {
   }
 }
