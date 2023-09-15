@@ -70,6 +70,10 @@ public class GameImpl implements Game {
         world[0][1].setTerrain(HILLS);
         world[2][2].setTerrain(MOUNTAINS);
 
+        // to pass tests, start with a city for red and blue
+        cities[1][1] = new CityImpl(Player.RED);
+        cities[1][4] = new CityImpl(Player.BLUE);
+
 
         this.year = -4000;
 

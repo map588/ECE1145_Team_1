@@ -15,9 +15,9 @@ public class CityImpl implements City{
 
     public CityImpl(Player owner){
         this.owner = owner;
-        int production_rate = 6;
-        int treasury = 0;
-        int population = 1;
+        production_rate = 6;
+        treasury = 0;
+        population = 1;
     }
 
     /**
@@ -35,7 +35,7 @@ public class CityImpl implements City{
      * @return population size.
      */
     public int getSize() {
-        return 1;           //This is for the naive implementation, will be changed later -MAP
+        return population;
     }
 
     /**
