@@ -42,7 +42,14 @@ public class UnitImpl implements Unit {
      * may define more strings to be valid.
      */
     public String getTypeString() {
-        return null;
+        if (type == unitType.archer)
+            return "archer";
+        else if (type == unitType.legion)
+            return "legion";
+        else if (type == unitType.settler)
+            return "settler";
+        else
+            return null;
     }
 
     /**
