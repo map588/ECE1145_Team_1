@@ -43,6 +43,7 @@ public class GameImpl implements Game {
 
     private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
 
+    private final Player firstPlayer;
 
     private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
@@ -59,6 +60,7 @@ public class GameImpl implements Game {
         //It populates the Players queue in order depending on the number of players
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
 
+        this.firstPlayer = Players.peekFirst();
 
         //Default constructor makes PLAINS tiles
         for (int i = 0; i < WORLDSIZE; i++)
@@ -140,7 +142,20 @@ public class GameImpl implements Game {
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
         year += 100;
+        if( Players.peekFirst() == firstPlayer ) {
+            this.updateCityValues();
+        }
     }
+
+  private void updateCityValues() {
+      for (int i = 0; i < WORLDSIZE; i++) {
+          for (int j = 0; j < WORLDSIZE; j++) {
+              if (cities[i][j] != null) {
+                  cities[i][j].increment_round();
+              }
+          }
+      }
+  }
 
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {
 

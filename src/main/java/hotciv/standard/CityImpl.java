@@ -11,7 +11,7 @@ public class CityImpl implements City {
     private int population;
     private int growth_rate;
 
-    private String current_production;
+    private String current_production_type;
     private String workforce_focus;
 
     public CityImpl(Player owner) {
@@ -41,6 +41,10 @@ public class CityImpl implements City {
         return this.population;
     }
 
+    public int getGrowth_rate() {
+        return this.growth_rate;
+    }
+
     /**
      * return the treasury, i.e. the
      * number of 'money'/production in the
@@ -61,7 +65,11 @@ public class CityImpl implements City {
      * see GameConstants for valid values.
      */
     public String getProduction() {
-        return this.current_production;
+        return this.current_production_type;
+    }
+
+    public int getProduction_rate() {
+        return this.production_rate;
     }
 
     /**
@@ -84,7 +92,7 @@ public class CityImpl implements City {
      */
     public void changeProductionInCity(String unitType) {
         if (valid_production_type(unitType)) {
-            this.current_production = unitType;
+            this.current_production_type = unitType;
         }
     }
 
@@ -101,9 +109,9 @@ public class CityImpl implements City {
     }
 
 
-    private void increment_round() {
+    void increment_round() {
         this.treasury += this.production_rate;
-        this.population += growth_rate;
+        this.population += this.growth_rate;
     }
 
     // --------------------- Private helper methods ------------------------------
