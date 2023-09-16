@@ -43,10 +43,9 @@ public class GameImpl implements Game {
 
     private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
 
+
     private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
-
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
-
     private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
 
@@ -59,6 +58,7 @@ public class GameImpl implements Game {
         //This line looks gross but IntelliJ was complaining when I used a for loop
         //It populates the Players queue in order depending on the number of players
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
+
 
         //Default constructor makes PLAINS tiles
         for (int i = 0; i < WORLDSIZE; i++)
@@ -84,7 +84,6 @@ public class GameImpl implements Game {
         setUnitAt(posArcher, ARCHER, Player.RED);
         setUnitAt(posSettler, SETTLER, Player.RED);
         setUnitAt(posLegion, LEGION, Player.BLUE);
-
 
 
         this.year = -4000;

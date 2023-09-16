@@ -18,15 +18,27 @@ public class TileImpl implements Tile {
     }
 
     public void setTerrain(String type) {
-        try{
-            this.terrain = terrainType.valueOf(type); //If the salami lid won't fit, throw exception -MAP
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid tile type: " + type);
+        if(this.valid_terrain_type(type)) {
+            this.terrain = terrainType.valueOf(type);
         }
     }
 
     public String getTypeString() {
         return terrain.toString();
+    }
+
+
+
+
+    //---------------------Validation methods---------------------//
+
+    public static boolean valid_terrain_type(String type) {
+        try {
+            terrainType.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
 }
