@@ -72,7 +72,7 @@ public class game_tests {
   }
 
   @Test
-  public void progress100yearsEveryTurn() {
+  public void progress100YearsEveryTurn() {
     int turn1 = game.getAge();
     game.endOfTurn();
     int turn2 = game.getAge();
@@ -82,7 +82,7 @@ public class game_tests {
 
 
   @Test
-  public void redWinsif3000BC() {
+  public void redWinsIf3000BC() {
     for (int i = 0; i < 10; i++) {
       game.endOfTurn();
     }
