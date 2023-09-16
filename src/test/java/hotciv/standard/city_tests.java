@@ -91,4 +91,23 @@ public class city_tests {
     assertThat(game.getCityAt(posRED).getSize(), is(1));
     assertThat(game.getCityAt(posBLUE).getSize(), is(1));
   }
+
+
+@Test
+public void productionIncreasesByRate() { //Current Requirements for city growth, will change later -MAP
+  Position posRED = new Position(1, 1);
+  Position posBLUE = new Position(1, 4);
+
+  int lastTreasuryRED = game.getCityAt(posRED).getTreasury();
+  int lastTreasuryBLUE = game.getCityAt(posBLUE).getTreasury();
+
+  game.endOfTurn();
+  game.endOfTurn();
+
+  int newTreasuryRED = game.getCityAt(posRED).getTreasury();
+    int newTreasuryBLUE = game.getCityAt(posBLUE).getTreasury();
+
+  assertThat((newTreasuryRED - lastTreasuryRED), is(game.getCityAt(posRED).getProductionRate()));
+  assertThat(game.getCityAt(posBLUE).getSize(), is(1));
+  }
 }

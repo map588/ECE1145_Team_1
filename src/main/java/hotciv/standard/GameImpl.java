@@ -131,6 +131,7 @@ public class GameImpl implements Game {
   public int getAge() {
     return year;
   }
+
   public boolean moveUnit( Position from, Position to ) {
     if(units[from.getColumn()][from.getRow()] != null) {
         units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
@@ -157,6 +158,8 @@ public class GameImpl implements Game {
       }
   }
 
+
+
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {
 
   }
@@ -166,5 +169,12 @@ public class GameImpl implements Game {
   public void performUnitActionAt( Position p ) {
 
   }
+
+
+  //----------------- True / False Queries ---------------------//
+    public boolean isPlayerInGame(Player player) {
+        return Players.contains(player);
+    }
+
 
 }

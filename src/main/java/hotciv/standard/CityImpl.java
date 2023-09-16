@@ -68,8 +68,26 @@ public class CityImpl implements City {
         return this.current_production_type;
     }
 
-    public int getProduction_rate() {
+    public int getProductionRate() {
         return this.production_rate;
+    }
+
+    /**
+     * @return the growth rate of the city
+     */
+    public int getGrowthRate() {
+        return this.growth_rate;
+    }
+
+    /**
+     * @param p player to set as owner
+     * @param game game to check if player is in
+     */
+    public void setOwner(Player p, GameImpl game) {
+        if(game.isPlayerInGame(p))
+            this.owner = p;
+        else
+            throw new IllegalArgumentException("Player not in game");
     }
 
     /**
@@ -114,7 +132,7 @@ public class CityImpl implements City {
         this.population += this.growth_rate;
     }
 
-    // --------------------- Private helper methods ------------------------------
+    // --------------------- Private validity checks ------------------------------
     private enum focusType {
         production, food
     }
