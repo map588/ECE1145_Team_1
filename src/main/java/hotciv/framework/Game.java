@@ -1,5 +1,7 @@
 package hotciv.framework;
 
+import hotciv.standard.UnitImpl;
+
 /** Game is the central interface allowing a client to access and
  * modify the state of a HotCiv game.  
 
@@ -133,5 +135,6 @@ public interface Game {
    * @param p the position of a unit that must perform its action.
    * Nothing happens in case the unit has no associated action.
    */
-  public void performUnitActionAt( Position p );  
+  public void performUnitActionAt( Position p );
+
 }

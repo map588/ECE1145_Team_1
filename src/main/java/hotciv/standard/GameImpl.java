@@ -67,6 +67,14 @@ public class GameImpl implements Game {
             for (int j = 0; j < WORLDSIZE; j++)
                 world[i][j] = new TileImpl();
 
+        for (int i = 0; i < WORLDSIZE; i++)
+            for (int j = 0; j < WORLDSIZE; j++)
+                units[i][j] = null;
+
+        for (int i = 0; i < WORLDSIZE; i++)
+            for (int j = 0; j < WORLDSIZE; j++)
+                cities[i][j] = null;
+
         //set the special tiles
         world[1][0].setTerrain(OCEANS);
         world[0][1].setTerrain(HILLS);
@@ -83,27 +91,30 @@ public class GameImpl implements Game {
         Position posArcher = new Position(0,2);
         Position posSettler = new Position(3, 4);
         Position posLegion = new Position(2,3);
-        setUnitAt(posArcher, ARCHER, Player.RED);
-        setUnitAt(posSettler, SETTLER, Player.RED);
-        setUnitAt(posLegion, LEGION, Player.BLUE);
+        createUnitAt(posArcher, ARCHER, Player.RED);
+        createUnitAt(posSettler, SETTLER, Player.RED);
+        createUnitAt(posLegion, LEGION, Player.BLUE);
 
 
         this.year = -4000;
-
  }
 
 
   public Tile getTileAt( Position p ) {
     return world[p.getColumn()][p.getRow()];
   }
+
   public Unit getUnitAt( Position p ) {
     return this.units[p.getColumn()][p.getRow()];
   }
 
   //This will be changed later to account for the conditions needed to buy and place units -MAP
-  public boolean setUnitAt( Position p, String unitType, Player owner ) {
-    this.units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
-    return true;
+  public boolean createUnitAt( Position p, String unitType, Player owner ) {
+        if(this.units[p.getColumn()][p.getRow()] != null) {
+            return false;
+        }
+        this.units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
+        return true;
   }
 
   public City getCityAt( Position p ) {
@@ -133,7 +144,7 @@ public class GameImpl implements Game {
   }
 
   public boolean moveUnit( Position from, Position to ) {
-    if(units[from.getColumn()][from.getRow()] != null) {
+    if(units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
         units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
         units[from.getColumn()][from.getRow()] = null;
         return true;
@@ -172,9 +183,13 @@ public class GameImpl implements Game {
 
 
   //----------------- True / False Queries ---------------------//
+
     public boolean isPlayerInGame(Player player) {
         return Players.contains(player);
     }
+
+
+
 
 
 }

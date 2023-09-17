@@ -32,6 +32,8 @@ public class UnitImpl implements Unit {
      * least those listed in GameConstants, particular variants
      * may define more strings to be valid.
      */
+
+    //---------------------Getters---------------------//
     public String getTypeString() {
         return this.type.toString();
     }
@@ -87,8 +89,7 @@ public static boolean valid_unit_type(String type){
     } catch (IllegalArgumentException e) {
         return false;
     }
-
-    return true;
-}
+        return true;
+    }
 
 }

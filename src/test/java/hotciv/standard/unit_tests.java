@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 
+import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Game;
 import org.junit.Before;
@@ -44,7 +45,9 @@ import static org.junit.Assert.assertThat;
 public class unit_tests {
   private Game game;
 
-  /** Fixture for alphaciv testing. */
+  /**
+   * Fixture for alphaciv testing.
+   */
   @Before
   public void setUp() {
     game = new GameImpl();
@@ -53,11 +56,30 @@ public class unit_tests {
 
   @Test
   public void startingUnits() {
-    Position posArcher = new Position(0,2);
-    Position posSettler = new Position(3,4);
-    Position posLegion = new Position(2,3);
+    Position posArcher = new Position(0, 2);
+    Position posSettler = new Position(3, 4);
+    Position posLegion = new Position(2, 3);
     assertThat(game.getUnitAt(posArcher).getTypeString(), is(ARCHER));
     assertThat(game.getUnitAt(posSettler).getTypeString(), is(SETTLER));
     assertThat(game.getUnitAt(posLegion).getTypeString(), is(LEGION));
+  }
+
+
+  @Test
+  public void oneUnitPerTile() {
+    Position posArcher = new Position(0, 2);
+    Position posSettler = new Position(3, 4);
+    Position posLegion = new Position(2, 3);
+    assertThat(game.getUnitAt(posArcher).getTypeString(), is(ARCHER));
+    assertThat(game.getUnitAt(posSettler).getTypeString(), is(SETTLER));
+    assertThat(game.getUnitAt(posLegion).getTypeString(), is(LEGION));
+
+    boolean oneUnitPerTile = game.moveUnit(posArcher, posLegion);
+    boolean oneUnitPerTile2 = game.moveUnit(posLegion, posArcher);
+    boolean oneUnitPerTile3 = game.moveUnit(posSettler, posSettler);
+
+    boolean unitsPlacedOverEachOther = oneUnitPerTile || oneUnitPerTile2 || oneUnitPerTile3;
+
+    assertThat(unitsPlacedOverEachOther, is(false));
   }
 }
