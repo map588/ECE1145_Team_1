@@ -63,8 +63,8 @@ public class unit_tests {
     assertThat(game.getUnitAt(posSettler).getTypeString(), is(SETTLER));
     assertThat(game.getUnitAt(posLegion).getTypeString(), is(LEGION));
   }
-
-
+    
+    
   @Test
   public void oneUnitPerTile() {
     Position posArcher = new Position(0, 2);
@@ -74,12 +74,13 @@ public class unit_tests {
     assertThat(game.getUnitAt(posSettler).getTypeString(), is(SETTLER));
     assertThat(game.getUnitAt(posLegion).getTypeString(), is(LEGION));
 
-    boolean oneUnitPerTile = game.moveUnit(posArcher, posLegion);
-    boolean oneUnitPerTile2 = game.moveUnit(posLegion, posArcher);
-    boolean oneUnitPerTile3 = game.moveUnit(posSettler, posSettler);
+    boolean twoUnitsOnTile = game.moveUnit(posArcher, posLegion);
+    boolean twoUnitsOnTile2 = game.moveUnit(posLegion, posArcher);
+    boolean twoUnitsOnTile3 = game.moveUnit(posSettler, posSettler);
 
-    boolean unitsPlacedOverEachOther = oneUnitPerTile || oneUnitPerTile2 || oneUnitPerTile3;
+    boolean unitsPlacedOverEachOther = twoUnitsOnTile || twoUnitsOnTile2 || twoUnitsOnTile3;
 
     assertThat(unitsPlacedOverEachOther, is(false));
+    
   }
 }
