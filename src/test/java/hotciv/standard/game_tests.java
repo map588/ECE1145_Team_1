@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.Game;
 import hotciv.framework.Player;
+import hotciv.framework.Position;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,6 +89,13 @@ public class game_tests {
     }
     assertThat(game.getAge(), is(-3000));
     assertThat(game.getWinner(), is(Player.RED));
+  }
+
+  @Test //TPD
+  public void attackingUnitAlwaysWins(){
+    Position posArcher = new Position(0, 2); //Attacker
+    Position posLegion = new Position(2,3); //Defender
+    assertThat(game.battle(posArcher, posLegion).getTypeString(), is("archer"));
   }
 
 }
