@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static hotciv.framework.GameConstants.*;
 
-
+//hotfix 1
 /** Skeleton implementation of HotCiv.
  
    This source code is from the book 
