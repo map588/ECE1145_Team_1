@@ -4,6 +4,7 @@ package hotciv.standard;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Game;
+import hotciv.framework.GameType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class unit_tests {
    */
   @Before
   public void setUp() {
-    game = new GameImpl();
+    game = new GameImpl(GameType.alphaCiv);
   }
 
 

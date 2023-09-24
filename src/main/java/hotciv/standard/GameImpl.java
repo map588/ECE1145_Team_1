@@ -49,12 +49,15 @@ public class GameImpl implements Game {
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
     private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
+    private GameType rules;
+
 
 
     //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
-    public GameImpl() {   //Constructor for GameImpl
+    public GameImpl(GameType r) {   //Constructor for GameImpl
         this.numberOfPlayers = 2;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
+        this.rules = r;
 
         //This line looks gross but IntelliJ was complaining when I used a for loop
         //It populates the Players queue in order depending on the number of players
@@ -133,11 +136,29 @@ public class GameImpl implements Game {
 
   //current bodge for RED to win after 3000 BC
   public Player getWinner() {
-    if( year >= -3000 ) {
-      return Player.RED;
-    }else
-        return null;
-  }
+    switch(rules) {
+        case alphaCiv:
+            if (year >= -3000)
+                WINNER = Player.RED;
+            return WINNER;
+
+
+        case betaCiv:
+            Position city1 = new Position(1, 1);
+            Position city2 = new Position(1, 4);
+            if (!WINNER_FOUND && (getCityAt(city1).getOwner() == getCityAt(city2).getOwner())) {
+                WINNER = getCityAt(city1).getOwner();
+                WINNER_FOUND = true;
+                return WINNER;
+            } else
+                return WINNER;
+
+
+        default:
+            return WINNER;
+        }
+    }
+
 
   public int getAge() {
     return year;
@@ -152,11 +173,49 @@ public class GameImpl implements Game {
     return false;
   }
     public void endOfTurn() {
-        Players.addLast(Players.removeFirst());  //rotate
-        year += 100;
-        if( Players.peekFirst() == firstPlayer ) {
-            this.updateCityValues();
+        switch(rules) {
+            case alphaCiv:
+                Players.addLast(Players.removeFirst());  //rotate
+                year += 100;
+                if( Players.peekFirst() == firstPlayer ) {
+                    this.updateCityValues();
+                }
+                break;
+
+            case betaCiv:
+                Players.addLast(Players.removeFirst()); // rotate
+
+                // Refer to textbook for description of aging algorithm
+                if (year < -100) {
+                    year += 100;
+                }
+                else if (year == -100) {
+                    year = -1;
+                }
+                else if (year == -1) {
+                    year = 1;
+                }
+                else if (year == 1) {
+                    year = 50;
+                }
+                else if (year < 1750) {
+                    year +=50;
+                }
+                else if (year < 1900) {
+                    year +=25;
+                }
+                else if (year < 1970) {
+                    year +=5;
+                }
+                else {
+                    year += 1;
+                }
+
+                if( Players.peekFirst() == firstPlayer ) {
+                    this.updateCityValues();
+                }
         }
+
     }
 
   private void updateCityValues() {

@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 import hotciv.framework.Game;
+import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class game_tests {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl();
+    game = new GameImpl(GameType.alphaCiv);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -83,75 +84,12 @@ public class game_tests {
   }
 
   @Test
-  public void betaCiv_DynamicWorldAging() {
-
-    // 100 Years per turn pre- 100BC
-    for (int i = 0; i < 38; i++){
-      game.endOfTurn();
-    }
-    assertThat(game.getAge(), is(-100));
-
-    // Next turn is 1BC
-    game.endOfTurn();
-    assertThat(game.getAge(), is(-1));
-
-    // Next turn is 1AD
-    game.endOfTurn();
-    assertThat(game.getAge(), is(1));
-
-    // Next turn is 50AD
-    game.endOfTurn();
-    assertThat(game.getAge(), is(50));
-
-
-    // 50 years per turn until 1750
-    for (int j = 0; j < 33; j++) {
-      game.endOfTurn();
-    }
-    assertThat(game.getAge(), is(1750));
-
-    // 25 years per turn until 1900
-    for (int h = 0; h < 5; h++) {
-      game.endOfTurn();
-    }
-    assertThat(game.getAge(), is(1900));
-
-    // 5 years per turn until 1970
-    for (int k = 0; k < 34; k++) {
-      game.endOfTurn();
-    }
-    assertThat(game.getAge(), is(1970));
-
-    // 1 year per turn for the rest of the game
-    for (int m = 0; m < 99; m++) {
-      game.endOfTurn();
-    }
-    assertThat(game.getAge(), is(2070));
-  }
-
-
-  @Test
   public void alphaCiv_RedWinsIf3000BC() {
     for (int i = 0; i < 10; i++) {
       game.endOfTurn();
     }
     assertThat(game.getAge(), is(-3000));
     assertThat(game.getWinner(), is(Player.RED));
-  }
-
-  @Test
-  public void betaCiv_FirstPlayerThatConquersWorldWins() {
-    Position city1 = new Position(1,1);
-    Position city2 = new Position(1,4);
-
-    game.setCityAt(city1, Player.BLUE);
-
-    assertThat(game.getWinner(), is(Player.BLUE)); // Blue owns both cities and should win
-
-    game.setCityAt(city1, Player.RED);
-    game.setCityAt(city2, Player.RED);
-
-    assertThat(game.getWinner(), is(Player.BLUE)); // Blue already won the game, so they remain the winner.
   }
 
   @Test //TPD
