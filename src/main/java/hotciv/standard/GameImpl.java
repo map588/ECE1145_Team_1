@@ -49,7 +49,7 @@ public class GameImpl implements Game {
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
     private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
-    private boolean winner_found = false;
+    private static boolean winner_found = false;
     private Player winner = null;
 
     private GameType rules;
@@ -140,27 +140,8 @@ public class GameImpl implements Game {
 
   //current bodge for RED to win after 3000 BC
   public Player getWinner() {
-    switch(rules) {
-        case alphaCiv:
-            if (year >= -3000)
-                winner = Player.RED;
-            return winner;
-
-
-        case betaCiv:
-            Position city1 = new Position(1, 1);
-            Position city2 = new Position(1, 4);
-            if (!winner_found && (getCityAt(city1).getOwner() == getCityAt(city2).getOwner())) {
-                winner = getCityAt(city1).getOwner();
-                winner_found = true;
-                return winner;
-            } else
-                return winner;
-
-
-        default:
-            return winner;
-        }
+    Winner winning_player = new Winner(this);
+    return Winner.returnWinner();
     }
 
 
@@ -258,8 +239,16 @@ public class GameImpl implements Game {
         return Players.contains(player);
     }
 
+    public GameType getRules() {
+        return rules;
+    }
 
 
+    public boolean returnWinnerFound() {
+        return winner_found;
+    }
 
-
+    public void setWinnerFound(boolean b) {
+        winner_found = b;
+    }
 }

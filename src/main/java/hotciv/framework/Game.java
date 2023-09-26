@@ -137,4 +137,19 @@ public interface Game {
    */
   public void performUnitActionAt( Position p );
 
+
+  /**
+   * @return the GameType for the game instance
+   */
+  public GameType getRules();
+
+  /**
+   * @return if a winner is found
+   */
+  public boolean returnWinnerFound();
+
+  /**
+   * @param b sets the value of winner_found
+   */
+  public void setWinnerFound(boolean b);
 }
