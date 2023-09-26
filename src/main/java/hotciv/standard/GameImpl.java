@@ -49,6 +49,9 @@ public class GameImpl implements Game {
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
     private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
+    private boolean winner_found = false;
+    private Player winner = null;
+
     private GameType rules;
 
 
@@ -140,23 +143,23 @@ public class GameImpl implements Game {
     switch(rules) {
         case alphaCiv:
             if (year >= -3000)
-                WINNER = Player.RED;
-            return WINNER;
+                winner = Player.RED;
+            return winner;
 
 
         case betaCiv:
             Position city1 = new Position(1, 1);
             Position city2 = new Position(1, 4);
-            if (!WINNER_FOUND && (getCityAt(city1).getOwner() == getCityAt(city2).getOwner())) {
-                WINNER = getCityAt(city1).getOwner();
-                WINNER_FOUND = true;
-                return WINNER;
+            if (!winner_found && (getCityAt(city1).getOwner() == getCityAt(city2).getOwner())) {
+                winner = getCityAt(city1).getOwner();
+                winner_found = true;
+                return winner;
             } else
-                return WINNER;
+                return winner;
 
 
         default:
-            return WINNER;
+            return winner;
         }
     }
 

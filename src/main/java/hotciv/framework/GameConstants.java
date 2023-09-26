@@ -45,7 +45,4 @@ public class GameConstants {
   // Valid production balance types
   public static final String productionFocus = "hammer";
   public static final String foodFocus = "apple";
-  public static boolean WINNER_FOUND = false;
-
-  public static Player WINNER = null;
 }

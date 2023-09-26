@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static hotciv.framework.GameConstants.ARCHER;
-import static hotciv.framework.GameConstants.WINNER_FOUND;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
