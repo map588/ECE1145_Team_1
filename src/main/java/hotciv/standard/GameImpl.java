@@ -37,7 +37,7 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    public int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
+    private int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
 
     private int year;
 
@@ -102,6 +102,7 @@ public class GameImpl implements Game {
         this.year = -4000;
  }
 
+  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
 
   public Tile getTileAt( Position p ) {
     return world[p.getColumn()][p.getRow()];

@@ -61,7 +61,7 @@ public class game_tests {
 
   @Test
   public void shouldBe2Players() {
-    assertThat(game.numberOfPlayers, is(2));
+    assertThat(game.getNumberOfPlayers(), is(2));
   }
 
   @Test
