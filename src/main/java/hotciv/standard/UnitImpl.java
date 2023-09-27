@@ -5,6 +5,8 @@ import hotciv.framework.*;
 public class UnitImpl implements Unit {
 
 
+
+
     private enum unitType {
         archer, legion, settler
     }
@@ -82,9 +84,18 @@ public class UnitImpl implements Unit {
     /**
      * action performed of a settler unit
      *
-     * @return 0 if no action performed
+     * @return 0 if no action performed(alphaciv)
      */
     public Integer settlerAction() {
+        return 0;
+    }
+
+    /**
+     * action performed of an archer unit
+     *
+     * @return 0 if no action (alphaciv)
+     */
+    public Integer archerAction() {
         return 0;
     }
 

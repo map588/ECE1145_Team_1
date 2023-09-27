@@ -91,4 +91,10 @@ public class unit_tests {
     assertThat(settler.settlerAction(), is(0));
   }
 
+  @Test
+  public void archerDoesNothing(){
+    UnitImpl archer = new UnitImpl(ARCHER, Player.RED);
+    assertThat(archer.archerAction(), is(0));
+  }
+
 } //end unit_test
