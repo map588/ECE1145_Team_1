@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
@@ -111,7 +112,8 @@ public class GameImpl implements Game {
     return world[p.getColumn()][p.getRow()];
   }
 
-  public Unit getUnitAt( Position p ) {
+  //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
+  public UnitImpl getUnitAt( Position p ) {
     return this.units[p.getColumn()][p.getRow()];
   }
 
@@ -186,6 +188,15 @@ public class GameImpl implements Game {
 
   }
   public void performUnitActionAt( Position p ) {
+    String unit_type = getUnitAt(p).getTypeString();
+    if(unit_type == SETTLER){
+        if(rules == GameType.gammaCiv){
+            this.setCityAt(p, this.getUnitAt(p).getOwner());
+        }
+        else {
+            int temp = getUnitAt(p).settlerAction(rules);
+        }
+    }
 
   }
 

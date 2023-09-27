@@ -54,7 +54,8 @@ public class gammaCiv_tests {
     public void settlerActionToCity(){
         //Player red has a settler at (3,4) in the test game constructor
         Position posSettler = new Position(3, 4);
-        game.setCityAt(posSettler, game.getUnitAt(posSettler).getOwner());
+        //game.setCityAt(posSettler, game.getUnitAt(posSettler).getOwner()); //old code
+        game.performUnitActionAt(posSettler); //with refactoring
         assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
         assertThat(game.getCityAt(posSettler).getSize(), is(1));
     }
