@@ -111,6 +111,9 @@ public class UnitImpl implements Unit {
             return 0;
     }
 
+    //---------------------Setters---------------------//
+
+
 
 
 //-------- Validity check functions --------//

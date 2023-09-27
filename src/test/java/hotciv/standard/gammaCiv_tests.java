@@ -48,7 +48,16 @@ public class gammaCiv_tests {
         game = new GameImpl(GameType.gammaCiv);
     }
 
-//TODO: settler and asrcher tests
+//TODO: settler and archer tests
+
+    @Test
+    public void settlerActionToCity(){
+        //Player red has a settler at (3,4) in the test game constructor
+        Position posSettler = new Position(3, 4);
+        game.setCityAt(posSettler, game.getUnitAt(posSettler).getOwner());
+        assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
+        assertThat(game.getCityAt(posSettler).getSize(), is(1));
+    }
 
 
 

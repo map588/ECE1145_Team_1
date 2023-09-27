@@ -191,10 +191,9 @@ public class GameImpl implements Game {
 
     //function (temporary?) to perform attack between 2 positions.
     //Returns the unit that won (always the attacker for now).
-    public Unit battle(Position attacker, Position defender){
-
+  public Unit battle(Position attacker, Position defender){
         return this.getUnitAt(attacker);
-    }
+  }
 
   //----------------- True / False Queries ---------------------//
 
