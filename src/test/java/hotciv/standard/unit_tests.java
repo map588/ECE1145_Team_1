@@ -88,13 +88,13 @@ public class unit_tests {
   @Test
   public void settlerDoesNothing(){
     UnitImpl settler = new UnitImpl(SETTLER, Player.RED);
-    assertThat(settler.settlerAction(), is(0));
+    assertThat(settler.settlerAction(game.getRules()), is(0));
   }
 
   @Test
   public void archerDoesNothing(){
     UnitImpl archer = new UnitImpl(ARCHER, Player.RED);
-    assertThat(archer.archerAction(), is(0));
+    assertThat(archer.archerAction(game.getRules()), is(0));
   }
 
 } //end unit_test
