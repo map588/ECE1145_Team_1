@@ -4,6 +4,7 @@ import hotciv.framework.*;
 
 public class UnitImpl implements Unit {
 
+
     private enum unitType {
         archer, legion, settler
     }
@@ -77,6 +78,16 @@ public class UnitImpl implements Unit {
     public int getAttackingStrength() {
         return this.attack;
     }
+
+    /**
+     * action performed of a settler unit
+     *
+     * @return 0 if no action performed
+     */
+    public Integer settlerAction() {
+        return 0;
+    }
+
 
 
 //-------- Validity check functions --------//

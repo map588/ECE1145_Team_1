@@ -84,4 +84,11 @@ public class unit_tests {
     assertThat(unitsPlacedOverEachOther, is(false));
     
   }
-}
+
+  @Test
+  public void settlerDoesNothing(){
+    UnitImpl settler = new UnitImpl(SETTLER, Player.RED);
+    assertThat(settler.settlerAction(), is(0));
+  }
+
+} //end unit_test
