@@ -9,12 +9,7 @@ public class Winner {
 
     private static Player first_place = null;
 
-
-
     Game game;
-
-
-
 
     public Winner(Game g) {
         game = g;

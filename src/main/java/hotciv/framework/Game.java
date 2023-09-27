@@ -152,4 +152,9 @@ public interface Game {
    * @param b sets the value of winner_found
    */
   public void setWinnerFound(boolean b);
+
+  /**
+   * @param i allow age to be changed by modifier
+   */
+  void setAge(int i);
 }

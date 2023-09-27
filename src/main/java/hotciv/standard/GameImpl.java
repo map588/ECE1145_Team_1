@@ -138,15 +138,17 @@ public class GameImpl implements Game {
     return Players.peekFirst();
   }
 
-  //current bodge for RED to win after 3000 BC
   public Player getWinner() {
-    Winner winning_player = new Winner(this);
+    Winner winning_player = new Winner(this); // constructor will assign a winner
     return Winner.returnWinner();
     }
 
-
   public int getAge() {
     return year;
+  }
+
+  public void setAge(int i) {
+    year = i;
   }
 
   public boolean moveUnit( Position from, Position to ) {
@@ -158,49 +160,11 @@ public class GameImpl implements Game {
     return false;
   }
     public void endOfTurn() {
-        switch(rules) {
-            case alphaCiv:
-                Players.addLast(Players.removeFirst());  //rotate
-                year += 100;
-                if( Players.peekFirst() == firstPlayer ) {
-                    this.updateCityValues();
-                }
-                break;
-
-            case betaCiv:
-                Players.addLast(Players.removeFirst()); // rotate
-
-                // Refer to textbook for description of aging algorithm
-                if (year < -100) {
-                    year += 100;
-                }
-                else if (year == -100) {
-                    year = -1;
-                }
-                else if (year == -1) {
-                    year = 1;
-                }
-                else if (year == 1) {
-                    year = 50;
-                }
-                else if (year < 1750) {
-                    year +=50;
-                }
-                else if (year < 1900) {
-                    year +=25;
-                }
-                else if (year < 1970) {
-                    year +=5;
-                }
-                else {
-                    year += 1;
-                }
-
-                if( Players.peekFirst() == firstPlayer ) {
-                    this.updateCityValues();
-                }
+        Players.addLast(Players.removeFirst());  //rotate
+        ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
+        if( Players.peekFirst() == firstPlayer ) {
+            this.updateCityValues();
         }
-
     }
 
   private void updateCityValues() {
