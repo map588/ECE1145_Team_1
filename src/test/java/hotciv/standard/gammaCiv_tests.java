@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
  Department of Computer Science
  Aarhus University
 
- Please visit http://www.baerbak.com/ for further information.
+ Please visit http://www.baerbak.com for further information.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
