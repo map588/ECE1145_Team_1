@@ -1,8 +1,7 @@
 package hotciv.standard;
 
-import hotciv.framework.GameType;
-import hotciv.framework.Player;
-import hotciv.framework.Position;
+import hotciv.framework.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
