@@ -83,9 +83,13 @@ public class GameImpl implements Game {
                 cities[i][j] = null;
 
         //set the special tiles
+        /*
         world[1][0].setTerrain(OCEANS);
         world[0][1].setTerrain(HILLS);
         world[2][2].setTerrain(MOUNTAINS);
+        */
+        CreateWorld map = new CreateWorld(this);
+
 
         // to pass tests, start with a city for red and blue
         Position cityRED = new Position(1,1);
