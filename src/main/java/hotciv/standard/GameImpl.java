@@ -46,15 +46,18 @@ public class GameImpl implements Game {
 
     private final Player firstPlayer;
 
-    private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
-    private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
-    private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
+    private enum GameType {
+        alphaCiv, betaCiv, gammaCiv
+    }
+
+    private TileImpl[][] world = new TileImpl[WORLDSIZE][WORLDSIZE];
+    private CityImpl[][] cities = new CityImpl[WORLDSIZE][WORLDSIZE];
+    private UnitImpl[][] units = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
     private static boolean winner_found = false;
     private Player winner = null;
 
     private GameType rules;
-
 
 
     //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
@@ -88,132 +91,217 @@ public class GameImpl implements Game {
         world[2][2].setTerrain(MOUNTAINS);
 
         // to pass tests, start with a city for red and blue
-        Position cityRED = new Position(1,1);
-        Position cityBLUE = new Position(1,4);
+        Position cityRED = new Position(1, 1);
+        Position cityBLUE = new Position(1, 4);
         setCityAt(cityRED, Player.RED);
         setCityAt(cityBLUE, Player.BLUE);
 
         // to pass tests, RED starts with an archer and a Settler
         // BLUE starts with a Legion
-        Position posArcher = new Position(0,2);
+        Position posArcher = new Position(0, 2);
         Position posSettler = new Position(3, 4);
-        Position posLegion = new Position(2,3);
+        Position posLegion = new Position(2, 3);
         createUnitAt(posArcher, ARCHER, Player.RED);
         createUnitAt(posSettler, SETTLER, Player.RED);
         createUnitAt(posLegion, LEGION, Player.BLUE);
 
 
         this.year = -4000;
- }
+    }
 
-  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
 
-  public Tile getTileAt( Position p ) {
-    return world[p.getColumn()][p.getRow()];
-  }
 
-  //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
-  public UnitImpl getUnitAt( Position p ) {
-    return this.units[p.getColumn()][p.getRow()];
-  }
+    //Getters
+    public int getNumberOfPlayers() {
+        return this.numberOfPlayers;
+    }
 
-  //This will be changed later to account for the conditions needed to buy and place units -MAP
-  public boolean createUnitAt( Position p, String unitType, Player owner ) {
-        if(this.units[p.getColumn()][p.getRow()] != null) {
+
+
+    public Tile getTileAt(Position p) {
+        return world[p.getColumn()][p.getRow()];
+    }
+
+
+
+    //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
+    public UnitImpl getUnitAt(Position p) {
+        return this.units[p.getColumn()][p.getRow()];
+    }
+
+
+
+
+    //This will be changed later to account for the conditions needed to buy and place units -MAP
+    public boolean createUnitAt(Position p, String unitType, Player owner) {
+        if (this.units[p.getColumn()][p.getRow()] != null) {
             return false;
         }
         this.units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
         return true;
-  }
-
-  public City getCityAt( Position p ) {
-    return cities[p.getColumn()][p.getRow()];
-  }
-
-  //Same as above, will be changed later -MAP
-  public boolean setCityAt( Position p, Player owner ) {
-    this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
-    return true;
-  }
-
-  public Player getPlayerInTurn() {
-    return Players.peekFirst();
-  }
-
-  public Player getWinner() {
-    Winner winning_player = new Winner(this); // constructor will assign a winner
-    return Winner.returnWinner();
     }
 
-  public int getAge() {
-    return year;
-  }
 
-  public void setAge(int i) {
-    year = i;
-  }
 
-  public boolean moveUnit( Position from, Position to ) {
-    if(units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
-        units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
-        units[from.getColumn()][from.getRow()] = null;
+    public City getCityAt(Position p) {
+        return cities[p.getColumn()][p.getRow()];
+    }
+
+
+
+    //Same as above, will be changed later -MAP
+    public boolean setCityAt(Position p, Player owner) {
+        this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
         return true;
     }
-    return false;
-  }
+
+
+
+    public Player getPlayerInTurn() {
+        return Players.peekFirst();
+    }
+
+    public Player getWinner() {
+        Player first_place = null;
+
+      switch(this.rules) {
+
+          case alphaCiv:
+              if (this.getAge() >= -3000)
+                  first_place = Player.RED;
+              break;
+
+          case betaCiv:
+              Position city1 = new Position(1, 1);
+              Position city2 = new Position(1, 4);
+              if (!this.returnWinnerFound() && (this.getCityAt(city1).getOwner() == this.getCityAt(city2).getOwner())) {
+                  first_place = this.getCityAt(city1).getOwner();
+                  this.setWinnerFound(true);
+              }
+              break;
+
+          default:
+              throw new IllegalArgumentException("Invalid game type");
+      }
+
+        return first_place;
+    }
+
+    public int getAge() {
+        return year;
+    }
+
+
+    //Setters
+    public void setAge(int i) {
+        year = i;
+    }
+
+    public void setWinnerFound(boolean b) {
+        winner_found = b;
+    }
+
+
+    public boolean moveUnit(Position from, Position to) {
+        if (units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
+            units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
+            units[from.getColumn()][from.getRow()] = null;
+            return true;
+        }
+        return false;
+    }
+
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
         ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
-        if( Players.peekFirst() == firstPlayer ) {
+        if (Players.peekFirst() == firstPlayer) {
             this.updateCityValues();
         }
     }
 
-  private void updateCityValues() {
-      for (int i = 0; i < WORLDSIZE; i++) {
-          for (int j = 0; j < WORLDSIZE; j++) {
-              if (cities[i][j] != null) {
-                  cities[i][j].increment_round();
-              }
-          }
-      }
-  }
-
-
-
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {
-
-  }
-  public void changeProductionInCityAt( Position p, String unitType ) {
-
-  }
-  public void performUnitActionAt( Position p ) {
-    String unit_type = getUnitAt(p).getTypeString();
-    if(unit_type == SETTLER){
-        if(rules == GameType.gammaCiv){
-            this.setCityAt(p, this.getUnitAt(p).getOwner());
+    private void updateCityValues() {
+        for (int i = 0; i < WORLDSIZE; i++) {
+            for (int j = 0; j < WORLDSIZE; j++) {
+                if (cities[i][j] != null) {
+                    cities[i][j].increment_round();
+                }
+            }
         }
-        else {
+    }
+
+
+    public void changeWorkForceFocusInCityAt(Position p, String balance) {
+
+    }
+
+    public void changeProductionInCityAt(Position p, String unitType) {
+
+    }
+
+    public void performUnitActionAt(Position p) {
+        if(this.rules != GameType.gammaCiv) {
+            return;
+        }
+        String unit_type = getUnitAt(p).getTypeString();
+        if (unit_type == SETTLER) {
+            this.setCityAt(p, this.getUnitAt(p).getOwner());
+        } else {
             int temp = getUnitAt(p).settlerAction(rules);
         }
     }
 
-  }
+
+
+    private void incrementAge(GameType rules) {
+        int current = this.getAge();
+
+        switch(rules) {
+            case betaCiv:
+                if (current < -100) {
+                    current += 100;
+                }
+                else if (current == -100) {
+                    current = -1;
+                }
+                else if (current == -1) {
+                    current = 1;
+                }
+                else if (current == 1) {
+                    current = 50;
+                }
+                else if (current < 1750) {
+                    current +=50;
+                }
+                else if (current < 1900) {
+                    current +=25;
+                }
+                else if (current < 1970) {
+                    current +=5;
+                }
+                else {
+                    current += 1;
+                }
+                this.setAge(current);
+                break;
+            default:
+                current += 100;
+                this.setAge(current);
+        }
+    }
+
 
     //function (temporary?) to perform attack between 2 positions.
     //Returns the unit that won (always the attacker for now).
-  public Unit battle(Position attacker, Position defender){
+    public Unit battle(Position attacker, Position defender) {
         return this.getUnitAt(attacker);
-  }
+    }
 
-  //----------------- True / False Queries ---------------------//
+
+
+    //----------------- True / False Queries ---------------------//
 
     public boolean isPlayerInGame(Player player) {
         return Players.contains(player);
-    }
-
-    public GameType getRules() {
-        return rules;
     }
 
 
@@ -221,7 +309,5 @@ public class GameImpl implements Game {
         return winner_found;
     }
 
-    public void setWinnerFound(boolean b) {
-        winner_found = b;
-    }
+
 }
