@@ -18,7 +18,7 @@ public class TileImpl implements Tile {
     }
 
     public void setTerrain(String type) {
-        if(this.valid_terrain_type(type)) {
+        if(valid_terrain_type(type)) {
             this.terrain = terrainType.valueOf(type);
         }
     }

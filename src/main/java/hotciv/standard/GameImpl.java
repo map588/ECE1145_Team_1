@@ -54,17 +54,17 @@ public class GameImpl implements Game {
     private CityImpl[][] cities = new CityImpl[WORLDSIZE][WORLDSIZE];
     private UnitImpl[][] units = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
-    private static boolean winner_found = false;
+    private static boolean end_game = false;
     private Player winner = null;
 
     private GameType rules;
 
 
     //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
-    public GameImpl(GameType r) {   //Constructor for GameImpl
+    public GameImpl() {   //Constructor for GameImpl
         this.numberOfPlayers = 2;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
-        this.rules = r;
+        this.rules = GameType.gammaCiv;
 
         //This line looks gross but IntelliJ was complaining when I used a for loop
         //It populates the Players queue in order depending on the number of players
@@ -111,7 +111,7 @@ public class GameImpl implements Game {
 
 
 
-    //Getters
+    //----------------Getters-----------------//
     public int getNumberOfPlayers() {
         return this.numberOfPlayers;
     }
@@ -130,6 +130,9 @@ public class GameImpl implements Game {
     }
 
 
+    public City getCityAt(Position p) {
+        return cities[p.getColumn()][p.getRow()];
+    }
 
 
     //This will be changed later to account for the conditions needed to buy and place units -MAP
@@ -142,18 +145,6 @@ public class GameImpl implements Game {
     }
 
 
-
-    public City getCityAt(Position p) {
-        return cities[p.getColumn()][p.getRow()];
-    }
-
-
-
-    //Same as above, will be changed later -MAP
-    public boolean setCityAt(Position p, Player owner) {
-        this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
-        return true;
-    }
 
 
 
@@ -174,9 +165,8 @@ public class GameImpl implements Game {
           case betaCiv:
               Position city1 = new Position(1, 1);
               Position city2 = new Position(1, 4);
-              if (!this.returnWinnerFound() && (this.getCityAt(city1).getOwner() == this.getCityAt(city2).getOwner())) {
+              if (this.getCityAt(city1).getOwner() == this.getCityAt(city2).getOwner()) {
                   first_place = this.getCityAt(city1).getOwner();
-                  this.setWinnerFound(true);
               }
               break;
 
@@ -192,15 +182,19 @@ public class GameImpl implements Game {
     }
 
 
-    //Setters
+    //----------------Setters-----------------//
+
+
+
+    public boolean setCityAt(Position p, Player owner) {
+        this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
+        return true;
+    }
+
+
     public void setAge(int i) {
         year = i;
     }
-
-    public void setWinnerFound(boolean b) {
-        winner_found = b;
-    }
-
 
     public boolean moveUnit(Position from, Position to) {
         if (units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
@@ -212,8 +206,8 @@ public class GameImpl implements Game {
     }
 
     public void endOfTurn() {
-        Players.addLast(Players.removeFirst());  //rotate
-        ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
+        Players.addLast(Players.removeFirst());
+        this.incrementAge(rules);
         if (Players.peekFirst() == firstPlayer) {
             this.updateCityValues();
         }
@@ -246,7 +240,7 @@ public class GameImpl implements Game {
         if (unit_type == SETTLER) {
             this.setCityAt(p, this.getUnitAt(p).getOwner());
         } else {
-            int temp = getUnitAt(p).settlerAction(rules);
+            int temp = getUnitAt(p).settlerAction();
         }
     }
 
@@ -304,9 +298,12 @@ public class GameImpl implements Game {
         return Players.contains(player);
     }
 
+    public boolean isUnitAt(Position p) {
+        return units[p.getColumn()][p.getRow()] != null;
+    }
 
-    public boolean returnWinnerFound() {
-        return winner_found;
+    public boolean isCityAt(Position p) {
+        return cities[p.getColumn()][p.getRow()] != null;
     }
 
 
