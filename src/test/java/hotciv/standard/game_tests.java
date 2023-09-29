@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static hotciv.framework.GameConstants.ARCHER;
+import static hotciv.framework.GameConstants.SETTLER;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -97,6 +98,18 @@ public class game_tests {
     Position posArcher = new Position(0, 2); //Attacker
     Position posLegion = new Position(2,3); //Defender
     assertThat(game.battle(posArcher, posLegion).getTypeString(), is(ARCHER));
+  }
+
+  @Test
+  public void settlerDoesNothing(){
+    Position posSettler = new Position(3, 4);
+    assertThat(game.settlerAction(posSettler), is(0));
+  }
+
+  @Test
+  public void archerDoesNothing(){
+    Position posArcher = new Position(0,2);
+    assertThat(game.archerAction(posArcher), is(0));
   }
 
 }

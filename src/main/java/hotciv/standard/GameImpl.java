@@ -194,15 +194,34 @@ public class GameImpl implements Game {
   public void performUnitActionAt( Position p ) {
     String unit_type = getUnitAt(p).getTypeString();
     if(unit_type == SETTLER){
+        settlerAction(p);
+    }
+    else if(unit_type == ARCHER){
+        archerAction(p);
+    }
+    else if(unit_type == LEGION){
+    }
+  }
+
+    public Integer settlerAction(Position p) {
         if(rules == GameType.gammaCiv){
             this.setCityAt(p, this.getUnitAt(p).getOwner());
+            return 1; //returns only used for testing purposes so far
         }
-        else {
-            int temp = getUnitAt(p).settlerAction(rules);
+        else{
+            return 0;
         }
     }
 
-  }
+    public Integer archerAction(Position p) {
+        if(rules == GameType.gammaCiv){ //archer performs fortify
+            return 1;//TODO: archer does fortify action. doubles defense but cannot move. if already fortified, it is undone
+        }
+        else{
+            return 0;
+        }
+    }
+
 
     //function (temporary?) to perform attack between 2 positions.
     //Returns the unit that won (always the attacker for now).

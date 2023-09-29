@@ -81,35 +81,6 @@ public class UnitImpl implements Unit {
         return this.attack;
     }
 
-    /**
-     * action performed of a settler unit
-     *
-     * @return 0 if no action performed(alphaciv)
-     */
-    public int settlerAction(GameType rules) {
-        if(rules == GameType.gammaCiv){
-            //TODO: settler performs build city and turns into a city. owner remains the same
-            return 1;
-        }
-        else
-            return 0;
-
-    }
-
-
-    /**
-     * action performed of an archer unit
-     *
-     * @return 0 if no action (alphaciv)
-     */
-    public Integer archerAction(GameType rules) {
-        if(rules == GameType.gammaCiv){ //archer performs fortify
-            //TODO: archer does fortify action. doubles defense but cannot move. if already fortified, it is undone
-            return 1;
-        }
-        else
-            return 0;
-    }
 
     //---------------------Setters---------------------//
 
