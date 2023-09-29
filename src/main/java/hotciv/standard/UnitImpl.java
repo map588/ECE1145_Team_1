@@ -117,3 +117,11 @@ public static boolean valid_unit_type(String type){
     }
 
 }
+
+// ^ This pattern works for all enums, so we can do this for production focus, food focus, etc.
+// For collections that will change with time, we can just make a private hashset of these valid enums and add to it as we go. -MAP
+
+//For example, after a certain age, I bet the players will "unlock" some new stuff.  We can have an absolute list of all valid types,
+// then a list of unlocked types, and then check if the incoming requests are within the currently unlocked types. -MAP
+
+
