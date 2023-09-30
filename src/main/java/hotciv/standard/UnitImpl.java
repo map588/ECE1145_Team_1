@@ -13,7 +13,7 @@ public class UnitImpl implements Unit {
     private int moveCount;
     private int defense;
     private int attack;
-
+    private boolean isFortified;
 
     public UnitImpl(String type, Player owner) {
         if (valid_unit_type(type)) {
@@ -93,9 +93,18 @@ public class UnitImpl implements Unit {
      *
      * @return 0 if no action (alphaciv)
      */
+    // In alphaCiv, we can just not call this method.
     public int archerAction() {
-            //TODO: archer does fortify action. doubles defense but cannot move. if already fortified, it is undone
-            return 1;
+           if(isFortified) {
+               defense /= 2;
+               isFortified = false;
+               return 1;
+           }
+           else{
+               defense *= 2;
+               isFortified = true;
+               return 1;
+           }
     }
 
     //---------------------Setters---------------------//

@@ -5,48 +5,14 @@ import java.util.Arrays;
 
 import static hotciv.framework.GameConstants.*;
 
-//hotfix 1
-/** Skeleton implementation of HotCiv.
- 
-   This source code is from the book 
-     "Flexible, Reliable Software:
-       Using Patterns and Agile Development"
-     published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
-     Department of Computer Science
-     Aarhus University
-   
-   Please visit http://www.baerbak.com/ for further information.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
- 
-       http://www.apache.org/licenses/LICENSE-2.0
- 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-*/
-
-public class GameImpl implements Game {
-
-
+public class AlphaCiv implements Game{
     private int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
-
     private int year;
-
     private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
-
     private final Player firstPlayer;
 
-    public enum GameType {
-        alphaCiv, betaCiv, gammaCiv
-    }
+
+
 
     private TileImpl[][] world = new TileImpl[WORLDSIZE][WORLDSIZE];
     private CityImpl[][] cities = new CityImpl[WORLDSIZE][WORLDSIZE];
@@ -55,21 +21,20 @@ public class GameImpl implements Game {
     private static boolean end_game = false;
     private Player winner = null;
 
-    private GameType rules;
+    private GameImpl.GameType rules;
 
 
     //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
-    public GameImpl() {   //Constructor for GameImpl
+    public AlphaCiv() {   //Constructor for GameImpl
         this.numberOfPlayers = 2;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
-        this.rules = GameType.gammaCiv;
+        this.rules = GameImpl.GameType.gammaCiv;
 
         //This line looks gross but IntelliJ was complaining when I used a for loop
         //It populates the Players queue in order depending on the number of players
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
 
         this.firstPlayer = Players.peekFirst();
-
 
         //Default constructor makes PLAINS tiles
         for (int i = 0; i < WORLDSIZE; i++)
@@ -100,9 +65,9 @@ public class GameImpl implements Game {
         Position posArcher = new Position(0, 2);
         Position posSettler = new Position(3, 4);
         Position posLegion = new Position(2, 3);
-        createUnitAt(posArcher,   ARCHER, Player.RED);
+        createUnitAt(posArcher, ARCHER, Player.RED);
         createUnitAt(posSettler, SETTLER, Player.RED);
-        createUnitAt(posLegion,   LEGION, Player.BLUE);
+        createUnitAt(posLegion, LEGION, Player.BLUE);
 
 
         this.year = -4000;
@@ -151,27 +116,12 @@ public class GameImpl implements Game {
     public Player getWinner() {
         Player first_place = null;
 
-      switch(this.rules) {
-
-          case alphaCiv:
-              if (this.getAge() >= -3000)
-                  first_place = Player.RED;
-              break;
-
-          case betaCiv:
-              Position city1 = new Position(1, 1);
-              Position city2 = new Position(1, 4);
-              if (this.getCityAt(city1).getOwner() == this.getCityAt(city2).getOwner()) {
-                  first_place = this.getCityAt(city1).getOwner();
-              }
-              break;
-
-          default:
-              throw new IllegalArgumentException("Invalid game type");
-      }
+        if (this.getAge() >= -3000)
+                    first_place = Player.RED;
 
         return first_place;
     }
+
 
     public int getAge() {
         return year;
@@ -179,8 +129,6 @@ public class GameImpl implements Game {
 
 
     //----------------Setters-----------------//
-
-
 
     public boolean setCityAt(Position p, Player owner) {
         this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
@@ -191,6 +139,7 @@ public class GameImpl implements Game {
     public void setAge(int i) {
         year = i;
     }
+
 
     public boolean moveUnit(Position from, Position to) {
         if (units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
@@ -229,7 +178,7 @@ public class GameImpl implements Game {
     }
 
     public void performUnitActionAt(Position p) {
-        if(this.rules != GameType.gammaCiv) {
+        if(this.rules != GameImpl.GameType.gammaCiv) {
             return;
         }
         String unit_type = getUnitAt(p).getTypeString();
@@ -241,42 +190,14 @@ public class GameImpl implements Game {
     }
 
 
-    private void incrementAge(GameType rules) {
+    private void incrementAge() {
         int current = this.getAge();
 
-        switch(rules) {
-            case betaCiv:
-                if (current < -100) {
-                    current += 100;
-                }
-                else if (current == -100) {
-                    current = -1;
-                }
-                else if (current == -1) {
-                    current = 1;
-                }
-                else if (current == 1) {
-                    current = 50;
-                }
-                else if (current < 1750) {
-                    current +=50;
-                }
-                else if (current < 1900) {
-                    current +=25;
-                }
-                else if (current < 1970) {
-                    current +=5;
-                }
-                else {
-                    current += 1;
-                }
-                this.setAge(current);
-                break;
-            default:
                 current += 100;
                 this.setAge(current);
-        }
+
     }
+
 
     //function (temporary?) to perform attack between 2 positions.
     //Returns the unit that won (always the attacker for now).
