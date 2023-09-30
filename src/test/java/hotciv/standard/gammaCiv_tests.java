@@ -59,6 +59,21 @@ public class gammaCiv_tests {
         assertThat(game.getCityAt(posSettler).getSize(), is(1));
     }
 
+    @Test
+    public void archerFortifyDoublesDefense(){ //simulate fortifying an archer
+        Position posArcher = new Position(0,2);
+        game.getUnitAt(posArcher).setDefensiveStrength(2);
+        game.archerAction(posArcher);
+        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(4));
+    }
+    @Test
+    public void archerFortifyHalvesDefense(){ //simulate fortifying an already fortified archer
+        Position posArcher = new Position(0,2);
+        game.getUnitAt(posArcher).setDefensiveStrength(1);
+        game.getUnitAt(posArcher).fortify();
+        game.archerAction(posArcher);
+        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(1));
+    }
 
 
 }

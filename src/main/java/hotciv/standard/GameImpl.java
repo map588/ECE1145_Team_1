@@ -213,13 +213,11 @@ public class GameImpl implements Game {
         }
     }
 
-    public Integer archerAction(Position p) {
+    public void archerAction(Position p) {
         if(rules == GameType.gammaCiv){ //archer performs fortify
-            return 1;//TODO: archer does fortify action. doubles defense but cannot move. if already fortified, it is undone
+            this.getUnitAt(p).fortify();
         }
-        else{
-            return 0;
-        }
+        else{}
     }
 
 
