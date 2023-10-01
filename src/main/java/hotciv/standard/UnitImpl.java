@@ -6,9 +6,6 @@ import java.util.regex.Matcher;
 
 public class UnitImpl implements Unit {
 
-
-
-
     private enum unitType {
         archer, legion, settler
     }
@@ -90,31 +87,21 @@ public class UnitImpl implements Unit {
     public void fortify(){
         if(this.type == unitType.archer){
             if(isFortified){
-                halfDefensiveStrength();
+                this.defense = defense/2;
                 isFortified = false;
             }
             else{
-                doubleDefensiveStrength();
+                this.defense = defense*2;
                 setMoveCount(0);
                 isFortified = true;
             }
         }
-        else{
-        }
     }
+
     public void setDefensiveStrength(int newDefensiveStr){
         this.defense = newDefensiveStr;
     }
-    public void doubleDefensiveStrength(){
-            this.defense = defense*2;
-    }
 
-    public void halfDefensiveStrength(){
-        if(this.defense == 0){}
-        else{
-            this.defense = defense/2;
-        }
-    }
     public void setMoveCount(int numOfMoves){
         this.moveCount = numOfMoves;
     }
