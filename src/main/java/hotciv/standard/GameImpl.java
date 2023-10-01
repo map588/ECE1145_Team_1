@@ -1,6 +1,9 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.helper_Interfaces.*;
+import hotciv.helpers.*;
+import hotciv.helpers.AgingStrategies.alphaAgeManager;
 
 
 import java.util.ArrayDeque;
@@ -38,38 +41,49 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
-
-    private int year;
-
-    private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
-
+    private final int numberOfPlayers;
+    private ArrayDeque<Player> Players;
     private final Player firstPlayer;
+    private World world;
+    private int age;
+    private GameType version;
 
-    private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
-    private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
-    private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
-
-    private static boolean winner_found = false;
-    private Player winner = null;
-
-    private GameType rules;
+    private ageManager age_manager;
+    private winnerManager winner_manager;
+    private worldManager world_manager;
 
 
 
-    //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
-    public GameImpl(GameType r) {   //Constructor for GameImpl
-        this.numberOfPlayers = 2;
+    public GameImpl(GameType version, int numPlayers) {   //Constructor for GameImpl
+        this.numberOfPlayers = numPlayers;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
-        this.rules = r;
 
-        //This line looks gross but IntelliJ was complaining when I used a for loop
-        //It populates the Players queue in order depending on the number of players
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
-
         this.firstPlayer = Players.peekFirst();
 
-        //Default constructor makes PLAINS tiles
+        this.version = version;
+
+        switch(version){
+            case alphaCiv:
+                this.world = new World();
+                this.world_manager = new alphaWorld(world);
+                this.age_manager = new alphaAgeManager(this);
+                break;
+            case betaCiv:
+                this.age = -4000;
+                break;
+            case gammaCiv:
+                this.age = -4000;
+                break;
+            case deltaCiv:
+                this.age = -4000;
+                break;
+            default:
+                this.age = -4000;
+                break;
+        }
+
+
         for (int i = 0; i < WORLDSIZE; i++)
             for (int j = 0; j < WORLDSIZE; j++)
                 world[i][j] = new TileImpl();
@@ -88,7 +102,7 @@ public class GameImpl implements Game {
         world[0][1].setTerrain(HILLS);
         world[2][2].setTerrain(MOUNTAINS);
         */
-        CreateWorld map = new CreateWorld(this);
+        worldCreator map = new worldCreator(this);
 
 
         // to pass tests, start with a city for red and blue
@@ -167,7 +181,7 @@ public class GameImpl implements Game {
   }
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
+        ageManager manager = new ageManager(this); // constructor will increase game age as necessary
         if( Players.peekFirst() == firstPlayer ) {
             this.updateCityValues();
         }

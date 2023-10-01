@@ -31,6 +31,9 @@ import hotciv.standard.UnitImpl;
 */
 
 public interface Game {
+  //======= Shared Data Fields =========
+
+
   // === Accessor methods ===================================
   
   /** return a specific tile.
