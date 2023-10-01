@@ -16,9 +16,9 @@ public class World {
 
         size = WORLDSIZE;
 
-        tiles  = new TileImpl[WORLDSIZE][WORLDSIZE];
-        cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
-        units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
+        tiles = new TileImpl[WORLDSIZE][WORLDSIZE];
+        cities = new CityImpl[WORLDSIZE][WORLDSIZE];
+        units = new UnitImpl[WORLDSIZE][WORLDSIZE];
 
         for (int i = 0; i < WORLDSIZE; i++) {
             for (int j = 0; j < WORLDSIZE; j++) {
@@ -29,12 +29,12 @@ public class World {
         }
     }
 
-    public World(int alternateSize){
+    public World(int alternateSize) {
         size = alternateSize;
 
-        tiles  = new TileImpl[size][size];
-        cities  = new CityImpl[size][size];
-        units  = new UnitImpl[size][size];
+        tiles = new TileImpl[size][size];
+        cities = new CityImpl[size][size];
+        units = new UnitImpl[size][size];
 
         for (int i = 0; i < alternateSize; i++) {
             for (int j = 0; j < alternateSize; j++) {
@@ -58,7 +58,6 @@ public class World {
     public CityImpl getCityAt(Position p) {
         return cities[p.getColumn()][p.getRow()];
     }
-
 
 
     //-------------Setters---------------//
@@ -86,6 +85,13 @@ public class World {
 
     public void removeTileAt(Position p) {
         tiles[p.getColumn()][p.getRow()] = null;
+    }
+
+
+
+    public void moveUnitTo(Position from, Position to) {
+        units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
+        units[from.getColumn()][from.getRow()] = null;
     }
 
 }

@@ -1,6 +1,6 @@
 package hotciv.helper_Interfaces;
-
-import hotciv.framework.Game;
+import  hotciv.framework.Game;
+import hotciv.standard.GameImpl;
 
 public interface ageManager {
 

@@ -1,5 +1,6 @@
 package hotciv.helpers.worldManagers;
 
-public class gammaWorld implements worldCreator{
+import hotciv.helper_Interfaces.worldManager;
 
+public class gammaWorld implements worldManager{
 }

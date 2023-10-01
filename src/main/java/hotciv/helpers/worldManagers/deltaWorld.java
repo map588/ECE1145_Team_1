@@ -4,14 +4,13 @@ import hotciv.framework.Position;
 import hotciv.helper_Interfaces.worldManager;
 import static hotciv.framework.GameConstants.*;
 import hotciv.standard.World;
+import hotciv.framework.Player;
 
 
 public class deltaWorld implements worldManager{
 
-    public deltaWorld(){}
-
     //We will pass in only the world object, unless a later implementation requires more information.
-    public World createWorld(World world) {
+    public void createWorld(World world) {
 
         String type;
         String[] layout =
@@ -47,9 +46,14 @@ public class deltaWorld implements worldManager{
                 if(tileChar == 'f') {type = FOREST;}
                 if(tileChar == 'h') {type = HILLS;}
                 Position p = new Position(c, r);
-                w.getTileAt(p).setTerrain(type);
+                world.getTileAt(p).setTerrain(type);
             }
         }
+
+        Position cityRed = new Position(8,12);
+        Position cityBlue = new Position(4,5);
+        world.setCityAt(cityRed, Player.RED);
+        world.setCityAt(cityBlue, Player.BLUE);
     }
 
 

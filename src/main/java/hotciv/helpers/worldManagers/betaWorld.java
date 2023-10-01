@@ -1,4 +1,13 @@
 package hotciv.helpers.worldManagers;
 
-public class betaWorld implements worldCreator{
+import hotciv.helper_Interfaces.worldManager;
+import hotciv.standard.*;
+
+public class betaWorld implements worldManager{
+
+
+
+    public void createWorld(World world) {
+
+    }
 }
