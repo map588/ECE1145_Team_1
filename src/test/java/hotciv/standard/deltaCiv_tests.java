@@ -3,6 +3,7 @@ package hotciv.standard;
 import static hotciv.framework.GameConstants.*;
 import hotciv.framework.Position;
 import hotciv.framework.Game;
+import hotciv.framework.GameType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class deltaCiv_tests {
 
 
     @Before
-    public void setUp() { game = new GameImpl(GameType.deltaCiv);}
+    public void setUp() { game = new GameImpl(GameType.deltaCiv, 2);}
 
 
     @Test

@@ -1,5 +1,6 @@
 package hotciv.standard;
 
+import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class betaCiv_tests {
    */
   @Before
   public void setUp() {
-    game = new GameImpl(GameType.betaCiv);
+    game = new GameImpl(GameType.betaCiv, 2);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.

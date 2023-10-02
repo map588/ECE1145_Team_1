@@ -44,7 +44,7 @@ public class gammaCiv_tests {
      */
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.gammaCiv);
+        game = new GameImpl(GameType.gammaCiv, 2);
     }
 
     //..........Unit Tests...........//
