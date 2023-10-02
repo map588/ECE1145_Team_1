@@ -1,6 +1,8 @@
 package hotciv.standard;
 import hotciv.framework.*;
 
+import java.util.regex.Matcher;
+
 
 public class UnitImpl implements Unit {
 
@@ -13,6 +15,7 @@ public class UnitImpl implements Unit {
     private int moveCount;
     private int defense;
     private int attack;
+    private boolean isFortified;
 
 
     public UnitImpl(String type, Player owner) {
@@ -22,6 +25,7 @@ public class UnitImpl implements Unit {
             this.moveCount = 1;
             this.defense = 0;
             this.attack = 0;
+            this.isFortified = false;
         }
     }
 
@@ -78,6 +82,29 @@ public class UnitImpl implements Unit {
         return this.attack;
     }
 
+
+    //---------------------Setters---------------------//
+    public void fortify(){
+        if(this.type == unitType.archer){
+            if(isFortified){
+                this.defense = defense/2;
+                isFortified = false;
+            }
+            else{
+                this.defense = defense*2;
+                setMoveCount(0);
+                isFortified = true;
+            }
+        }
+    }
+
+    public void setDefensiveStrength(int newDefensiveStr){
+        this.defense = newDefensiveStr;
+    }
+
+    public void setMoveCount(int numOfMoves){
+        this.moveCount = numOfMoves;
+    }
 
 //-------- Validity check functions --------//
 

@@ -2,12 +2,13 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
 import static hotciv.framework.GameConstants.*;
 
-
+//hotfix 1
 /** Skeleton implementation of HotCiv.
  
    This source code is from the book 
@@ -37,7 +38,7 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    public int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
+    private int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
 
     private int year;
 
@@ -48,6 +49,9 @@ public class GameImpl implements Game {
     private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
     private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
     private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
+
+    private static boolean winner_found = false;
+    private Player winner = null;
 
     private GameType rules;
 
@@ -79,9 +83,13 @@ public class GameImpl implements Game {
                 cities[i][j] = null;
 
         //set the special tiles
+        /*
         world[1][0].setTerrain(OCEANS);
         world[0][1].setTerrain(HILLS);
         world[2][2].setTerrain(MOUNTAINS);
+        */
+        CreateWorld map = new CreateWorld(this);
+
 
         // to pass tests, start with a city for red and blue
         Position cityRED = new Position(1,1);
@@ -102,12 +110,14 @@ public class GameImpl implements Game {
         this.year = -4000;
  }
 
+  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
 
   public Tile getTileAt( Position p ) {
     return world[p.getColumn()][p.getRow()];
   }
 
-  public Unit getUnitAt( Position p ) {
+  //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
+  public UnitImpl getUnitAt( Position p ) {
     return this.units[p.getColumn()][p.getRow()];
   }
 
@@ -134,34 +144,17 @@ public class GameImpl implements Game {
     return Players.peekFirst();
   }
 
-  //current bodge for RED to win after 3000 BC
   public Player getWinner() {
-    switch(rules) {
-        case alphaCiv:
-            if (year >= -3000)
-                WINNER = Player.RED;
-            return WINNER;
-
-
-        case betaCiv:
-            Position city1 = new Position(1, 1);
-            Position city2 = new Position(1, 4);
-            if (!WINNER_FOUND && (getCityAt(city1).getOwner() == getCityAt(city2).getOwner())) {
-                WINNER = getCityAt(city1).getOwner();
-                WINNER_FOUND = true;
-                return WINNER;
-            } else
-                return WINNER;
-
-
-        default:
-            return WINNER;
-        }
+    Winner winning_player = new Winner(this); // constructor will assign a winner
+    return Winner.returnWinner();
     }
-
 
   public int getAge() {
     return year;
+  }
+
+  public void setAge(int i) {
+    year = i;
   }
 
   public boolean moveUnit( Position from, Position to ) {
@@ -173,49 +166,11 @@ public class GameImpl implements Game {
     return false;
   }
     public void endOfTurn() {
-        switch(rules) {
-            case alphaCiv:
-                Players.addLast(Players.removeFirst());  //rotate
-                year += 100;
-                if( Players.peekFirst() == firstPlayer ) {
-                    this.updateCityValues();
-                }
-                break;
-
-            case betaCiv:
-                Players.addLast(Players.removeFirst()); // rotate
-
-                // Refer to textbook for description of aging algorithm
-                if (year < -100) {
-                    year += 100;
-                }
-                else if (year == -100) {
-                    year = -1;
-                }
-                else if (year == -1) {
-                    year = 1;
-                }
-                else if (year == 1) {
-                    year = 50;
-                }
-                else if (year < 1750) {
-                    year +=50;
-                }
-                else if (year < 1900) {
-                    year +=25;
-                }
-                else if (year < 1970) {
-                    year +=5;
-                }
-                else {
-                    year += 1;
-                }
-
-                if( Players.peekFirst() == firstPlayer ) {
-                    this.updateCityValues();
-                }
+        Players.addLast(Players.removeFirst());  //rotate
+        ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
+        if( Players.peekFirst() == firstPlayer ) {
+            this.updateCityValues();
         }
-
     }
 
   private void updateCityValues() {
@@ -237,16 +192,40 @@ public class GameImpl implements Game {
 
   }
   public void performUnitActionAt( Position p ) {
-
+    String unit_type = getUnitAt(p).getTypeString();
+    if(unit_type == SETTLER){
+        settlerAction(p);
+    }
+    else if(unit_type == ARCHER){
+        archerAction(p);
+    }
+    else if(unit_type == LEGION){
+    }
   }
+
+    public Integer settlerAction(Position p) {
+        if(rules == GameType.gammaCiv){
+            this.setCityAt(p, this.getUnitAt(p).getOwner());
+            return 1; //returns only used for testing purposes so far
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public void archerAction(Position p) {
+        if(rules == GameType.gammaCiv){ //archer performs fortify
+            this.getUnitAt(p).fortify();
+        }
+        else{}
+    }
+
 
     //function (temporary?) to perform attack between 2 positions.
     //Returns the unit that won (always the attacker for now).
-
-    public Unit battle(Position attacker, Position defender){
-
+  public Unit battle(Position attacker, Position defender){
         return this.getUnitAt(attacker);
-    }
+  }
 
   //----------------- True / False Queries ---------------------//
 
@@ -254,8 +233,16 @@ public class GameImpl implements Game {
         return Players.contains(player);
     }
 
+    public GameType getRules() {
+        return rules;
+    }
 
 
+    public boolean returnWinnerFound() {
+        return winner_found;
+    }
 
-
+    public void setWinnerFound(boolean b) {
+        winner_found = b;
+    }
 }

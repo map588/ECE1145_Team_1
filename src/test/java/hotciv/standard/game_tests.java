@@ -10,7 +10,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hotciv.framework.GameConstants.WINNER_FOUND;
+import static hotciv.framework.GameConstants.ARCHER;
+import static hotciv.framework.GameConstants.SETTLER;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -60,7 +61,7 @@ public class game_tests {
 
   @Test
   public void shouldBe2Players() {
-    assertThat(game.numberOfPlayers, is(2));
+    assertThat(game.getNumberOfPlayers(), is(2));
   }
 
   @Test
@@ -96,7 +97,21 @@ public class game_tests {
   public void attackingUnitAlwaysWins(){
     Position posArcher = new Position(0, 2); //Attacker
     Position posLegion = new Position(2,3); //Defender
-    assertThat(game.battle(posArcher, posLegion).getTypeString(), is("archer"));
+    assertThat(game.battle(posArcher, posLegion).getTypeString(), is(ARCHER));
+  }
+
+  @Test
+  public void settlerDoesNothing(){
+    Position posSettler = new Position(3, 4);
+    assertThat(game.settlerAction(posSettler), is(0));
+  }
+
+  @Test
+  public void archerDoesNothing(){
+    Position posArcher = new Position(0,2);
+    game.archerAction(posArcher);
+    assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(0));
+    assertThat(game.getUnitAt(posArcher).getMoveCount(), is(1));
   }
 
 }
