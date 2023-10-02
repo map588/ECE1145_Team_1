@@ -1,6 +1,11 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.helper_Interfaces.*;
+import hotciv.helpers.*;
+import hotciv.helpers.AgingStrategies.*;
+import hotciv.helpers.winnerManagers.*;
+import hotciv.helpers.worldManagers.*;
 
 
 import java.util.ArrayDeque;
@@ -38,105 +43,90 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private int numberOfPlayers;  //Local variable to hold a count of the number of players -TPD
-
-    private int year;
-
-    private ArrayDeque<Player> Players; //A deque will be helpful for cycling through the players
-
+    private final int numberOfPlayers;
+    private ArrayDeque<Player> Players;
     private final Player firstPlayer;
+    public World world;
+    private int age;
+    private GameType version;
 
-    private TileImpl[][] world  = new TileImpl[WORLDSIZE][WORLDSIZE];
-    private CityImpl[][] cities  = new CityImpl[WORLDSIZE][WORLDSIZE];
-    private UnitImpl[][] units  = new UnitImpl[WORLDSIZE][WORLDSIZE];
-
-    private static boolean winner_found = false;
-    private Player winner = null;
-
-    private GameType rules;
+    private ageManager age_manager;
+    private winnerManager winner_manager;
+    private worldManager world_manager;
 
 
 
-    //This constructor is currently specific to the first iteration checkoffs, but will be changed later -MAP
-    public GameImpl(GameType r) {   //Constructor for GameImpl
-        this.numberOfPlayers = 2;
+    public GameImpl(GameType version, int numPlayers) {   //Constructor for GameImpl
+        this.numberOfPlayers = numPlayers;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
-        this.rules = r;
 
-        //This line looks gross but IntelliJ was complaining when I used a for loop
-        //It populates the Players queue in order depending on the number of players
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
-
         this.firstPlayer = Players.peekFirst();
 
-        //Default constructor makes PLAINS tiles
-        for (int i = 0; i < WORLDSIZE; i++)
-            for (int j = 0; j < WORLDSIZE; j++)
-                world[i][j] = new TileImpl();
+        this.version = version;
 
-        for (int i = 0; i < WORLDSIZE; i++)
-            for (int j = 0; j < WORLDSIZE; j++)
-                units[i][j] = null;
+        this.world = new World();
 
-        for (int i = 0; i < WORLDSIZE; i++)
-            for (int j = 0; j < WORLDSIZE; j++)
-                cities[i][j] = null;
+        switch(version){
+            case alphaCiv:
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new alphaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
 
-        //set the special tiles
-        /*
-        world[1][0].setTerrain(OCEANS);
-        world[0][1].setTerrain(HILLS);
-        world[2][2].setTerrain(MOUNTAINS);
-        */
-        CreateWorld map = new CreateWorld(this);
+                break;
+            case betaCiv:
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new alphaAgeManager();
+                this.winner_manager = new betaWinnerManager();
 
+                break;
+            case gammaCiv:
+                this.world_manager  = new gammaWorld();
+                this.age_manager    = new gammaAgeManager();
+                this.winner_manager = new gammaWinnerManager();
 
-        // to pass tests, start with a city for red and blue
-        Position cityRED = new Position(1,1);
-        Position cityBLUE = new Position(1,4);
-        setCityAt(cityRED, Player.RED);
-        setCityAt(cityBLUE, Player.BLUE);
+                break;
+            case deltaCiv:
+                this.world_manager  = new deltaWorld();
+                this.age_manager    = new deltaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
 
-        // to pass tests, RED starts with an archer and a Settler
-        // BLUE starts with a Legion
-        Position posArcher = new Position(0,2);
-        Position posSettler = new Position(3, 4);
-        Position posLegion = new Position(2,3);
-        createUnitAt(posArcher, ARCHER, Player.RED);
-        createUnitAt(posSettler, SETTLER, Player.RED);
-        createUnitAt(posLegion, LEGION, Player.BLUE);
+                break;
+            default:
 
+                break;
+        }
 
-        this.year = -4000;
+        world_manager.createWorld(world);
  }
 
   public int getNumberOfPlayers(){ return this.numberOfPlayers; }
 
   public Tile getTileAt( Position p ) {
-    return world[p.getColumn()][p.getRow()];
+    return world.getTileAt(p);
   }
 
   //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
   public UnitImpl getUnitAt( Position p ) {
-    return this.units[p.getColumn()][p.getRow()];
+    return world.getUnitAt(p);
   }
 
   //This will be changed later to account for the conditions needed to buy and place units -MAP
   public boolean createUnitAt( Position p, String unitType, Player owner ) {
-        if(this.units[p.getColumn()][p.getRow()] != null) {
+        if(world.getUnitAt(p) != null) {
             return false;
         }
-        this.units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
-        return true;
+        world.setUnitAt(p, unitType, owner);
+    return true;
   }
 
   public City getCityAt( Position p ) {
-    return cities[p.getColumn()][p.getRow()];
+    return world.getCityAt(p);
   }
 
   //Same as above, will be changed later -MAP
   public boolean setCityAt( Position p, Player owner ) {
-    this.cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
+    world.setCityAt(p, owner);
     return true;
   }
 
@@ -145,39 +135,36 @@ public class GameImpl implements Game {
   }
 
   public Player getWinner() {
-    Winner winning_player = new Winner(this); // constructor will assign a winner
-    return Winner.returnWinner();
+    return winner_manager.getWinner(this);
     }
 
   public int getAge() {
-    return year;
-  }
-
-  public void setAge(int i) {
-    year = i;
+    return age;
   }
 
   public boolean moveUnit( Position from, Position to ) {
-    if(units[from.getColumn()][from.getRow()] != null && units[to.getColumn()][to.getRow()] == null) {
-        units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
-        units[from.getColumn()][from.getRow()] = null;
+    if(world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
+        world.moveUnitTo(from, to);
         return true;
     }
     return false;
   }
+
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        ManageAge manager = new ManageAge(this); // constructor will increase game age as necessary
+        this.age_manager.incrementAge(this);
         if( Players.peekFirst() == firstPlayer ) {
-            this.updateCityValues();
+            this.endOfRound();
         }
     }
 
-  private void updateCityValues() {
+  private void endOfRound() {
+        Position p;
       for (int i = 0; i < WORLDSIZE; i++) {
           for (int j = 0; j < WORLDSIZE; j++) {
-              if (cities[i][j] != null) {
-                  cities[i][j].increment_round();
+              p = new Position(i,j);
+              if (world.getCityAt(p) != null) {
+                  world.getCityAt(p).increment_round();
               }
           }
       }
@@ -191,34 +178,34 @@ public class GameImpl implements Game {
   public void changeProductionInCityAt( Position p, String unitType ) {
 
   }
-  public void performUnitActionAt( Position p ) {
-    String unit_type = getUnitAt(p).getTypeString();
-    if(unit_type == SETTLER){
-        settlerAction(p);
-    }
-    else if(unit_type == ARCHER){
-        archerAction(p);
-    }
-    else if(unit_type == LEGION){
-    }
-  }
+//  public void performUnitActionAt( Position p ) {
+//    String unit_type = getUnitAt(p).getTypeString();
+//    if(unit_type == SETTLER){
+//        settlerAction(p);
+//    }
+//    else if(unit_type == ARCHER){
+//        archerAction(p);
+//    }
+//    else if(unit_type == LEGION){
+//    }
+//  }
 
-    public Integer settlerAction(Position p) {
-        if(rules == GameType.gammaCiv){
-            this.setCityAt(p, this.getUnitAt(p).getOwner());
-            return 1; //returns only used for testing purposes so far
-        }
-        else{
-            return 0;
-        }
-    }
+//    public Integer settlerAction(Position p) {
+//        if(rules == GameType.gammaCiv){
+//            this.setCityAt(p, this.getUnitAt(p).getOwner());
+//            return 1; //returns only used for testing purposes so far
+//        }
+//        else{
+//            return 0;
+//        }
+//    }
 
-    public void archerAction(Position p) {
-        if(rules == GameType.gammaCiv){ //archer performs fortify
-            this.getUnitAt(p).fortify();
-        }
-        else{}
-    }
+//    public void archerAction(Position p) {
+//        if(rules == GameType.gammaCiv){ //archer performs fortify
+//            this.getUnitAt(p).fortify();
+//        }
+//        else{}
+//    }
 
 
     //function (temporary?) to perform attack between 2 positions.
@@ -233,16 +220,14 @@ public class GameImpl implements Game {
         return Players.contains(player);
     }
 
-    public GameType getRules() {
-        return rules;
+    public GameType getVersion() {
+        return version;
     }
 
-
-    public boolean returnWinnerFound() {
-        return winner_found;
-    }
-
-    public void setWinnerFound(boolean b) {
-        winner_found = b;
+    /**
+     * @param i allow age to be changed by modifier
+     */
+    public void setAge(int i) {
+        age = i;
     }
 }

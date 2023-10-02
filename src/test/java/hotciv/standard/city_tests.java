@@ -1,15 +1,10 @@
 package hotciv.standard;
 
-import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Game;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;

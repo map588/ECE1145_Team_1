@@ -1,18 +1,12 @@
-package hotciv.framework;
+package hotciv.helpers.AgingStrategies;
+
+import hotciv.framework.Game;
+import hotciv.helper_Interfaces.ageManager;
+
+public class betaAgeManager implements ageManager{
 
 
-
-public class ManageAge {
-    private Game game;
-
-    public ManageAge(Game g) {
-        if (g.getRules() == GameType.betaCiv)
-            increaseAgeBetaCiv(g);
-        else
-            increaseAgeDefault(g);
-    }
-
-    private void increaseAgeBetaCiv(Game g) {
+    public int incrementAge(Game g){
         int current = g.getAge();
 
         // Refer to textbook for description of aging algorithm
@@ -41,12 +35,7 @@ public class ManageAge {
         else {
             current += 1;
         }
-        g.setAge(current);
-    }
 
-    private void increaseAgeDefault(Game g) {
-        int current = g.getAge();
-        current += 100;
-        g.setAge(current);
+        return current;
     }
 }

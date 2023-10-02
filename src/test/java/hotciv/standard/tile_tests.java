@@ -2,13 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.Game;
 import hotciv.framework.Position;
-import hotciv.framework.Tile;
-import hotciv.framework.GameType;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static hotciv.framework.GameConstants.*;
 import static org.hamcrest.CoreMatchers.*;
