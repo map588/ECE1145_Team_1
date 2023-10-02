@@ -2,8 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
-import hotciv.helpers.*;
 import hotciv.helpers.AgingStrategies.*;
+import hotciv.helpers.actionManagers.*;
 import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
 
@@ -54,6 +54,8 @@ public class GameImpl implements Game {
     private winnerManager winner_manager;
     private worldManager world_manager;
 
+    private actionManager action_manager;
+
 
 
     public GameImpl(GameType version, int numPlayers) {   //Constructor for GameImpl
@@ -72,24 +74,28 @@ public class GameImpl implements Game {
                 this.world_manager  = new alphaWorld();
                 this.age_manager    = new alphaAgeManager();
                 this.winner_manager = new alphaWinnerManager();
+                this.action_manager = new alphaActionManager();
 
                 break;
             case betaCiv:
                 this.world_manager  = new alphaWorld();
                 this.age_manager    = new alphaAgeManager();
                 this.winner_manager = new betaWinnerManager();
+                this.action_manager = new betaActionManager();
 
                 break;
             case gammaCiv:
                 this.world_manager  = new gammaWorld();
                 this.age_manager    = new gammaAgeManager();
                 this.winner_manager = new gammaWinnerManager();
+                this.action_manager = new gammaActionManager();
 
                 break;
             case deltaCiv:
                 this.world_manager  = new deltaWorld();
                 this.age_manager    = new deltaAgeManager();
                 this.winner_manager = new alphaWinnerManager();
+                this.action_manager = new deltaActionManager();
 
                 break;
             default:
@@ -178,34 +184,17 @@ public class GameImpl implements Game {
   public void changeProductionInCityAt( Position p, String unitType ) {
 
   }
-//  public void performUnitActionAt( Position p ) {
-//    String unit_type = getUnitAt(p).getTypeString();
-//    if(unit_type == SETTLER){
-//        settlerAction(p);
-//    }
-//    else if(unit_type == ARCHER){
-//        archerAction(p);
-//    }
-//    else if(unit_type == LEGION){
-//    }
-//  }
-
-//    public Integer settlerAction(Position p) {
-//        if(rules == GameType.gammaCiv){
-//            this.setCityAt(p, this.getUnitAt(p).getOwner());
-//            return 1; //returns only used for testing purposes so far
-//        }
-//        else{
-//            return 0;
-//        }
-//    }
-
-//    public void archerAction(Position p) {
-//        if(rules == GameType.gammaCiv){ //archer performs fortify
-//            this.getUnitAt(p).fortify();
-//        }
-//        else{}
-//    }
+  public void performUnitActionAt( Position p ) {
+    String unit_type = getUnitAt(p).getTypeString();
+    if(unit_type == SETTLER){
+        action_manager.settlerAction(this, p);
+    }
+    else if(unit_type == ARCHER){
+        action_manager.archerAction(this, p);
+    }
+    else if(unit_type == LEGION){
+    }
+  }
 
 
     //function (temporary?) to perform attack between 2 positions.

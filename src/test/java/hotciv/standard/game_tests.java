@@ -98,7 +98,7 @@ public class game_tests {
   @Test
   public void settlerDoesNothing(){
     Position posSettler = new Position(3, 4);
-    assertThat(game.settlerAction(posSettler), is(0));
+    assertThat(game.performUnitActionAt(posSettler), is(0));
   }
 
   @Test
