@@ -53,7 +53,6 @@ public class GameImpl implements Game {
     private ageManager age_manager;
     private winnerManager winner_manager;
     private worldManager world_manager;
-
     private actionManager action_manager;
 
 

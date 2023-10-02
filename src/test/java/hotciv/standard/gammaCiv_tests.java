@@ -63,7 +63,7 @@ public class gammaCiv_tests {
     public void archerFortifyDoublesDefense(){ //simulate fortifying an archer
         Position posArcher = new Position(0,2);
         game.getUnitAt(posArcher).setDefensiveStrength(2);
-        game.archerAction(posArcher);
+        game.performUnitActionAt(posArcher);
         assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(4));
     }
     @Test
@@ -71,7 +71,7 @@ public class gammaCiv_tests {
         Position posArcher = new Position(0,2);
         game.getUnitAt(posArcher).setDefensiveStrength(1);
         game.getUnitAt(posArcher).fortify();
-        game.archerAction(posArcher);
+        game.performUnitActionAt(posArcher);
         assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(1));
     }
 

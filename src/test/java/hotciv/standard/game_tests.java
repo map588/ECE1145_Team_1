@@ -6,6 +6,8 @@ import hotciv.framework.Position;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static hotciv.framework.GameConstants.ARCHER;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -98,13 +100,14 @@ public class game_tests {
   @Test
   public void settlerDoesNothing(){
     Position posSettler = new Position(3, 4);
-    assertThat(game.performUnitActionAt(posSettler), is(0));
+    game.performUnitActionAt(posSettler);
+    assertThat(game.getCityAt(posSettler), is(Optional.empty()));
   }
 
   @Test
   public void archerDoesNothing(){
     Position posArcher = new Position(0,2);
-    game.archerAction(posArcher);
+    game.performUnitActionAt(posArcher);
     assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(0));
     assertThat(game.getUnitAt(posArcher).getMoveCount(), is(1));
   }
