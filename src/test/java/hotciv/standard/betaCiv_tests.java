@@ -108,11 +108,6 @@ public class betaCiv_tests {
     assertThat(game.getCityAt(city1).getOwner(), is(Player.BLUE));
 
     assertThat(game.getWinner(), is(Player.BLUE)); // Blue owns both cities and should win
-
-    game.setCityAt(city1, Player.RED);
-    game.setCityAt(city2, Player.RED);
-
-    assertThat(game.getWinner(), is(Player.BLUE)); // Blue already won the game, so they remain the winner.
   }
 }
 

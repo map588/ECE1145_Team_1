@@ -101,7 +101,7 @@ public class game_tests {
   public void settlerDoesNothing(){
     Position posSettler = new Position(3, 4);
     game.performUnitActionAt(posSettler);
-    assertThat(game.getCityAt(posSettler), is(Optional.empty()));
+    assertThat(game.getCityAt(posSettler), is(nullValue()));
   }
 
   @Test
