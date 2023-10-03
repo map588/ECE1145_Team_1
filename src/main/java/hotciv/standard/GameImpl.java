@@ -68,6 +68,8 @@ public class GameImpl implements Game {
 
         this.world = new World();
 
+        this.age = -4000;
+
         switch(version){
             case alphaCiv:
                 this.world_manager  = new alphaWorld();
@@ -157,7 +159,7 @@ public class GameImpl implements Game {
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        this.age_manager.incrementAge(this);
+        age = this.age_manager.incrementAge(this);
         if( Players.peekFirst() == firstPlayer ) {
             this.endOfRound();
         }
