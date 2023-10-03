@@ -80,7 +80,7 @@ public class GameImpl implements Game {
                 break;
             case betaCiv:
                 this.world_manager  = new alphaWorld();
-                this.age_manager    = new alphaAgeManager();
+                this.age_manager    = new betaAgeManager();
                 this.winner_manager = new betaWinnerManager();
                 this.action_manager = new betaActionManager();
 
@@ -159,7 +159,7 @@ public class GameImpl implements Game {
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        age = this.age_manager.incrementAge(this);
+        this.age = this.age_manager.incrementAge(this);
         if( Players.peekFirst() == firstPlayer ) {
             this.endOfRound();
         }
