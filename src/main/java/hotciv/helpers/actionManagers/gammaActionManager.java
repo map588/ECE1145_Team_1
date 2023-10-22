@@ -7,6 +7,7 @@ public class gammaActionManager implements actionManager{
 
     public int settlerAction(GameImpl g, Position p) {
         g.setCityAt(p, g.getUnitAt(p).getOwner());
+        g.removeUnitAt(p);
         return 1;
     }
 

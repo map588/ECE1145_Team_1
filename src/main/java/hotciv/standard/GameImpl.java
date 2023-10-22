@@ -149,6 +149,8 @@ public class GameImpl implements Game {
     return age;
   }
 
+  public void removeUnitAt(Position position){ world.removeUnitAt(position); }
+
   public boolean moveUnit( Position from, Position to ) {
     if(world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
         world.moveUnitTo(from, to);
