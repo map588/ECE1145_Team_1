@@ -5,13 +5,12 @@ import hotciv.standard.GameImpl;
 import hotciv.framework.Position;
 public class gammaActionManager implements actionManager{
 
-    public int settlerAction(GameImpl g, Position p) {
-        g.setCityAt(p, g.getUnitAt(p).getOwner());
-        g.removeUnitAt(p);
-        return 1;
+    public void settlerAction(GameImpl currentGame, Position settlerPosition) {
+        currentGame.setCityAt(settlerPosition, currentGame.getUnitOwner(settlerPosition));
+        currentGame.removeUnitAt(settlerPosition);
     }
 
-    public void archerAction(GameImpl g, Position p) {
-        g.getUnitAt(p).fortify();
+    public void archerAction(GameImpl currentGame, Position archerPosition) {
+        currentGame.getUnitAt(archerPosition).fortify();
     }
 }

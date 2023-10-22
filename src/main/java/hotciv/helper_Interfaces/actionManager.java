@@ -5,10 +5,12 @@ import hotciv.standard.GameImpl;
 
 public interface actionManager {
 
-    default public int settlerAction(GameImpl g, Position p) {
-        return 0; //returns only used for testing purposes so far
+    default public void settlerAction(GameImpl g, Position p) {
     }
 
     default public void archerAction(GameImpl g, Position p) {
+    }
+
+    default public void legionAction(GameImpl g, Position p) {
     }
 }
