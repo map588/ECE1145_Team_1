@@ -6,11 +6,11 @@ import java.util.regex.Matcher;
 
 public class UnitImpl implements Unit {
 
-    private enum unitType {
+    private enum type {
         archer, legion, settler
     }
 
-    private unitType type;
+    private type unitType;
     private Player owner;
     private int moveCount;
     private int defense;
@@ -18,9 +18,9 @@ public class UnitImpl implements Unit {
     private boolean isFortified;
 
 
-    public UnitImpl(String type, Player owner) {
-        if (valid_unit_type(type)) {
-            this.type = unitType.valueOf(type);
+    public UnitImpl(String unitType, Player owner) {
+        if (valid_unit_type(unitType)) {
+            this.unitType = type.valueOf(unitType);
             this.owner = owner;
             this.moveCount = 1;
             this.defense = 0;
@@ -39,7 +39,7 @@ public class UnitImpl implements Unit {
 
     //---------------------Getters---------------------//
     public String getTypeString() {
-        return this.type.toString();
+        return this.unitType.toString();
     }
 
     /**
@@ -85,7 +85,7 @@ public class UnitImpl implements Unit {
 
     //---------------------Setters---------------------//
     public void fortify(){
-        if(this.type == unitType.archer){
+        if(this.unitType == type.archer){
             if(isFortified){
                 this.defense = defense/2;
                 isFortified = false;
@@ -110,9 +110,9 @@ public class UnitImpl implements Unit {
 
 
 //Every type equality will need this annoying check so I pulled it out into a method -MAP
-public static boolean valid_unit_type(String type){
+public static boolean valid_unit_type(String unitType){
     try{
-        unitType.valueOf(type);
+        type.valueOf(unitType);
     } catch (IllegalArgumentException e) {
         return false;
     }
