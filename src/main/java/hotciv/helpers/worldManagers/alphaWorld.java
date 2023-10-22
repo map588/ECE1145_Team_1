@@ -8,5 +8,6 @@ import hotciv.standard.World;
 
 
 public class alphaWorld implements worldManager {
+
 }
 

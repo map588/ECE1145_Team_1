@@ -6,6 +6,7 @@ import hotciv.standard.GameImpl;
 
 public class betaWinnerManager implements winnerManager {
 
+    @Override
     public Player getWinner(GameImpl game) {
         Position city1 = new Position(1, 1);
         Position city2 = new Position(1, 4);

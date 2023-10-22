@@ -72,29 +72,29 @@ public class GameImpl implements Game {
 
         switch (version) {
             case alphaCiv:
-                world_manager = new alphaWorld();
-                age_manager = new alphaAgeManager();
+                world_manager  = new alphaWorld();
+                age_manager    = new alphaAgeManager();
                 winner_manager = new alphaWinnerManager();
                 action_manager = new alphaActionManager();
 
                 break;
             case betaCiv:
-                world_manager = new alphaWorld();
-                age_manager = new betaAgeManager();
+                world_manager  = new alphaWorld();
+                age_manager    = new betaAgeManager();
                 winner_manager = new betaWinnerManager();
                 action_manager = new betaActionManager();
 
                 break;
             case gammaCiv:
-                world_manager = new gammaWorld();
-                age_manager = new gammaAgeManager();
+                world_manager  = new gammaWorld();
+                age_manager    = new gammaAgeManager();
                 winner_manager = new gammaWinnerManager();
                 action_manager = new gammaActionManager();
 
                 break;
             case deltaCiv:
-                world_manager = new deltaWorld();
-                age_manager = new deltaAgeManager();
+                world_manager  = new deltaWorld();
+                age_manager    = new deltaAgeManager();
                 winner_manager = new alphaWinnerManager();
                 action_manager = new deltaActionManager();
 
