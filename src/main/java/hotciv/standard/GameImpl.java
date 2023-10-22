@@ -46,7 +46,7 @@ public class GameImpl implements Game {
     private static int numberOfPlayers;
     private static Player firstPlayer;
     private ArrayDeque<Player> Players;
-    public World world;
+    private World world;
     private static int age;
     private static GameType version;
 
