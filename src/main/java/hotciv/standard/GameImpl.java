@@ -46,7 +46,7 @@ public class GameImpl implements Game {
     private static int numberOfPlayers;
     private static Player firstPlayer;
     private ArrayDeque<Player> Players;
-    private World world;
+    private static World world;
     private static int age;
     private static GameType version;
 
@@ -66,7 +66,7 @@ public class GameImpl implements Game {
 
         version = ruleSet;
 
-        this.world = new World();
+        world = new World();
 
         age = -4000;
 
@@ -157,17 +157,15 @@ public class GameImpl implements Game {
     public void performUnitActionAt(Position p) {
         String unitType = getUnitAt(p).getTypeString();
 
-        //pass read-only copy for safety
-        final GameImpl game = this;
         switch (unitType) {
             case SETTLER:
-                action_manager.settlerAction(game, p);
+                action_manager.settlerAction(this, p);
                 break;
             case ARCHER:
-                action_manager.archerAction(game, p);
+                action_manager.archerAction(this, p);
                 break;
             case LEGION:
-                action_manager.legionAction(game, p);
+                action_manager.legionAction(this, p);
                 break;
             default:
                 //default do nothing
