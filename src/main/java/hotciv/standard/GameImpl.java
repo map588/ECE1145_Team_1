@@ -43,60 +43,61 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private final int numberOfPlayers;
+    private static int numberOfPlayers;
+    private static Player firstPlayer;
     private ArrayDeque<Player> Players;
-    private final Player firstPlayer;
     public World world;
-    private int age;
-    private GameType version;
+    private static int age;
+    private static GameType version;
 
-    private ageManager age_manager;
-    private winnerManager winner_manager;
-    private worldManager world_manager;
-    private actionManager action_manager;
+    private static ageManager age_manager;
+    private static winnerManager winner_manager;
+    private static worldManager world_manager;
+    private static actionManager action_manager;
 
 
 
-    public GameImpl(GameType version, int numPlayers) {   //Constructor for GameImpl
-        this.numberOfPlayers = numPlayers;
+    public GameImpl(GameType ruleSet, int numPlayers) {   //Constructor for GameImpl
+        numberOfPlayers = numPlayers;
+
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
-
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
-        this.firstPlayer = Players.peekFirst();
 
-        this.version = version;
+        firstPlayer = Players.peekFirst();
+
+        version = ruleSet;
 
         this.world = new World();
 
-        this.age = -4000;
+        age = -4000;
 
         switch(version){
             case alphaCiv:
-                this.world_manager  = new alphaWorld();
-                this.age_manager    = new alphaAgeManager();
-                this.winner_manager = new alphaWinnerManager();
-                this.action_manager = new alphaActionManager();
+                 world_manager  = new alphaWorld();
+                 age_manager    = new alphaAgeManager();
+                 winner_manager = new alphaWinnerManager();
+                 action_manager = new alphaActionManager();
 
                 break;
             case betaCiv:
-                this.world_manager  = new alphaWorld();
-                this.age_manager    = new betaAgeManager();
-                this.winner_manager = new betaWinnerManager();
-                this.action_manager = new betaActionManager();
+                 world_manager  = new alphaWorld();
+                 age_manager    = new betaAgeManager();
+                 winner_manager = new betaWinnerManager();
+                 action_manager = new betaActionManager();
 
                 break;
             case gammaCiv:
-                this.world_manager  = new gammaWorld();
-                this.age_manager    = new gammaAgeManager();
-                this.winner_manager = new gammaWinnerManager();
-                this.action_manager = new gammaActionManager();
+                 world_manager  = new gammaWorld();
+                 age_manager    = new gammaAgeManager();
+                 winner_manager = new gammaWinnerManager();
+                 action_manager = new gammaActionManager();
 
                 break;
             case deltaCiv:
-                this.world_manager  = new deltaWorld();
-                this.age_manager    = new deltaAgeManager();
-                this.winner_manager = new alphaWinnerManager();
-                this.action_manager = new deltaActionManager();
+                 world_manager  = new deltaWorld();
+                 age_manager    = new deltaAgeManager();
+                 winner_manager = new alphaWinnerManager();
+                 action_manager = new deltaActionManager();
 
                 break;
             default:
@@ -128,7 +129,7 @@ public class GameImpl implements Game {
 
   public void endOfTurn() {
       Players.addLast(Players.removeFirst());  //rotate
-      this.age = this.age_manager.incrementAge(this);
+       age =  age_manager.incrementAge(this);
       if (Players.peekFirst() == firstPlayer) {
           this.endOfRound();
       }
@@ -153,18 +154,24 @@ public class GameImpl implements Game {
   }
 
   public void performUnitActionAt( Position unitPosition ) {
-    String unitType = getUnitAt(unitPosition).getTypeString();
-    switch(unitType) {
-        case SETTLER:
-            action_manager.settlerAction(this, unitPosition);
-            break;
-        case ARCHER:
-            action_manager.archerAction(this, unitPosition);
-            break;
-        case LEGION:
-            action_manager.legionAction(this, unitPosition);
-            break;
-    }
+      String unitType = getUnitAt(unitPosition).getTypeString();
+
+      //pass read-only copy for safety
+      final GameImpl game = this;
+       switch (unitType) {
+          case SETTLER:
+              action_manager.settlerAction(game, unitPosition);
+              break;
+          case ARCHER:
+              action_manager.archerAction(game, unitPosition);
+              break;
+          case LEGION:
+              action_manager.legionAction(game, unitPosition);
+              break;
+          default:
+              //default do nothing
+              break;
+      }
   }
 
   public Unit battle(Position attacker, Position defender){
@@ -173,18 +180,21 @@ public class GameImpl implements Game {
 
 
   //---------------------- Getters -----------------------------//
-  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
+  public int getNumberOfPlayers(){ return  numberOfPlayers; }
 
   public Tile getTileAt( Position p ) {
       return world.getTileAt(p);
   }
 
+
   public UnitImpl getUnitAt( Position p ) {
       return world.getUnitAt(p);
   }
+
   public City getCityAt( Position p ) {
       return world.getCityAt(p);
   }
+
   public Player getPlayerInTurn() {
       return Players.peekFirst();
   }
