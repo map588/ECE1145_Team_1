@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /** Skeleton class for AlphaCiv test cases
@@ -57,6 +58,7 @@ public class gammaCiv_tests {
         game.performUnitActionAt(posSettler); //with refactoring
         assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
         assertThat(game.getCityAt(posSettler).getSize(), is(1));
+        assertNull(game.getUnitAt(posSettler));
     }
 
     @Test
@@ -84,6 +86,7 @@ public class gammaCiv_tests {
         game.performUnitActionAt(posSettler);
         assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
         assertThat(game.getCityAt(posSettler).getSize(), is(1));
+        assertNull(game.getUnitAt(posSettler));
     }
 
     @Test

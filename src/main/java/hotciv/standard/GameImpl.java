@@ -105,18 +105,7 @@ public class GameImpl implements Game {
         }
 
         world_manager.createWorld(world);
- }
-
-  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
-
-  public Tile getTileAt( Position p ) {
-    return world.getTileAt(p);
-  }
-
-  //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
-  public UnitImpl getUnitAt( Position p ) {
-    return world.getUnitAt(p);
-  }
+    }
 
   //This will be changed later to account for the conditions needed to buy and place units -MAP
   public boolean createUnitAt( Position p, String unitType, Player owner ) {
@@ -127,27 +116,7 @@ public class GameImpl implements Game {
     return true;
   }
 
-  public City getCityAt( Position p ) {
-    return world.getCityAt(p);
-  }
-
-  //Same as above, will be changed later -MAP
-  public boolean setCityAt( Position p, Player owner ) {
-    world.setCityAt(p, owner);
-    return true;
-  }
-
-  public Player getPlayerInTurn() {
-    return Players.peekFirst();
-  }
-
-  public Player getWinner() {
-    return winner_manager.getWinner(this);
-    }
-
-  public int getAge() {
-    return age;
-  }
+  public void removeUnitAt(Position position){ world.removeUnitAt(position); }
 
   public boolean moveUnit( Position from, Position to ) {
     if(world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
@@ -157,13 +126,13 @@ public class GameImpl implements Game {
     return false;
   }
 
-    public void endOfTurn() {
-        Players.addLast(Players.removeFirst());  //rotate
-        this.age = this.age_manager.incrementAge(this);
-        if( Players.peekFirst() == firstPlayer ) {
-            this.endOfRound();
-        }
-    }
+  public void endOfTurn() {
+      Players.addLast(Players.removeFirst());  //rotate
+      this.age = this.age_manager.incrementAge(this);
+      if (Players.peekFirst() == firstPlayer) {
+          this.endOfRound();
+      }
+  }
 
   private void endOfRound() {
         Position p;
@@ -177,48 +146,83 @@ public class GameImpl implements Game {
       }
   }
 
-
-
   public void changeWorkForceFocusInCityAt( Position p, String balance ) {
-
   }
+
   public void changeProductionInCityAt( Position p, String unitType ) {
-
-  }
-  
-  public void performUnitActionAt( Position p ) {
-    String unit_type = getUnitAt(p).getTypeString();
-    if(unit_type == SETTLER){
-        action_manager.settlerAction(this, p);
-    }
-    else if(unit_type == ARCHER){
-        action_manager.archerAction(this, p);
-    }
-    else if(unit_type == LEGION){
-    }
   }
 
+  public void performUnitActionAt( Position unitPosition ) {
+    String unitType = getUnitAt(unitPosition).getTypeString();
+    switch(unitType) {
+        case SETTLER:
+            action_manager.settlerAction(this, unitPosition);
+            break;
+        case ARCHER:
+            action_manager.archerAction(this, unitPosition);
+            break;
+        case LEGION:
+            action_manager.legionAction(this, unitPosition);
+            break;
+    }
+  }
 
-    //function (temporary?) to perform attack between 2 positions.
-    //Returns the unit that won (always the attacker for now).
   public Unit battle(Position attacker, Position defender){
         return this.getUnitAt(attacker);
   }
 
+
+  //---------------------- Getters -----------------------------//
+  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
+
+  public Tile getTileAt( Position p ) {
+      return world.getTileAt(p);
+  }
+
+  public UnitImpl getUnitAt( Position p ) {
+      return world.getUnitAt(p);
+  }
+  public City getCityAt( Position p ) {
+      return world.getCityAt(p);
+  }
+  public Player getPlayerInTurn() {
+      return Players.peekFirst();
+  }
+
+  public Player getWinner() {
+      return winner_manager.getWinner(this);
+  }
+
+  public int getAge() {
+      return age;
+  }
+
+  public Player getUnitOwner(Position unitPosition) {
+      return this.getUnitAt(unitPosition).getOwner();
+  }
+
+
+  //---------------------Setters--------------------------------//
+  //This will be changed later to account for the conditions needed to buy and place units -MAP
+  public boolean setCityAt( Position cityPosition, Player owner ) {
+      world.setCityAt(cityPosition, owner);
+      return true;
+  }
+
   //----------------- True / False Queries ---------------------//
 
-    public boolean isPlayerInGame(Player player) {
-        return Players.contains(player);
-    }
+  public boolean isPlayerInGame(Player player) {
+      return Players.contains(player);
+  }
 
-    public GameType getVersion() {
-        return version;
-    }
+  public GameType getVersion() {
+      return version;
+  }
 
     /**
      * @param i allow age to be changed by modifier
      */
-    public void setAge(int i) {
-        age = i;
-    }
+  public void setAge(int i) {
+      age = i;
+  }
 }
