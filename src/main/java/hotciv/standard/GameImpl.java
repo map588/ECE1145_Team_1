@@ -2,7 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
-import hotciv.helpers.agingManagers.*;
+import hotciv.helpers.ageManagers.*;
 import hotciv.helpers.actionManagers.*;
 import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
