@@ -4,5 +4,7 @@ public enum GameType {
     alphaCiv,
     betaCiv,
     gammaCiv,
-    deltaCiv
+    deltaCiv,
+    epsilonCiv,
+    zetaCiv
 }

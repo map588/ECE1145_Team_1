@@ -99,6 +99,13 @@ public class GameImpl implements Game {
                 action_manager = new deltaActionManager();
 
                 break;
+            case epsilonCiv:
+                world_manager  = new epsilonWorld();
+                age_manager    = new epsilonAgeManager();
+                winner_manager = new epsilonWinnerManager();
+                action_manager = new epsilonActionManager();
+
+                break;
             default:
 
                 break;
