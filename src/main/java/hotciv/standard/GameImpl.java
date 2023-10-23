@@ -219,7 +219,7 @@ public class GameImpl implements Game {
         return true;
     }
 
-    //----------------- True / False Queries ---------------------//
+    //----------------- Queries ---------------------//
 
     public boolean isPlayerInGame(Player player) {
         return Players.contains(player);
