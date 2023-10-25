@@ -49,6 +49,7 @@ public class GameImpl implements Game {
     private static World world;
     private static int age;
     private static GameType version;
+    private int[] numberSuccessfulAttacks;
 
     private static ageManager age_manager;
     private static winnerManager winner_manager;
@@ -58,6 +59,7 @@ public class GameImpl implements Game {
 
     public GameImpl(GameType ruleSet, int numPlayers) {   //Constructor for GameImpl
         numberOfPlayers = numPlayers;
+        numberSuccessfulAttacks = new int[numberOfPlayers];
 
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
@@ -112,6 +114,7 @@ public class GameImpl implements Game {
         }
 
         world_manager.createWorld(world);
+        initializeAttackCount();
     }
 
     //This will be changed later to account for the conditions needed to buy and place units -MAP
@@ -181,6 +184,7 @@ public class GameImpl implements Game {
     }
 
     public Unit battle(Position attacker, Position defender) {
+        numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++;
         return this.getUnitAt(attacker);
     }
 
@@ -224,6 +228,11 @@ public class GameImpl implements Game {
     public boolean setCityAt(Position p, Player owner) {
         world.setCityAt(p, owner);
         return true;
+    }
+
+    public void initializeAttackCount (){
+        numberSuccessfulAttacks = new int[numberOfPlayers];
+
     }
 
     //----------------- Queries ---------------------//

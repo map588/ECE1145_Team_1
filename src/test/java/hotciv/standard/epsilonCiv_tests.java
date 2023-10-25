@@ -10,12 +10,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class epsilonCiv_tests {
-    private Game game;
+    private GameImpl game;
     /**
      * Fixture for epsilonCiv testing.
      */
     @Before
     public void setUp() {
         game = new GameImpl(GameType.epsilonCiv, 2);
+    }
+
+    @Test
+    public void winnerIsFirstWithThreeSuccessfulAttacks(){
+
     }
 }
