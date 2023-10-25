@@ -164,6 +164,7 @@ public class GameImpl implements Game {
     public void changeProductionInCityAt(Position p, String unitType) {
     }
 
+   //Move this variability stuff to a strategy file like actionManager -10/25
     public void performUnitActionAt(Position p) {
         String unitType = getUnitAt(p).getTypeString();
 
