@@ -114,7 +114,6 @@ public class GameImpl implements Game {
         }
 
         world_manager.createWorld(world);
-        initializeAttackCount();
     }
 
     //This will be changed later to account for the conditions needed to buy and place units -MAP
@@ -223,6 +222,10 @@ public class GameImpl implements Game {
         return this.getUnitAt(p).getOwner();
     }
 
+    public int[] getNumberOfSuccessfulAttacks(){
+        return numberSuccessfulAttacks;
+    }
+
 
     //---------------------Setters--------------------------------//
     //This will be changed later to account for the conditions needed to buy and place units -MAP
@@ -231,10 +234,7 @@ public class GameImpl implements Game {
         return true;
     }
 
-    public void initializeAttackCount (){
-        numberSuccessfulAttacks = new int[numberOfPlayers];
 
-    }
 
     //----------------- Queries ---------------------//
 
