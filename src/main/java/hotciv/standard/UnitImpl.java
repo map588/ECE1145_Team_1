@@ -106,6 +106,12 @@ public class UnitImpl implements Unit {
         this.moveCount = numOfMoves;
     }
 
+    public boolean isInCity(Game g, Position p){
+        if (g.getCityAt(p) != null){
+            return true;
+        }
+        return false;
+    }
 //-------- Validity check functions --------//
 
 
