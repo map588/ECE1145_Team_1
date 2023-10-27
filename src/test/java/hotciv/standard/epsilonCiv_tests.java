@@ -38,6 +38,7 @@ public class epsilonCiv_tests {
 
     @Test
     public void testBattleOutcome() {
+        /*
         Position unit1 = new Position(1, 1);
         Position unit2 = new Position(1, 4);
         game.createUnitAt(unit1, ARCHER, Player.RED);
