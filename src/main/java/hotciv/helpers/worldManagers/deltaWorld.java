@@ -10,7 +10,6 @@ import hotciv.framework.Player;
 public class deltaWorld implements worldManager{
 
     //We will pass in only the world object, unless a later implementation requires more information.
-    @Override
     public void createWorld(World world) {
 
         String type;

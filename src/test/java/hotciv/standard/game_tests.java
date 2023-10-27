@@ -1,12 +1,9 @@
 package hotciv.standard;
 
-import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Optional;
 
 import static hotciv.framework.GameConstants.ARCHER;
 import static org.hamcrest.CoreMatchers.*;
@@ -46,7 +43,7 @@ public class game_tests {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl(GameType.alphaCiv, 2);
+    game = new GameImpl(GameType.alphaCiv);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -100,14 +97,13 @@ public class game_tests {
   @Test
   public void settlerDoesNothing(){
     Position posSettler = new Position(3, 4);
-    game.performUnitActionAt(posSettler);
-    assertThat(game.getCityAt(posSettler), is(nullValue()));
+    assertThat(game.settlerAction(posSettler), is(0));
   }
 
   @Test
   public void archerDoesNothing(){
     Position posArcher = new Position(0,2);
-    game.performUnitActionAt(posArcher);
+    game.archerAction(posArcher);
     assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(0));
     assertThat(game.getUnitAt(posArcher).getMoveCount(), is(1));
   }

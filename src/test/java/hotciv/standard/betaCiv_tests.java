@@ -1,6 +1,5 @@
 package hotciv.standard;
 
-import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import org.junit.Before;
@@ -45,7 +44,7 @@ public class betaCiv_tests {
    */
   @Before
   public void setUp() {
-    game = new GameImpl(GameType.betaCiv, 2);
+    game = new GameImpl(GameType.betaCiv);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -108,6 +107,11 @@ public class betaCiv_tests {
     assertThat(game.getCityAt(city1).getOwner(), is(Player.BLUE));
 
     assertThat(game.getWinner(), is(Player.BLUE)); // Blue owns both cities and should win
+
+    game.setCityAt(city1, Player.RED);
+    game.setCityAt(city2, Player.RED);
+
+    assertThat(game.getWinner(), is(Player.BLUE)); // Blue already won the game, so they remain the winner.
   }
 }
 

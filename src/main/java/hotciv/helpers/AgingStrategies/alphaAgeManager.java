@@ -1,4 +1,4 @@
-package hotciv.helpers.ageManagers;
+package hotciv.helpers.AgingStrategies;
 
 import hotciv.helper_Interfaces.ageManager;
 

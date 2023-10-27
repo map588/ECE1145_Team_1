@@ -1,11 +1,11 @@
-package hotciv.helpers.ageManagers;
+package hotciv.helpers.AgingStrategies;
 
 import hotciv.framework.Game;
 import hotciv.helper_Interfaces.ageManager;
 
 public class betaAgeManager implements ageManager{
 
-@Override
+
     public int incrementAge(Game g){
         int current = g.getAge();
 

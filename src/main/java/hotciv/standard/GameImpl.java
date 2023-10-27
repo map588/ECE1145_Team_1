@@ -2,8 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
-import hotciv.helpers.ageManagers.*;
-import hotciv.helpers.actionManagers.*;
+import hotciv.helpers.*;
+import hotciv.helpers.AgingStrategies.*;
 import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
 
@@ -43,69 +43,53 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private static int numberOfPlayers;
-    private static Player firstPlayer;
+    private final int numberOfPlayers;
     private ArrayDeque<Player> Players;
-    private static World world;
-    private static int age;
-    private static GameType version;
-    private int[] numberSuccessfulAttacks;
+    private final Player firstPlayer;
+    public World world;
+    private int age;
+    private GameType version;
 
-    private static ageManager age_manager;
-    private static winnerManager winner_manager;
-    private static worldManager world_manager;
-    private static actionManager action_manager;
+    private ageManager age_manager;
+    private winnerManager winner_manager;
+    private worldManager world_manager;
 
 
-    public GameImpl(GameType ruleSet, int numPlayers) {   //Constructor for GameImpl
-        numberOfPlayers = numPlayers;
-        numberSuccessfulAttacks = new int[numberOfPlayers];
 
+    public GameImpl(GameType version, int numPlayers) {   //Constructor for GameImpl
+        this.numberOfPlayers = numPlayers;
         this.Players = new ArrayDeque<Player>(numberOfPlayers);
+
         Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
+        this.firstPlayer = Players.peekFirst();
 
-        firstPlayer = Players.peekFirst();
+        this.version = version;
 
-        version = ruleSet;
+        this.world = new World();
 
-        world = new World();
-
-        age = -4000;
-
-        switch (version) {
+        switch(version){
             case alphaCiv:
-                world_manager  = new alphaWorld();
-                age_manager    = new alphaAgeManager();
-                winner_manager = new alphaWinnerManager();
-                action_manager = new alphaActionManager();
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new alphaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
 
                 break;
             case betaCiv:
-                world_manager  = new alphaWorld();
-                age_manager    = new betaAgeManager();
-                winner_manager = new betaWinnerManager();
-                action_manager = new betaActionManager();
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new alphaAgeManager();
+                this.winner_manager = new betaWinnerManager();
 
                 break;
             case gammaCiv:
-                world_manager  = new gammaWorld();
-                age_manager    = new gammaAgeManager();
-                winner_manager = new gammaWinnerManager();
-                action_manager = new gammaActionManager();
+                this.world_manager  = new gammaWorld();
+                this.age_manager    = new gammaAgeManager();
+                this.winner_manager = new gammaWinnerManager();
 
                 break;
             case deltaCiv:
-                world_manager  = new deltaWorld();
-                age_manager    = new deltaAgeManager();
-                winner_manager = new alphaWinnerManager();
-                action_manager = new deltaActionManager();
-
-                break;
-            case epsilonCiv:
-                world_manager  = new epsilonWorld();
-                age_manager    = new epsilonAgeManager();
-                winner_manager = new epsilonWinnerManager();
-                action_manager = new epsilonActionManager();
+                this.world_manager  = new deltaWorld();
+                this.age_manager    = new deltaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
 
                 break;
             default:
@@ -114,129 +98,123 @@ public class GameImpl implements Game {
         }
 
         world_manager.createWorld(world);
-    }
+ }
 
-    //This will be changed later to account for the conditions needed to buy and place units -MAP
-    public boolean createUnitAt(Position p, String unitType, Player owner) {
-        if (world.getUnitAt(p) != null) {
+  public int getNumberOfPlayers(){ return this.numberOfPlayers; }
+
+  public Tile getTileAt( Position p ) {
+    return world.getTileAt(p);
+  }
+
+  //changed this to return a UnitImpl, doesn't seem to break anything, but wouldn't let me call it without it 9/27
+  public UnitImpl getUnitAt( Position p ) {
+    return world.getUnitAt(p);
+  }
+
+  //This will be changed later to account for the conditions needed to buy and place units -MAP
+  public boolean createUnitAt( Position p, String unitType, Player owner ) {
+        if(world.getUnitAt(p) != null) {
             return false;
         }
         world.setUnitAt(p, unitType, owner);
+    return true;
+  }
+
+  public City getCityAt( Position p ) {
+    return world.getCityAt(p);
+  }
+
+  //Same as above, will be changed later -MAP
+  public boolean setCityAt( Position p, Player owner ) {
+    world.setCityAt(p, owner);
+    return true;
+  }
+
+  public Player getPlayerInTurn() {
+    return Players.peekFirst();
+  }
+
+  public Player getWinner() {
+    return winner_manager.getWinner(this);
+    }
+
+  public int getAge() {
+    return age;
+  }
+
+  public boolean moveUnit( Position from, Position to ) {
+    if(world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
+        world.moveUnitTo(from, to);
         return true;
     }
-
-    public void removeUnitAt(Position position) {
-        world.removeUnitAt(position);
-    }
-
-    public boolean moveUnit(Position from, Position to) {
-        if (world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
-            world.moveUnitTo(from, to);
-            return true;
-        }
-        return false;
-    }
+    return false;
+  }
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        age = age_manager.incrementAge(this);
-        if (Players.peekFirst() == firstPlayer) {
+        this.age_manager.incrementAge(this);
+        if( Players.peekFirst() == firstPlayer ) {
             this.endOfRound();
         }
     }
 
-    private void endOfRound() {
+  private void endOfRound() {
         Position p;
-        for (int i = 0; i < WORLDSIZE; i++) {
-            for (int j = 0; j < WORLDSIZE; j++) {
-                p = new Position(i, j);
-                if (world.getCityAt(p) != null) {
-                    world.getCityAt(p).increment_round();
-                }
-            }
-        }
-    }
+      for (int i = 0; i < WORLDSIZE; i++) {
+          for (int j = 0; j < WORLDSIZE; j++) {
+              p = new Position(i,j);
+              if (world.getCityAt(p) != null) {
+                  world.getCityAt(p).increment_round();
+              }
+          }
+      }
+  }
 
-    public void changeWorkForceFocusInCityAt(Position p, String balance) {
-    }
 
-    public void changeProductionInCityAt(Position p, String unitType) {
-    }
 
-   //Move this variability stuff to a strategy file like actionManager -10/25
-    public void performUnitActionAt(Position p) {
-        String unitType = getUnitAt(p).getTypeString();
+  public void changeWorkForceFocusInCityAt( Position p, String balance ) {
 
-        switch (unitType) {
-            case SETTLER:
-                action_manager.settlerAction(this, p);
-                break;
-            case ARCHER:
-                action_manager.archerAction(this, p);
-                break;
-            case LEGION:
-                action_manager.legionAction(this, p);
-                break;
-            default:
-                //default do nothing
-                break;
-        }
-    }
+  }
+  public void changeProductionInCityAt( Position p, String unitType ) {
 
-    public Unit battle(Position attacker, Position defender) {
-        numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++;
+  }
+//  public void performUnitActionAt( Position p ) {
+//    String unit_type = getUnitAt(p).getTypeString();
+//    if(unit_type == SETTLER){
+//        settlerAction(p);
+//    }
+//    else if(unit_type == ARCHER){
+//        archerAction(p);
+//    }
+//    else if(unit_type == LEGION){
+//    }
+//  }
+
+//    public Integer settlerAction(Position p) {
+//        if(rules == GameType.gammaCiv){
+//            this.setCityAt(p, this.getUnitAt(p).getOwner());
+//            return 1; //returns only used for testing purposes so far
+//        }
+//        else{
+//            return 0;
+//        }
+//    }
+
+//    public void archerAction(Position p) {
+//        if(rules == GameType.gammaCiv){ //archer performs fortify
+//            this.getUnitAt(p).fortify();
+//        }
+//        else{}
+//    }
+
+
+    //function (temporary?) to perform attack between 2 positions.
+    //Returns the unit that won (always the attacker for now).
+  public Unit battle(Position attacker, Position defender){
         return this.getUnitAt(attacker);
-    }
+  }
 
-
-    //---------------------- Getters -----------------------------//
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
-    }
-
-    public Tile getTileAt(Position p) {
-        return world.getTileAt(p);
-    }
-
-    public UnitImpl getUnitAt(Position p) {
-        return world.getUnitAt(p);
-    }
-
-    public City getCityAt(Position p) {
-        return world.getCityAt(p);
-    }
-
-    public Player getPlayerInTurn() {
-        return Players.peekFirst();
-    }
-
-    public Player getWinner() {
-        return winner_manager.getWinner(this);
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public Player getUnitOwner(Position p) {
-        return this.getUnitAt(p).getOwner();
-    }
-
-    public int[] getNumberOfSuccessfulAttacks(){
-        return numberSuccessfulAttacks;
-    }
-
-
-    //---------------------Setters--------------------------------//
-    //This will be changed later to account for the conditions needed to buy and place units -MAP
-    public boolean setCityAt(Position p, Player owner) {
-        world.setCityAt(p, owner);
-        return true;
-    }
-
-
-
-    //----------------- Queries ---------------------//
+  //----------------- True / False Queries ---------------------//
 
     public boolean isPlayerInGame(Player player) {
         return Players.contains(player);
@@ -244,5 +222,12 @@ public class GameImpl implements Game {
 
     public GameType getVersion() {
         return version;
+    }
+
+    /**
+     * @param i allow age to be changed by modifier
+     */
+    public void setAge(int i) {
+        age = i;
     }
 }

@@ -6,11 +6,14 @@ import java.util.regex.Matcher;
 
 public class UnitImpl implements Unit {
 
-    private enum type {
+
+
+
+    private enum unitType {
         archer, legion, settler
     }
 
-    private type unitType;
+    private unitType type;
     private Player owner;
     private int moveCount;
     private int defense;
@@ -18,9 +21,9 @@ public class UnitImpl implements Unit {
     private boolean isFortified;
 
 
-    public UnitImpl(String unitType, Player owner) {
-        if (valid_unit_type(unitType)) {
-            this.unitType = type.valueOf(unitType);
+    public UnitImpl(String type, Player owner) {
+        if (valid_unit_type(type)) {
+            this.type = unitType.valueOf(type);
             this.owner = owner;
             this.moveCount = 1;
             this.defense = 0;
@@ -39,7 +42,7 @@ public class UnitImpl implements Unit {
 
     //---------------------Getters---------------------//
     public String getTypeString() {
-        return this.unitType.toString();
+        return this.type.toString();
     }
 
     /**
@@ -85,23 +88,33 @@ public class UnitImpl implements Unit {
 
     //---------------------Setters---------------------//
     public void fortify(){
-        if(this.unitType == type.archer){
+        if(this.type == unitType.archer){
             if(isFortified){
-                this.defense = defense/2;
+                halfDefensiveStrength();
                 isFortified = false;
             }
             else{
-                this.defense = defense*2;
+                doubleDefensiveStrength();
                 setMoveCount(0);
                 isFortified = true;
             }
         }
+        else{
+        }
     }
-
     public void setDefensiveStrength(int newDefensiveStr){
         this.defense = newDefensiveStr;
     }
+    public void doubleDefensiveStrength(){
+            this.defense = defense*2;
+    }
 
+    public void halfDefensiveStrength(){
+        if(this.defense == 0){}
+        else{
+            this.defense = defense/2;
+        }
+    }
     public void setMoveCount(int numOfMoves){
         this.moveCount = numOfMoves;
     }
@@ -110,9 +123,9 @@ public class UnitImpl implements Unit {
 
 
 //Every type equality will need this annoying check so I pulled it out into a method -MAP
-public static boolean valid_unit_type(String unitType){
+public static boolean valid_unit_type(String type){
     try{
-        type.valueOf(unitType);
+        unitType.valueOf(type);
     } catch (IllegalArgumentException e) {
         return false;
     }
