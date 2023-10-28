@@ -46,23 +46,22 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private                 int numberOfPlayers;
-    private              Player firstPlayer;
-    private  ArrayDeque<Player> Players;
-    private               World world;
-    private                 int age;
-    private            GameType version;
-    private               int[] numberSuccessfulAttacks;
+    private int numberOfPlayers;
+    private Player firstPlayer;
+    private ArrayDeque<Player> Players;
+    private World world;
+    private int age;
+    private GameType version;
+    private int[] numberSuccessfulAttacks;
 
-    private  ManagerFactory     manager_factory;
+    private ManagerFactory manager_factory;
 
-    private  ageManager         age_manager;
-    private  winnerManager      winner_manager;
-    private  worldManager       world_manager;
-    private  actionManager      action_manager;
-    private  attackManager      attack_manager;
-    private  roundManager       round_manager;
-
+    private ageManager age_manager;
+    private winnerManager winner_manager;
+    private worldManager world_manager;
+    private actionManager action_manager;
+    private attackManager attack_manager;
+    private roundManager round_manager;
 
 
     public GameImpl(GameType ruleSet, int numPlayers) {
@@ -106,15 +105,16 @@ public class GameImpl implements Game {
                 break;
         }
 
-        this.world_manager  = manager_factory.createWorldManager();
-        this.age_manager    = manager_factory.createAgeManager();
+        this.world_manager = manager_factory.createWorldManager();
+        this.age_manager = manager_factory.createAgeManager();
         this.winner_manager = manager_factory.createWinnerManager();
         this.action_manager = manager_factory.createActionManager();
         this.attack_manager = manager_factory.createAttackManager();
+        this.round_manager = manager_factory.createRoundManager();
 
 
-        this.age   =   this.age_manager.START_AGE;
-        this.world =   world_manager.createWorld();
+        this.age = this.age_manager.START_AGE;
+        this.world = world_manager.createWorld();
     }
 
 
@@ -127,10 +127,8 @@ public class GameImpl implements Game {
     }
 
     private void endOfRound() {
-        Position p;
-        Player player;
-        this.age = age_manager.incrementAge(this);
-        this.round_manager.incrementRound(this);
+        age_manager.incrementAge(this);
+        round_manager.incrementRound(this);
     }
 
     public void changeWorkForceFocusInCityAt(Position p, String balance) {
@@ -139,7 +137,7 @@ public class GameImpl implements Game {
     public void changeProductionInCityAt(Position p, String unitType) {
     }
 
-   //Move this variability stuff to a strategy file like actionManager -10/25
+    //Move this variability stuff to a strategy file like actionManager -10/25
     public void performUnitActionAt(Position p) {
         String unitType = getUnitAt(p).getTypeString();
 
@@ -163,41 +161,6 @@ public class GameImpl implements Game {
         this.attack_manager.attack(attacker, defender, this);
         numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
         return this.getUnitAt(attacker);
-    }
-
-
-
-    public Position findProductionPosition(Position p) {
-
-        class int_pair{
-            public int x;
-            public int y;
-            public int_pair(int x, int y){
-                this.x = x;
-                this.y = y;
-            }
-        }
-
-        //Defining order of checked positions for unit placement around city
-        int_pair[] surrounding_positions = new int_pair[9];
-        surrounding_positions[0] = new int_pair(  0,   0);
-        surrounding_positions[1] = new int_pair(  0, - 1);
-        surrounding_positions[2] = new int_pair(  1, - 1);
-        surrounding_positions[3] = new int_pair(  1,   0);
-        surrounding_positions[4] = new int_pair(  1,   1);
-        surrounding_positions[5] = new int_pair(  0,   1);
-        surrounding_positions[6] = new int_pair(- 1,   1);
-        surrounding_positions[7] = new int_pair(- 1,   0);
-        surrounding_positions[8] = new int_pair(- 1, - 1);
-
-        //Checking each position around city for empty space
-        for(int i = 0; i < 9; i++){
-            Position new_position = new Position(p.getColumn() + surrounding_positions[i].x, p.getRow() + surrounding_positions[i].y);
-            if(getUnitAt(new_position) == null){
-                return new_position;
-            }
-        }
-        return null;
     }
 
     //---------------------- Getters -----------------------------//
@@ -233,16 +196,20 @@ public class GameImpl implements Game {
         return this.getUnitAt(p).getOwner();
     }
 
-    public int[] getNumberOfSuccessfulAttacks(){
+    public int[] getNumberOfSuccessfulAttacks() {
         return this.numberSuccessfulAttacks;
     }
 
-    public int getDefensiveStrength(Unit unit){
+    public int getDefensiveStrength(Unit unit) {
         return unit.getDefensiveStrength();
     }
 
-    public int getAttackStrength(Unit unit){
+    public int getAttackStrength(Unit unit) {
         return unit.getAttackingStrength();
+    }
+
+    public GameType getVersion() {
+        return this.version;
     }
 
     //---------------------Setters--------------------------------//
@@ -251,6 +218,7 @@ public class GameImpl implements Game {
         this.world.setCityAt(p, owner);
         return true;
     }
+
     public void createUnitAt(Position p, String unit, Player owner) {
         this.world.setUnitAt(p, unit, owner);
     }
@@ -263,6 +231,9 @@ public class GameImpl implements Game {
         return false;
     }
 
+    public void setAge(int age) {
+        this.age = age;
+    }
 
     //---------------------Destructors-----------------------------//
 
@@ -276,7 +247,49 @@ public class GameImpl implements Game {
         return this.Players.contains(player);
     }
 
-    public GameType getVersion() {
-        return this.version;
+    public boolean isUnitAt(Position p) {
+        return this.getUnitAt(p) != null;
+    }
+
+    public Position findProductionPosition(Position p) {
+
+        class int_pair {
+            public int x;
+            public int y;
+
+            public int_pair(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        //Defining order of checked positions for unit placement around city
+        int_pair[] surrounding_positions = new int_pair[9];
+        surrounding_positions[0] = new int_pair(0, 0);
+        surrounding_positions[1] = new int_pair(0, -1);
+        surrounding_positions[2] = new int_pair(1, -1);
+        surrounding_positions[3] = new int_pair(1, 0);
+        surrounding_positions[4] = new int_pair(1, 1);
+        surrounding_positions[5] = new int_pair(0, 1);
+        surrounding_positions[6] = new int_pair(-1, 1);
+        surrounding_positions[7] = new int_pair(-1, 0);
+        surrounding_positions[8] = new int_pair(-1, -1);
+
+        //Checking each position around city for empty space
+        for (int i = 0; i < 9; i++) {
+            Position new_position = new Position(p.getColumn() + surrounding_positions[i].x, p.getRow() + surrounding_positions[i].y);
+            if (getUnitAt(new_position) == null) {
+                return new_position;
+            }
+        }
+        return null;
+    }
+
+//-------------------Testing-Only Functions----------------------//
+
+    public void progressRounds(int n) {
+        for (int i = 0; i < (n * numberOfPlayers); i++) {
+            this.endOfTurn();
+        }
     }
 }

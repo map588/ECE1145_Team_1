@@ -6,8 +6,9 @@ public interface ageManager {
 
     public final int START_AGE = -4000;
 
-    default public int incrementAge(Game g){
-        return g.getAge() + 100;
-    }
+    default void incrementAge(GameImpl g){
+        int newAge = g.getAge() + 100;
 
+        g.setAge(newAge);
+    }
 }

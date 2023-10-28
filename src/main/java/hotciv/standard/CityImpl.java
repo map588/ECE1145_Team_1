@@ -131,14 +131,18 @@ public class CityImpl implements City {
     }
 
     public void increment_round(GameImpl g) {
-        int current_production_cost = GameConstants.unit_cost.get(this.current_production_type);
+
         this.treasury  += this.production_rate;
         this.population += this.growth_rate;
 
-        if (this.treasury >= current_production_cost){
-            this.treasury -= current_production_cost;
-            Position new_unit_position = g.findProductionPosition(this.city_position);
-            g.createUnitAt(new_unit_position, this.current_production_type, this.owner);
+        if(current_production_type != null) {
+            int current_production_cost = GameConstants.unit_cost.get(this.current_production_type);
+
+            if (this.treasury >= current_production_cost) {
+                this.treasury -= current_production_cost;
+                Position new_unit_position = g.findProductionPosition(this.city_position);
+                g.createUnitAt(new_unit_position, this.current_production_type, this.owner);
+            }
         }
     }
 
