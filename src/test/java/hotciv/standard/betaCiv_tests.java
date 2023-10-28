@@ -59,7 +59,7 @@ public class betaCiv_tests {
 
     // Next turn is 1BC
 
-    game.progressRounds(39);
+    game.progressRounds(1);
     assertThat(game.getAge(), is(-1));
 
     // Next turn is 1AD
