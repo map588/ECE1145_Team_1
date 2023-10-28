@@ -1,11 +1,16 @@
 package hotciv.standard;
-import hotciv.framework.City;
+import hotciv.framework.GameConstants;
 import hotciv.framework.Player;
+import hotciv.framework.City;
+import hotciv.framework.Game;
 import hotciv.framework.Position;
+
+
 
 public class CityImpl implements City {
 
     private Player owner;
+    private Position city_position;
     private int production_rate;
     private int treasury;
     private int population;
@@ -14,14 +19,14 @@ public class CityImpl implements City {
     private String current_production_type;
     private String workforce_focus;
 
-    public CityImpl(Player owner) {
+    public CityImpl(Player owner, Position position) {
         this.owner = owner;
+        this.city_position = position;
         production_rate = 6; //temp
         treasury = 0;
         population = 1;  //temp
         growth_rate = 0; //temp
     }
-
 
     /**
      * return the owner of this city.
@@ -39,10 +44,6 @@ public class CityImpl implements City {
      */
     public int getSize() {
         return this.population;
-    }
-
-    public int getGrowth_rate() {
-        return this.growth_rate;
     }
 
     /**
@@ -68,6 +69,9 @@ public class CityImpl implements City {
         return this.current_production_type;
     }
 
+    /**
+     * @return the production rate of the city
+     */
     public int getProductionRate() {
         return this.production_rate;
     }
@@ -126,10 +130,16 @@ public class CityImpl implements City {
         }
     }
 
-
-    public void increment_round() {
-        this.treasury += this.production_rate;
+    public void increment_round(GameImpl g) {
+        int current_production_cost = GameConstants.unit_cost.get(this.current_production_type);
+        this.treasury  += this.production_rate;
         this.population += this.growth_rate;
+
+        if (this.treasury >= current_production_cost){
+            this.treasury -= current_production_cost;
+            Position new_unit_position = g.findProductionPosition(this.city_position);
+            g.createUnitAt(new_unit_position, this.current_production_type, this.owner);
+        }
     }
 
     // --------------------- Private validity checks ------------------------------

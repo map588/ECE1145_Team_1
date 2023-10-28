@@ -1,5 +1,5 @@
 package hotciv.framework;
-
+import hotciv.standard.GameImpl;
 /** Represents a city in the game.
 
 Responsibilities:
@@ -68,7 +68,7 @@ public interface City {
    * @return a string type defining the focus, see GameConstants
    * for valid return values.
    */
-  public void increment_round();
+  public void increment_round(GameImpl g);
 
   public String getWorkforceFocus();
 

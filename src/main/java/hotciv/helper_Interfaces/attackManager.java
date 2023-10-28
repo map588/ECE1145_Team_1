@@ -2,7 +2,7 @@ package hotciv.helper_Interfaces;
 
 import hotciv.framework.*;
 import hotciv.standard.*;
-import hotciv.helpers.*;
+
 
 public interface attackManager {
 

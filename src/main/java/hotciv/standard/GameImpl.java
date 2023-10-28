@@ -9,6 +9,7 @@ import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.attackManagers.*;
 
 
+import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
@@ -54,7 +55,7 @@ public class GameImpl implements Game {
 
     private  ageManager age_manager;
     private  winnerManager winner_manager;
-    private  worldManager world_manager;
+    private  worldManager  world_manager;
     private  actionManager action_manager;
     private  attackManager attack_manager;
 
@@ -80,7 +81,7 @@ public class GameImpl implements Game {
                 this.age_manager    = new alphaAgeManager();
                 this.winner_manager = new alphaWinnerManager();
                 this.action_manager = new alphaActionManager();
-                this.attack_manager = new
+                this.attack_manager = new alphaAttackManager();
 
                 break;
             case betaCiv:
@@ -88,6 +89,7 @@ public class GameImpl implements Game {
                 this.age_manager    = new betaAgeManager();
                 this.winner_manager = new betaWinnerManager();
                 this.action_manager = new betaActionManager();
+                this.attack_manager = new alphaAttackManager();
 
                 break;
             case gammaCiv:
@@ -103,6 +105,7 @@ public class GameImpl implements Game {
                 this.age_manager    = new deltaAgeManager();
                 this.winner_manager = new alphaWinnerManager();
                 this.action_manager = new deltaActionManager();
+                this.attack_manager = new deltaAttackManager();
 
                 break;
             case epsilonCiv:
@@ -110,8 +113,17 @@ public class GameImpl implements Game {
                 this.age_manager    = new epsilonAgeManager();
                 this.winner_manager = new epsilonWinnerManager();
                 this.action_manager = new epsilonActionManager();
-
+                this.attack_manager = new epsilonAttackManager();
                 break;
+
+            case zetaCiv:
+                this.world_manager  = new zetaWorld();
+                this.age_manager    = new zetaAgeManager();
+                this.winner_manager = new zetaWinnerManager();
+                this.action_manager = new zetaActionManager();
+                this.attack_manager = new zetaAttackManager();
+                break;
+
             default:
 
                 break;
@@ -120,19 +132,9 @@ public class GameImpl implements Game {
         world_manager.createWorld(world);
     }
 
-    //This will be changed later to account for the conditions needed to buy and place units -MAP
-    public boolean createUnitAt(Position p, String unitType, Player owner) {
-        if (this.getUnitAt(p) != null) {
-            return false;
-        }
-        this.setUnitAt(p, unitType, owner);
-        return true;
-    }
-
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        this.age = age_manager.incrementAge(this);
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
         }
@@ -140,11 +142,14 @@ public class GameImpl implements Game {
 
     private void endOfRound() {
         Position p;
+        Player player;
+        this.age = age_manager.incrementAge(this);
         for (int i = 0; i < WORLDSIZE; i++) {
             for (int j = 0; j < WORLDSIZE; j++) {
                 p = new Position(i, j);
                 if (this.getCityAt(p) != null) {
-                    this.getCityAt(p).increment_round();
+                    player = this.getCityAt(p).getOwner();
+                    this.getCityAt(p).increment_round(this);
                 }
             }
         }
@@ -177,11 +182,45 @@ public class GameImpl implements Game {
     }
 
     public Unit attack(Position attacker, Position defender) {
-        this.attackManager.
-        numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++;
+        this.attack_manager.attack(attacker, defender, this);
+        numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
         return this.getUnitAt(attacker);
     }
 
+
+
+    public Position findProductionPosition(Position p) {
+
+        class int_pair{
+            public int x;
+            public int y;
+            public int_pair(int x, int y){
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        //Defining order of checked positions for unit placement around city
+        int_pair[] surrounding_positions = new int_pair[9];
+        surrounding_positions[0] = new int_pair(  0,   0);
+        surrounding_positions[1] = new int_pair(  0, - 1);
+        surrounding_positions[2] = new int_pair(  1, - 1);
+        surrounding_positions[3] = new int_pair(  1,   0);
+        surrounding_positions[4] = new int_pair(  1,   1);
+        surrounding_positions[5] = new int_pair(  0,   1);
+        surrounding_positions[6] = new int_pair(- 1,   1);
+        surrounding_positions[7] = new int_pair(- 1,   0);
+        surrounding_positions[8] = new int_pair(- 1, - 1);
+
+        //Checking each position around city for empty space
+        for(int i = 0; i < 9; i++){
+            Position new_position = new Position(p.getColumn() + surrounding_positions[i].x, p.getRow() + surrounding_positions[i].y);
+            if(getUnitAt(new_position) == null){
+                return new_position;
+            }
+        }
+        return null;
+    }
 
     //---------------------- Getters -----------------------------//
     public int getNumberOfPlayers() {
@@ -220,6 +259,13 @@ public class GameImpl implements Game {
         return this.numberSuccessfulAttacks;
     }
 
+    public int getDefensiveStrength(Unit unit){
+        return unit.getDefensiveStrength();
+    }
+
+    public int getAttackStrength(Unit unit){
+        return unit.getAttackingStrength();
+    }
 
     //---------------------Setters--------------------------------//
     //This will be changed later to account for the conditions needed to buy and place units -MAP
@@ -227,12 +273,12 @@ public class GameImpl implements Game {
         this.world.setCityAt(p, owner);
         return true;
     }
-    public void setUnitAt(Position p, String unit, Player owner) {
+    public void createUnitAt(Position p, String unit, Player owner) {
         this.world.setUnitAt(p, unit, owner);
     }
 
     public boolean moveUnit(Position from, Position to) {
-        if (this.getUnitAt(from) != null && this.getUnitAt(to) == null) {
+        if (this.getUnitAt(from) != null && this.getUnitAt(to) == null && this.getUnitAt(from).getOwner() == this.getPlayerInTurn()) {
             this.world.moveUnitTo(from, to);
             return true;
         }

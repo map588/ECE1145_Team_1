@@ -70,7 +70,7 @@ public class World {
     }
 
     public void setCityAt(Position p, Player owner) {
-        cities[p.getColumn()][p.getRow()] = new CityImpl(owner);
+        cities[p.getColumn()][p.getRow()] = new CityImpl(owner, p);
     }
 
 

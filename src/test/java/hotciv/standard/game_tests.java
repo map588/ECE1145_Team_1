@@ -94,7 +94,7 @@ public class game_tests {
   public void attackingUnitAlwaysWins(){
     Position posArcher = new Position(0, 2); //Attacker
     Position posLegion = new Position(2,3); //Defender
-    assertThat(game.battle(posArcher, posLegion).getTypeString(), is(ARCHER));
+    assertThat(game.attack(posArcher, posLegion).getTypeString(), is(ARCHER));
   }
 
   @Test

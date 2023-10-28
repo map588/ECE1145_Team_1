@@ -28,11 +28,11 @@ public class epsilonCiv_tests {
         Position unit2 = new Position(1, 4);
         game.createUnitAt(unit1, ARCHER, Player.RED);
         game.createUnitAt(unit2, ARCHER, Player.BLUE);
-        game.battle(unit1, unit2);
+        game.attack(unit1, unit2);
         assertNull(game.getWinner());
-        game.battle(unit1, unit2);
+        game.attack(unit1, unit2);
         assertNull(game.getWinner());
-        game.battle(unit1, unit2);
+        game.attack(unit1, unit2);
         assertThat(game.getWinner(), is(Player.RED));
     }
 
