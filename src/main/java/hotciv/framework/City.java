@@ -55,7 +55,6 @@ public interface City {
    * in the city treasury
    */
   public int getTreasury();
-
   /**
    * return the type of unit this city is currently producing.
    *
@@ -63,13 +62,14 @@ public interface City {
    * see GameConstants for valid values.
    */
   public String getProduction();
-
   /**
    * return the work force's focus in this city.
    *
    * @return a string type defining the focus, see GameConstants
    * for valid return values.
    */
+  public void increment_round();
+
   public String getWorkforceFocus();
 
 

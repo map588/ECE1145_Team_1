@@ -6,6 +6,7 @@ import hotciv.helpers.ageManagers.*;
 import hotciv.helpers.actionManagers.*;
 import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
+import hotciv.helpers.attackManagers.*;
 
 
 import java.util.ArrayDeque;
@@ -43,69 +44,72 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private static int numberOfPlayers;
-    private static Player firstPlayer;
-    private ArrayDeque<Player> Players;
-    private static World world;
-    private static int age;
-    private static GameType version;
-    private int[] numberSuccessfulAttacks;
+    private  int numberOfPlayers;
+    private  Player firstPlayer;
+    private  ArrayDeque<Player> Players;
+    private  World world;
+    private  int age;
+    private  GameType version;
+    private  int[] numberSuccessfulAttacks;
 
-    private static ageManager age_manager;
-    private static winnerManager winner_manager;
-    private static worldManager world_manager;
-    private static actionManager action_manager;
+    private  ageManager age_manager;
+    private  winnerManager winner_manager;
+    private  worldManager world_manager;
+    private  actionManager action_manager;
+    private  attackManager attack_manager;
 
 
     public GameImpl(GameType ruleSet, int numPlayers) {   //Constructor for GameImpl
-        numberOfPlayers = numPlayers;
-        numberSuccessfulAttacks = new int[numberOfPlayers];
+        this.numberOfPlayers = numPlayers;
+        this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
 
-        this.Players = new ArrayDeque<Player>(numberOfPlayers);
-        Players.addAll(Arrays.asList(Player.values()).subList(0, numberOfPlayers));
+        this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
+        this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
 
-        firstPlayer = Players.peekFirst();
+        this.firstPlayer = this.Players.peekFirst();
 
-        version = ruleSet;
+        this.version = ruleSet;
 
-        world = new World();
+        this.world = new World();
 
-        age = -4000;
+        this.age = -4000;
 
         switch (version) {
             case alphaCiv:
-                world_manager  = new alphaWorld();
-                age_manager    = new alphaAgeManager();
-                winner_manager = new alphaWinnerManager();
-                action_manager = new alphaActionManager();
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new alphaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
+                this.action_manager = new alphaActionManager();
+                this.attack_manager = new
 
                 break;
             case betaCiv:
-                world_manager  = new alphaWorld();
-                age_manager    = new betaAgeManager();
-                winner_manager = new betaWinnerManager();
-                action_manager = new betaActionManager();
+                this.world_manager  = new alphaWorld();
+                this.age_manager    = new betaAgeManager();
+                this.winner_manager = new betaWinnerManager();
+                this.action_manager = new betaActionManager();
 
                 break;
             case gammaCiv:
-                world_manager  = new gammaWorld();
-                age_manager    = new gammaAgeManager();
-                winner_manager = new gammaWinnerManager();
-                action_manager = new gammaActionManager();
+                this.world_manager  = new gammaWorld();
+                this.age_manager    = new gammaAgeManager();
+                this.winner_manager = new gammaWinnerManager();
+                this.action_manager = new gammaActionManager();
+                this.attack_manager = new gammaAttackManager();
 
                 break;
             case deltaCiv:
-                world_manager  = new deltaWorld();
-                age_manager    = new deltaAgeManager();
-                winner_manager = new alphaWinnerManager();
-                action_manager = new deltaActionManager();
+                this.world_manager  = new deltaWorld();
+                this.age_manager    = new deltaAgeManager();
+                this.winner_manager = new alphaWinnerManager();
+                this.action_manager = new deltaActionManager();
 
                 break;
             case epsilonCiv:
-                world_manager  = new epsilonWorld();
-                age_manager    = new epsilonAgeManager();
-                winner_manager = new epsilonWinnerManager();
-                action_manager = new epsilonActionManager();
+                this.world_manager  = new epsilonWorld();
+                this.age_manager    = new epsilonAgeManager();
+                this.winner_manager = new epsilonWinnerManager();
+                this.action_manager = new epsilonActionManager();
 
                 break;
             default:
@@ -118,28 +122,17 @@ public class GameImpl implements Game {
 
     //This will be changed later to account for the conditions needed to buy and place units -MAP
     public boolean createUnitAt(Position p, String unitType, Player owner) {
-        if (world.getUnitAt(p) != null) {
+        if (this.getUnitAt(p) != null) {
             return false;
         }
-        world.setUnitAt(p, unitType, owner);
+        this.setUnitAt(p, unitType, owner);
         return true;
     }
 
-    public void removeUnitAt(Position position) {
-        world.removeUnitAt(position);
-    }
-
-    public boolean moveUnit(Position from, Position to) {
-        if (world.getUnitAt(from) != null && world.getUnitAt(to) == null) {
-            world.moveUnitTo(from, to);
-            return true;
-        }
-        return false;
-    }
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
-        age = age_manager.incrementAge(this);
+        this.age = age_manager.incrementAge(this);
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
         }
@@ -150,8 +143,8 @@ public class GameImpl implements Game {
         for (int i = 0; i < WORLDSIZE; i++) {
             for (int j = 0; j < WORLDSIZE; j++) {
                 p = new Position(i, j);
-                if (world.getCityAt(p) != null) {
-                    world.getCityAt(p).increment_round();
+                if (this.getCityAt(p) != null) {
+                    this.getCityAt(p).increment_round();
                 }
             }
         }
@@ -183,7 +176,8 @@ public class GameImpl implements Game {
         }
     }
 
-    public Unit battle(Position attacker, Position defender) {
+    public Unit attack(Position attacker, Position defender) {
+        this.attackManager.
         numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++;
         return this.getUnitAt(attacker);
     }
@@ -191,31 +185,31 @@ public class GameImpl implements Game {
 
     //---------------------- Getters -----------------------------//
     public int getNumberOfPlayers() {
-        return numberOfPlayers;
+        return this.numberOfPlayers;
     }
 
     public Tile getTileAt(Position p) {
-        return world.getTileAt(p);
+        return this.world.getTileAt(p);
     }
 
     public UnitImpl getUnitAt(Position p) {
-        return world.getUnitAt(p);
+        return this.world.getUnitAt(p);
     }
 
     public City getCityAt(Position p) {
-        return world.getCityAt(p);
+        return this.world.getCityAt(p);
     }
 
     public Player getPlayerInTurn() {
-        return Players.peekFirst();
+        return this.Players.peekFirst();
     }
 
     public Player getWinner() {
-        return winner_manager.getWinner(this);
+        return this.winner_manager.getWinner(this);
     }
 
     public int getAge() {
-        return age;
+        return this.age;
     }
 
     public Player getUnitOwner(Position p) {
@@ -223,26 +217,40 @@ public class GameImpl implements Game {
     }
 
     public int[] getNumberOfSuccessfulAttacks(){
-        return numberSuccessfulAttacks;
+        return this.numberSuccessfulAttacks;
     }
 
 
     //---------------------Setters--------------------------------//
     //This will be changed later to account for the conditions needed to buy and place units -MAP
     public boolean setCityAt(Position p, Player owner) {
-        world.setCityAt(p, owner);
+        this.world.setCityAt(p, owner);
         return true;
     }
+    public void setUnitAt(Position p, String unit, Player owner) {
+        this.world.setUnitAt(p, unit, owner);
+    }
 
+    public boolean moveUnit(Position from, Position to) {
+        if (this.getUnitAt(from) != null && this.getUnitAt(to) == null) {
+            this.world.moveUnitTo(from, to);
+            return true;
+        }
+        return false;
+    }
+    //---------------------Destructors-----------------------------//
 
+    public void removeUnitAt(Position position) {
+        this.world.removeUnitAt(position);
+    }
 
     //----------------- Queries ---------------------//
 
     public boolean isPlayerInGame(Player player) {
-        return Players.contains(player);
+        return this.Players.contains(player);
     }
 
     public GameType getVersion() {
-        return version;
+        return this.version;
     }
 }

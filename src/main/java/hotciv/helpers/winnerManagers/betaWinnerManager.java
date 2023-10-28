@@ -15,4 +15,5 @@ public class betaWinnerManager implements winnerManager {
         }
         return null;
     }
+
 }

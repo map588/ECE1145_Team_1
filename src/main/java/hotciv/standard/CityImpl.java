@@ -127,7 +127,7 @@ public class CityImpl implements City {
     }
 
 
-    void increment_round() {
+    public void increment_round() {
         this.treasury += this.production_rate;
         this.population += this.growth_rate;
     }
