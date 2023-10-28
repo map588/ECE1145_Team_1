@@ -7,7 +7,8 @@ import hotciv.helpers.actionManagers.*;
 import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.attackManagers.*;
-
+import hotciv.helpers.roundManagers.*;
+import hotciv.factories.*;
 
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
@@ -45,95 +46,80 @@ import static hotciv.framework.GameConstants.*;
 
 public class GameImpl implements Game {
 
-    private  int numberOfPlayers;
-    private  Player firstPlayer;
+    private                 int numberOfPlayers;
+    private              Player firstPlayer;
     private  ArrayDeque<Player> Players;
-    private  World world;
-    private  int age;
-    private  GameType version;
-    private  int[] numberSuccessfulAttacks;
+    private               World world;
+    private                 int age;
+    private            GameType version;
+    private               int[] numberSuccessfulAttacks;
 
-    private  ageManager age_manager;
-    private  winnerManager winner_manager;
-    private  worldManager  world_manager;
-    private  actionManager action_manager;
-    private  attackManager attack_manager;
+    private  ManagerFactory     manager_factory;
+
+    private  ageManager         age_manager;
+    private  winnerManager      winner_manager;
+    private  worldManager       world_manager;
+    private  actionManager      action_manager;
+    private  attackManager      attack_manager;
+    private  roundManager       round_manager;
 
 
-    public GameImpl(GameType ruleSet, int numPlayers) {   //Constructor for GameImpl
+
+    public GameImpl(GameType ruleSet, int numPlayers) {
+
         this.numberOfPlayers = numPlayers;
         this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
 
         this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
         this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
-
         this.firstPlayer = this.Players.peekFirst();
 
         this.version = ruleSet;
 
-        this.world = new World();
-
-        this.age = -4000;
-
         switch (version) {
             case alphaCiv:
-                this.world_manager  = new alphaWorld();
-                this.age_manager    = new alphaAgeManager();
-                this.winner_manager = new alphaWinnerManager();
-                this.action_manager = new alphaActionManager();
-                this.attack_manager = new alphaAttackManager();
-
+                this.manager_factory = new alphaManagerFactory();
                 break;
+
             case betaCiv:
-                this.world_manager  = new alphaWorld();
-                this.age_manager    = new betaAgeManager();
-                this.winner_manager = new betaWinnerManager();
-                this.action_manager = new betaActionManager();
-                this.attack_manager = new alphaAttackManager();
-
+                this.manager_factory = new betaManagerFactory();
                 break;
+
             case gammaCiv:
-                this.world_manager  = new gammaWorld();
-                this.age_manager    = new gammaAgeManager();
-                this.winner_manager = new gammaWinnerManager();
-                this.action_manager = new gammaActionManager();
-                this.attack_manager = new gammaAttackManager();
-
+                this.manager_factory = new gammaManagerFactory();
                 break;
+
             case deltaCiv:
-                this.world_manager  = new deltaWorld();
-                this.age_manager    = new deltaAgeManager();
-                this.winner_manager = new alphaWinnerManager();
-                this.action_manager = new deltaActionManager();
-                this.attack_manager = new deltaAttackManager();
-
+                this.manager_factory = new deltaManagerFactory();
                 break;
+
             case epsilonCiv:
-                this.world_manager  = new epsilonWorld();
-                this.age_manager    = new epsilonAgeManager();
-                this.winner_manager = new epsilonWinnerManager();
-                this.action_manager = new epsilonActionManager();
-                this.attack_manager = new epsilonAttackManager();
+                this.manager_factory = new epsilonManagerFactory();
                 break;
 
             case zetaCiv:
-                this.world_manager  = new zetaWorld();
-                this.age_manager    = new zetaAgeManager();
-                this.winner_manager = new zetaWinnerManager();
-                this.action_manager = new zetaActionManager();
-                this.attack_manager = new zetaAttackManager();
+                this.manager_factory = new zetaManagerFactory();
                 break;
 
             default:
-
+                this.manager_factory = new alphaManagerFactory();
                 break;
         }
 
-        world_manager.createWorld(world);
+        this.world_manager  = manager_factory.createWorldManager();
+        this.age_manager    = manager_factory.createAgeManager();
+        this.winner_manager = manager_factory.createWinnerManager();
+        this.action_manager = manager_factory.createActionManager();
+        this.attack_manager = manager_factory.createAttackManager();
+
+
+        this.age   =   this.age_manager.START_AGE;
+        this.world =   world_manager.createWorld();
     }
 
 
     public void endOfTurn() {
+        //winnerManager.checkForWinner(this, Players.peekFirst()); TODO: implement checkForWinner
         Players.addLast(Players.removeFirst());  //rotate
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
@@ -144,15 +130,7 @@ public class GameImpl implements Game {
         Position p;
         Player player;
         this.age = age_manager.incrementAge(this);
-        for (int i = 0; i < WORLDSIZE; i++) {
-            for (int j = 0; j < WORLDSIZE; j++) {
-                p = new Position(i, j);
-                if (this.getCityAt(p) != null) {
-                    player = this.getCityAt(p).getOwner();
-                    this.getCityAt(p).increment_round(this);
-                }
-            }
-        }
+        this.round_manager.incrementRound(this);
     }
 
     public void changeWorkForceFocusInCityAt(Position p, String balance) {
@@ -284,6 +262,8 @@ public class GameImpl implements Game {
         }
         return false;
     }
+
+
     //---------------------Destructors-----------------------------//
 
     public void removeUnitAt(Position position) {
