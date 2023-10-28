@@ -11,8 +11,8 @@ public class deltaWorld implements worldManager{
 
     //We will pass in only the world object, unless a later implementation requires more information.
     @Override
-    public void createWorld(World world) {
-
+    public World createWorld() {
+        World world = new World();
         String type;
         String[] layout =
                 new String[] {
@@ -55,6 +55,8 @@ public class deltaWorld implements worldManager{
         Position cityBlue = new Position(4,5);
         world.setCityAt(cityRed, Player.RED);
         world.setCityAt(cityBlue, Player.BLUE);
+
+        return world;
     }
 
 

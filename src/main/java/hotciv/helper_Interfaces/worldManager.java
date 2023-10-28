@@ -8,7 +8,8 @@ import hotciv.framework.Tile;
 
 public interface worldManager {
 
-    default void createWorld(World world) {
+    default World createWorld() {
+        World world = new World();
 
         Position ocean = new Position(1, 0);
         Position hills = new Position(0, 1);
@@ -30,6 +31,7 @@ public interface worldManager {
         world.setUnitAt(posSettler, SETTLER, Player.RED);
         world.setUnitAt(posLegion,  LEGION, Player.BLUE);
 
+        return world;
     }
 
 }

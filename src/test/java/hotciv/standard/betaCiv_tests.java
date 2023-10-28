@@ -54,46 +54,37 @@ public class betaCiv_tests {
   public void betaCiv_DynamicWorldAging() {
 
     // 100 Years per turn pre- 100BC
-    for (int i = 0; i < 39; i++) {
-      game.endOfTurn();
-    }
+    game.progressRounds(39);
     assertThat(game.getAge(), is(-100));
 
     // Next turn is 1BC
-    game.endOfTurn();
+
+    game.progressRounds(1);
     assertThat(game.getAge(), is(-1));
 
     // Next turn is 1AD
-    game.endOfTurn();
+    game.progressRounds(1);
     assertThat(game.getAge(), is(1));
 
     // Next turn is 50AD
-    game.endOfTurn();
+    game.progressRounds(1);
     assertThat(game.getAge(), is(50));
 
 
     // 50 years per turn until 1750
-    for (int j = 0; j < 34; j++) {
-      game.endOfTurn();
-    }
+    game.progressRounds(34);
     assertThat(game.getAge(), is(1750));
 
     // 25 years per turn until 1900
-    for (int h = 0; h < 6; h++) {
-      game.endOfTurn();
-    }
+    game.progressRounds(6);
     assertThat(game.getAge(), is(1900));
 
     // 5 years per turn until 1970
-    for (int k = 0; k < 14; k++) {
-      game.endOfTurn();
-    }
+    game.progressRounds(14);
     assertThat(game.getAge(), is(1970));
 
     // 1 year per turn for the rest of the game
-    for (int m = 0; m < 100; m++) {
-      game.endOfTurn();
-    }
+    game.progressRounds(100);
     assertThat(game.getAge(), is(2070));
   }
 
@@ -104,9 +95,9 @@ public class betaCiv_tests {
     Position city2 = new Position(1, 4);
 
     game.setCityAt(city1, Player.BLUE);
+    game.setCityAt(city2, Player.BLUE);
 
     assertThat(game.getCityAt(city1).getOwner(), is(Player.BLUE));
-
     assertThat(game.getWinner(), is(Player.BLUE)); // Blue owns both cities and should win
   }
 }

@@ -6,8 +6,6 @@ import hotciv.framework.Position;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static hotciv.framework.GameConstants.ARCHER;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -40,7 +38,7 @@ import static org.junit.Assert.assertThat;
    limitations under the License.
 
 */
-public class game_tests {
+public class gameTests {
   private GameImpl game; //Changed Game to GameImpl -TPD
 
   /** Fixture for alphaciv testing. */
@@ -75,7 +73,7 @@ public class game_tests {
   @Test
   public void alphaCiv_Progress100YearsEveryTurn() {
     int turn1 = game.getAge();
-    game.endOfTurn();
+    for (int i = 0; i < game.getNumberOfPlayers(); i++) {game.endOfTurn();}
     int turn2 = game.getAge();
 
     assertThat((turn2 - turn1), is(100));
@@ -83,7 +81,7 @@ public class game_tests {
 
   @Test
   public void alphaCiv_RedWinsIf3000BC() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < (10 * game.getNumberOfPlayers()); i++) {
       game.endOfTurn();
     }
     assertThat(game.getAge(), is(-3000));

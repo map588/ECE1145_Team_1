@@ -4,8 +4,11 @@ import hotciv.standard.GameImpl;
 
 public interface ageManager {
 
-    default public int incrementAge(Game g){
-        return g.getAge() + 100;
-    }
+    public final int START_AGE = -4000;
 
+    default void incrementAge(GameImpl g){
+        int newAge = g.getAge() + 100;
+
+        g.setAge(newAge);
+    }
 }
