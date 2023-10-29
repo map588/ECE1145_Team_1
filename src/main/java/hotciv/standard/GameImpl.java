@@ -60,7 +60,7 @@ public class GameImpl implements Game {
     private winnerManager winner_manager;
     private worldManager world_manager;
     private actionManager action_manager;
-    private attackManager attack_manager;
+    public attackManager attack_manager;
     private roundManager round_manager;
 
 
@@ -296,5 +296,9 @@ public class GameImpl implements Game {
         for (int i = 0; i < (n * numberOfPlayers); i++) {
             this.endOfTurn();
         }
+    }
+
+    public attackManager getAttack_manager(){
+        return this.attack_manager;
     }
 }

@@ -12,12 +12,10 @@ public class epsilonAttackManager implements attackManager {
 
     private int CombAttackStrength;
     private int CombDefendStrength;
-    private int numberAdjacentAttackUnits;
-    private int numberAdjacentDefenceUnits;
     private static Position attackerPos;
     private static Position defenderPos;
-    private static int attackerRoll;
-    private static int defenderRoll;
+    public static int attackerRoll;
+    public static int defenderRoll;
 
     @Override
     public boolean attack(Position attacker, Position defender, GameImpl g){
@@ -29,7 +27,7 @@ public class epsilonAttackManager implements attackManager {
         defenderRoll = dieRoll();
 
         //**************************** Hard coded true for troubleshooting/setup
-        boolean winner = true; //determineVictor(); //true if attacker, false if defender
+        boolean winner = determineVictor(); //true if attacker, false if defender
 
         if (winner){
             g.incrementNumberOfSuccessfulAttacks(attackerPos);
@@ -44,19 +42,23 @@ public class epsilonAttackManager implements attackManager {
     }
 
 
+    @Override
     public int getCombAttackStrength(GameImpl g, Unit unit){
         return CombAttackStrength;
     }
 
+    @Override
     public int getCombDefenderStrength(GameImpl g, Unit unit){
         return CombDefendStrength;
     }
 
+    @Override
     public void setCombAttackerStrength(GameImpl g, Unit unit){
         CombAttackStrength = getTerrainFactor(g, attackerPos) *
                 (g.getAttackStrength(unit) + getFriendlySupport(g, attackerPos, g.getUnitOwner(attackerPos)));
     }
 
+    @Override
     public void setCombDefenderStrength(GameImpl g, Unit unit){
         CombDefendStrength = getTerrainFactor(g, defenderPos) *
                 (g.getDefensiveStrength(unit) + getFriendlySupport(g, defenderPos, g.getUnitOwner(defenderPos)));
@@ -76,6 +78,8 @@ public class epsilonAttackManager implements attackManager {
      * @return the support for the unit, +1 for each friendly unit in the 8
      * neighborhood.
      */
+
+
     public static int getFriendlySupport(GameImpl g, Position position, Player player) {
         Iterator<Position> neighborhood = Utility.get8neighborhoodIterator(position);
         Position p;
@@ -100,6 +104,7 @@ public class epsilonAttackManager implements attackManager {
      * the position that the factor should be calculated for
      * @return the terrain factor
      */
+
     public static int getTerrainFactor(Game game, Position position) {
 // cities overrule underlying terrain
         if ( game.getCityAt(position) != null ) { return 3; }
@@ -111,6 +116,7 @@ public class epsilonAttackManager implements attackManager {
         return 1;
     }
 
+    @Override
     public int dieRoll(){
         Random random = new Random();
         // Simulate a six-sided die roll
@@ -120,7 +126,14 @@ public class epsilonAttackManager implements attackManager {
         return dieRoll;
     }
 
-    private boolean determineVictor(){
+    @Override
+    public void setTestDieValues(int attacker, int defender){
+        attackerRoll = attacker;
+        defenderRoll = defender;
+    }
+
+    @Override
+    public boolean determineVictor(){
         if ((CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll)){
             return true;
         }

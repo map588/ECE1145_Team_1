@@ -1,6 +1,8 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.helper_Interfaces.*;
+import hotciv.helpers.attackManagers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,81 +15,71 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class epsilonCiv_tests {
+
+
     private GameImpl game;
-    /**
-     * Fixture for epsilonCiv testing.
-     */
+    private attackManager epAttManager;
+
     @Before
     public void setUp() {
         game = new GameImpl(GameType.epsilonCiv, 2);
+        epAttManager = game.getAttack_manager();
+
     }
-/*
+
     @Test
     public void winnerIsFirstWithThreeSuccessfulAttacks(){
         Position unit1 = new Position(1, 1);
-        Position unit2 = new Position(1, 4);
         game.createUnitAt(unit1, ARCHER, Player.RED);
-        game.createUnitAt(unit2, ARCHER, Player.BLUE);
-        game.attack(unit1, unit2);
+        game.incrementNumberOfSuccessfulAttacks(unit1);
         assertNull(game.getWinner());
-        game.attack(unit1, unit2);
+        game.incrementNumberOfSuccessfulAttacks(unit1);
         assertNull(game.getWinner());
-        game.attack(unit1, unit2);
+        game.incrementNumberOfSuccessfulAttacks(unit1);
         assertThat(game.getWinner(), is(Player.RED));
+
     }
-*/
+//        Position unit1 = new Position(1, 1);
+//        Position unit2 = new Position(1, 4);
+//        game.createUnitAt(unit1, ARCHER, Player.RED);
+//        game.createUnitAt(unit2, ARCHER, Player.BLUE);
+//        game.attack(unit1, unit2);
+//        assertNull(game.getWinner());
+//        game.attack(unit1, unit2);
+//        assertNull(game.getWinner());
+//        game.attack(unit1, unit2);
+//        assertThat(game.getWinner(), is(Player.RED));
+
+
     @Test
-    public void testBattleOutcome() {
-        /*
-        Position unit1 = new Position(1, 1);
-        Position unit2 = new Position(1, 4);
-        game.createUnitAt(unit1, ARCHER, Player.RED);
-        game.createUnitAt(unit2, ARCHER, Player.BLUE);
-        // Create a mock Attacking unit
-        UnitImpl attacker = mock(UnitImpl.class);
-        attacker.setDefensiveStrength(4);
-        when(attacker.getDefensiveStrength()).thenReturn(4); // Attack strength of 4
-        when(attacker.isInCity(game, )).thenReturn(true); // In a city
-        when(attacker.getAdjacentFriendlyUnits()).thenReturn(2); // Two adjacent friendly units
+    public void testAttackOutcome() {
 
-        // Create a mock Attacking unit
-        Attacking defender = mock(Attacking.class);
-        when(defender.getStrength()).thenReturn(3); // Defensive strength of 3
-        when(defender.isInCity()).thenReturn(false); // Not in a city
-        when(defender.getAdjacentFriendlyUnits()).thenReturn(1); // One adjacent friendly unit
+        Position Runit1 = new Position(1, 1);
+        Position Runit2 = new Position(2, 1);
+        Position Bunit1 = new Position(1, 4);
+        Position Bunit2 = new Position(2, 4);
+        Position Bunit3 = new Position(1, 5);
+        game.createUnitAt(Runit1, ARCHER, Player.RED);
+        UnitImpl Red1 = game.getUnitAt(Runit1);
+        Red1.setAttackingStrength(1);
+        game.createUnitAt(Runit2, ARCHER, Player.RED);
+        UnitImpl Red2 = game.getUnitAt(Runit2);
+        Red2.setAttackingStrength(1);
+        game.createUnitAt(Bunit1, ARCHER, Player.BLUE);
+        UnitImpl Blue1 = game.getUnitAt(Bunit1);
+        Blue1.setDefensiveStrength(1);
+        game.createUnitAt(Bunit2, ARCHER, Player.BLUE);
+        UnitImpl Blue2 = game.getUnitAt(Bunit2);
+        Blue2.setDefensiveStrength(1);
+        game.createUnitAt(Bunit3, ARCHER, Player.BLUE);
+        UnitImpl Blue3 = game.getUnitAt(Bunit3);
+        Blue3.setDefensiveStrength(1);
 
-        // Simulate rolling a six-sided die (random integer in the range 1...6)
-        int dieRollAttacker = 4; // Example: Attacker rolls a 4
-        int dieRollDefender = 3; // Example: Defender rolls a 3
-
-        // Calculate the combined attack and defense strengths
-        int combinedAttackStrength = (4 + 1 + 1) * 3; // Combined attack strength for the attacker
-        int combinedDefenseStrength = (3 + 1) * 2; // Combined defense strength for the defender
-
-        // Calculate the battle outcome
-        boolean outcome = combinedAttackStrength * dieRollAttacker > combinedDefenseStrength * dieRollDefender;
-
-        // Verify the battle outcome
-        if (outcome) {
-            // Attacker wins
-            // Perform actions such as removing the defender and moving the attacker
-        } else {
-            // Defender wins
-            // Remove the attacker
-        }
-
-        // Verify that the appropriate methods were called on the mock objects
-        verify(attacker).getStrength();
-        verify(attacker).isInCity();
-        verify(attacker).getAdjacentFriendlyUnits();
-
-        verify(defender).getStrength();
-        verify(defender).isInCity();
-        verify(defender).getAdjacentFriendlyUnits();*/
+        epAttManager.setTestDieValues(4,1);
+        assertThat(game.attack(Runit1, Bunit1), is(true));
+        //assertThat(mockManager.attack);
     }
+
+
+
 }
-
-
-
-
-

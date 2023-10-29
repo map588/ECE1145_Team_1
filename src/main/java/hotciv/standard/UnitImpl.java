@@ -102,6 +102,10 @@ public class UnitImpl implements Unit {
         this.defense = newDefensiveStr;
     }
 
+    public void setAttackingStrength(int newAttackStr) {
+        this.attack = newAttackStr;
+    }
+
     public void setMoveCount(int numOfMoves){
         this.moveCount = numOfMoves;
     }
