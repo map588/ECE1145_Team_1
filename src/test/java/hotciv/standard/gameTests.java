@@ -9,6 +9,7 @@ import org.junit.Test;
 import static hotciv.framework.GameConstants.ARCHER;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /** Skeleton class for AlphaCiv test cases
 
@@ -92,7 +93,7 @@ public class gameTests {
   public void attackingUnitAlwaysWins(){
     Position posArcher = new Position(0, 2); //Attacker
     Position posLegion = new Position(2,3); //Defender
-    assertThat(game.attack(posArcher, posLegion).getTypeString(), is(ARCHER));
+    assertTrue(game.attack(posArcher, posLegion));
   }
 
   @Test

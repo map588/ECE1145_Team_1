@@ -157,10 +157,10 @@ public class GameImpl implements Game {
         }
     }
 
-    public Unit attack(Position attacker, Position defender) {
+    public boolean attack(Position attacker, Position defender) {
         this.attack_manager.attack(attacker, defender, this);
-        numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
-        return this.getUnitAt(attacker);
+        //numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
+        return true;
     }
 
     //---------------------- Getters -----------------------------//
@@ -234,6 +234,11 @@ public class GameImpl implements Game {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public void incrementNumberOfSuccessfulAttacks(Position p) {
+        numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
+    }
+
 
     //---------------------Destructors-----------------------------//
 

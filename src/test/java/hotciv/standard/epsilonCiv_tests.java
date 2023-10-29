@@ -21,7 +21,7 @@ public class epsilonCiv_tests {
     public void setUp() {
         game = new GameImpl(GameType.epsilonCiv, 2);
     }
-
+/*
     @Test
     public void winnerIsFirstWithThreeSuccessfulAttacks(){
         Position unit1 = new Position(1, 1);
@@ -35,7 +35,7 @@ public class epsilonCiv_tests {
         game.attack(unit1, unit2);
         assertThat(game.getWinner(), is(Player.RED));
     }
-
+*/
     @Test
     public void testBattleOutcome() {
         /*

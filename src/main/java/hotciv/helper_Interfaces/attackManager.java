@@ -7,16 +7,17 @@ import hotciv.standard.*;
 public interface attackManager {
 
 
-    default public int attack(Position attacker, Position defender, Game g){
+
+    default public boolean attack(Position attacker, Position defender, GameImpl g){
 
         Unit attackingUnit = g.getUnitAt(attacker);
         Unit defendingUnit = g.getUnitAt(defender);
+        g.incrementNumberOfSuccessfulAttacks(attacker);
 
 
 
 
-
-        return 0;
+        return true;
     }
 
 
