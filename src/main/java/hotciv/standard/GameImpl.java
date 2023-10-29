@@ -53,6 +53,7 @@ public class GameImpl implements Game {
     private int age;
     private GameType version;
     private int[] numberSuccessfulAttacks;
+    private int roundNumber;
 
     private ManagerFactory manager_factory;
 
@@ -238,6 +239,9 @@ public class GameImpl implements Game {
         numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
     }
 
+    public int getRoundNumber(){
+        return roundNumber;
+    }
 
     //---------------------Destructors-----------------------------//
 
@@ -295,6 +299,7 @@ public class GameImpl implements Game {
         for (int i = 0; i < (n * numberOfPlayers); i++) {
             this.endOfTurn();
         }
+        roundNumber = n + 1;
     }
 
     public attackManager getAttack_manager(){
