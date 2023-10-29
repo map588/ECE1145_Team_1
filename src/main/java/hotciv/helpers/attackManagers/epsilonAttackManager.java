@@ -6,7 +6,7 @@ import java.util.Random;
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.attackManager;
 import hotciv.standard.GameImpl;
-import hotciv.standard.utility.Utility;
+import hotciv.utility.Utility;
 
 public class epsilonAttackManager implements attackManager {
 

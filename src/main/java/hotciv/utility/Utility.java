@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package hotciv.standard.utility;
+package hotciv.utility;
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
 import java.util.ArrayList;

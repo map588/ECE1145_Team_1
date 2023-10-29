@@ -2,10 +2,6 @@ package hotciv.helper_Interfaces;
 
 import hotciv.framework.*;
 import hotciv.standard.*;
-import hotciv.standard.utility.Utility;
-
-import java.util.Iterator;
-import java.util.Random;
 
 
 public interface attackManager {

@@ -18,7 +18,7 @@
 package hotciv.standard;
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
-import hotciv.standard.utility.Utility;
+import hotciv.utility.Utility;
 import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
