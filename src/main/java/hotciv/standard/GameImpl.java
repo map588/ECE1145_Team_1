@@ -158,9 +158,8 @@ public class GameImpl implements Game {
     }
 
     public boolean attack(Position attacker, Position defender) {
-        this.attack_manager.attack(attacker, defender, this);
         //numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
-        return true;
+        return this.attack_manager.attack(attacker, defender, this);
     }
 
     //---------------------- Getters -----------------------------//

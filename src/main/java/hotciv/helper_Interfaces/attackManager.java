@@ -40,13 +40,7 @@ public interface attackManager {
     default public void setCombDefenderStrength(GameImpl g, Unit unit){
     }
 
-    default public int dieRoll(){
-        Random random = new Random();
-        // Simulate a six-sided die roll
-        int min = 1;
-        int max = 6;
-        int dieRoll = random.nextInt(max - min + 1) + min;
-        return dieRoll;
+    default public void dieRoll(){
     }
 
     default public void setTestDieValues(int attacker, int defender){
@@ -56,7 +50,11 @@ public interface attackManager {
         return true;
     }
 
+    default public void setTestMode(){
+    }
 
+    default public void setNormalMode(){
+    }
 
 
 }

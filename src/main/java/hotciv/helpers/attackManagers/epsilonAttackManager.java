@@ -14,8 +14,11 @@ public class epsilonAttackManager implements attackManager {
     private int CombDefendStrength;
     private static Position attackerPos;
     private static Position defenderPos;
-    public static int attackerRoll;
-    public static int defenderRoll;
+    public int attackerRoll;
+    public int defenderRoll;
+    public int attackerRollTest;
+    public int defenderRollTest;
+    private boolean isTestCase = false;
 
     @Override
     public boolean attack(Position attacker, Position defender, GameImpl g){
@@ -23,8 +26,10 @@ public class epsilonAttackManager implements attackManager {
         defenderPos = defender;
         Unit attackingUnit = g.getUnitAt(attacker);
         Unit defendingUnit = g.getUnitAt(defender);
-        attackerRoll = dieRoll();
-        defenderRoll = dieRoll();
+        setCombAttackerStrength(g, attackingUnit);
+        setCombDefenderStrength(g, defendingUnit);
+
+        dieRoll();
 
         //**************************** Hard coded true for troubleshooting/setup
         boolean winner = determineVictor(); //true if attacker, false if defender
@@ -117,19 +122,26 @@ public class epsilonAttackManager implements attackManager {
     }
 
     @Override
-    public int dieRoll(){
-        Random random = new Random();
-        // Simulate a six-sided die roll
-        int min = 1;
-        int max = 6;
-        int dieRoll = random.nextInt(max - min + 1) + min;
-        return dieRoll;
+    public void dieRoll(){
+        if (isTestCase){
+            attackerRoll = attackerRollTest;
+            defenderRoll = defenderRollTest;
+        }
+        else {
+            Random random = new Random();
+            // Simulate a six-sided die roll
+            int min = 1;
+            int max = 6;
+            attackerRoll = random.nextInt(max - min + 1) + min;
+            defenderRoll = random.nextInt(max - min + 1) + min;
+
+        }
     }
 
     @Override
     public void setTestDieValues(int attacker, int defender){
-        attackerRoll = attacker;
-        defenderRoll = defender;
+        attackerRollTest = attacker;
+        defenderRollTest = defender;
     }
 
     @Override
@@ -138,6 +150,16 @@ public class epsilonAttackManager implements attackManager {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void setTestMode(){
+        isTestCase = true;
+    }
+
+    @Override
+    public void setNormalMode(){
+        isTestCase = false;
     }
 
 }

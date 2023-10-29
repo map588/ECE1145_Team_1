@@ -16,6 +16,7 @@ public class UnitImpl implements Unit {
     private int defense;
     private int attack;
     private boolean isFortified;
+    private Position position;
 
 
     public UnitImpl(String unitType, Player owner) {
@@ -81,6 +82,8 @@ public class UnitImpl implements Unit {
     public int getAttackingStrength() {
         return this.attack;
     }
+
+
 
 
     //---------------------Setters---------------------//

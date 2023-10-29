@@ -39,16 +39,6 @@ public class epsilonCiv_tests {
         assertThat(game.getWinner(), is(Player.RED));
 
     }
-//        Position unit1 = new Position(1, 1);
-//        Position unit2 = new Position(1, 4);
-//        game.createUnitAt(unit1, ARCHER, Player.RED);
-//        game.createUnitAt(unit2, ARCHER, Player.BLUE);
-//        game.attack(unit1, unit2);
-//        assertNull(game.getWinner());
-//        game.attack(unit1, unit2);
-//        assertNull(game.getWinner());
-//        game.attack(unit1, unit2);
-//        assertThat(game.getWinner(), is(Player.RED));
 
 
     @Test
@@ -59,12 +49,14 @@ public class epsilonCiv_tests {
         Position Bunit1 = new Position(1, 4);
         Position Bunit2 = new Position(2, 4);
         Position Bunit3 = new Position(1, 5);
+        Position Bunit4 = new Position(3, 4);
         game.createUnitAt(Runit1, ARCHER, Player.RED);
         UnitImpl Red1 = game.getUnitAt(Runit1);
         Red1.setAttackingStrength(1);
         game.createUnitAt(Runit2, ARCHER, Player.RED);
         UnitImpl Red2 = game.getUnitAt(Runit2);
         Red2.setAttackingStrength(1);
+        Red2.setDefensiveStrength(6);
         game.createUnitAt(Bunit1, ARCHER, Player.BLUE);
         UnitImpl Blue1 = game.getUnitAt(Bunit1);
         Blue1.setDefensiveStrength(1);
@@ -74,10 +66,22 @@ public class epsilonCiv_tests {
         game.createUnitAt(Bunit3, ARCHER, Player.BLUE);
         UnitImpl Blue3 = game.getUnitAt(Bunit3);
         Blue3.setDefensiveStrength(1);
+        game.createUnitAt(Bunit4, ARCHER, Player.BLUE);
+        UnitImpl Blue4 = game.getUnitAt(Bunit4);
+        Blue4.setDefensiveStrength(1);
+        Blue4.setAttackingStrength(1);
 
         epAttManager.setTestDieValues(4,1);
+        epAttManager.setTestMode();
         assertThat(game.attack(Runit1, Bunit1), is(true));
-        //assertThat(mockManager.attack);
+        assertThat(game.getUnitOwner(Bunit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
+        assertNull(game.getUnitAt(Runit1)); //ensures original place of red unit is clear
+        assertThat(game.attack(Bunit1, Bunit2), is(true)); //red unit attacks blue unit and wins
+        assertThat(game.attack(Bunit4, Runit2), is(false)); //blue attacks red and loses
+        assertNull(game.getUnitAt(Bunit4)); //no unit at this location (died)
+        assertThat(game.getUnitAt(Runit2), is(Red2)); //successful defender stays in location
+        assertThat(game.attack(Bunit2, Bunit3), is(true)); //red attacks blue and wins
+        assertThat(game.getWinner(), is(Player.RED)); //player Red has won after 3 successful attacks
     }
 
 
