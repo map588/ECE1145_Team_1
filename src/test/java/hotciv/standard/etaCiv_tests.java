@@ -47,8 +47,35 @@ public class etaCiv_tests {
         game = new GameImpl(GameType.etaCiv, 2);
     }
 
-    // City Workforce focus tests...
+    // CITY WORKFORCE FOCUS TESTS...
 
-    // City Population Tests...
+    @Test
+    public void productionFocus() {
+        // When a city is set to production focus, the citizens are assigned to the tiles adjacent
+        // to the city that offer the most production. The city must have a citizen assigned to it.
+    }
 
+    @Test
+    public void foodFocus() {
+        // When a city is set to food focus, the citizens are assigned to the tiles adjacent
+        // to the city that offer the most food. The city must have a citizen assigned to it.
+    }
+
+
+    // CITY POPULATION TESTS...
+    @Test
+    public void populationGrowth() {
+        // population size in the city increases by one once the total collected food
+        // in the city exceeds 5 + (city size)*3 .
+    }
+
+    @Test
+    public void maxPopulation() {
+        // population size is capped at 9
+    }
+
+    @Test
+    public void foodResetOnPopulationIncrease() {
+        // food count is reset to 0 when the population increases.
+    }
 }
