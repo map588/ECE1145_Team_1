@@ -10,33 +10,27 @@ import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.roundManagers.*;
 
 public class gammaManagerFactory implements ManagerFactory {
-    
+
+
+    //gamma variant
     public actionManager createActionManager() {
         return new gammaActionManager();
     }
 
-    
+
     public attackManager createAttackManager() {
-        return new gammaAttackManager();
+        return new alphaAttackManager();
     }
-
-    
     public ageManager createAgeManager() {
-        return new gammaAgeManager();
+        return new alphaAgeManager();
     }
-
-    
     public winnerManager createWinnerManager() {
-        return new gammaWinnerManager();
+        return new alphaWinnerManager();
     }
-
-    
     public worldManager createWorldManager() {
-        return new gammaWorld();
+        return new alphaWorld();
     }
-
-    
     public roundManager createRoundManager() {
-        return new gammaRoundManager();
+        return new alphaRoundManager();
     }
 }

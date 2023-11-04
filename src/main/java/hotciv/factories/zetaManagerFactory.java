@@ -12,32 +12,26 @@ import hotciv.helpers.roundManagers.*;
 
 public class zetaManagerFactory implements ManagerFactory {
 
-    public actionManager createActionManager() {
-        return new zetaActionManager();
-    }
-
-
-    public attackManager createAttackManager() {
-        return new zetaAttackManager();
-    }
-
-
-    public ageManager createAgeManager() {
-        return  new zetaAgeManager();
-    }
-
-
+    //zeta variant
     public winnerManager createWinnerManager() {
         return new zetaWinnerManager();
     }
 
 
-    public worldManager createWorldManager() {
-        return new zetaWorld();
+
+    public actionManager createActionManager() {
+        return new alphaActionManager();
     }
-
-
+    public attackManager createAttackManager() {
+        return new alphaAttackManager();
+    }
+    public ageManager createAgeManager() {
+        return  new alphaAgeManager();
+    }
+    public worldManager createWorldManager() {
+        return new alphaWorld();
+    }
     public roundManager createRoundManager() {
-        return  new zetaRoundManager();
+        return  new alphaRoundManager();
     }
 }

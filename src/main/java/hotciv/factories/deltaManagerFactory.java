@@ -10,33 +10,27 @@ import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.roundManagers.*;
 
 public class deltaManagerFactory implements ManagerFactory {
-    
-    public actionManager createActionManager() {
-        return new deltaActionManager();
-    }
 
-    
-    public attackManager createAttackManager() {
-        return new deltaAttackManager();
-    }
-
-    
-    public ageManager createAgeManager() {
-        return new deltaAgeManager();
-    }
-
-    
-    public winnerManager createWinnerManager() {
-        return new deltaWinnerManager();
-    }
-
-    
+    // delta variant
     public worldManager createWorldManager() {
         return new deltaWorld();
     }
 
-    
+
+
+    public actionManager createActionManager() {
+        return new alphaActionManager();
+    }
+    public attackManager createAttackManager() {
+        return new alphaAttackManager();
+    }
+    public ageManager createAgeManager() {
+        return new alphaAgeManager();
+    }
+    public winnerManager createWinnerManager() {
+        return new alphaWinnerManager();
+    }
     public roundManager createRoundManager() {
-        return new deltaRoundManager();
+        return new alphaRoundManager();
     }
 }

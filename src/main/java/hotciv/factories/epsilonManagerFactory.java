@@ -10,33 +10,29 @@ import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.roundManagers.*;
 
 public class epsilonManagerFactory implements ManagerFactory {
-    
-    public actionManager createActionManager() {
-        return new epsilonActionManager();
-    }
 
-    
-    public attackManager createAttackManager() {
-        return new epsilonAttackManager();
-    }
-
-    
-    public ageManager createAgeManager() {
-        return new epsilonAgeManager();
-    }
-
-    
+    //epsilon variant
     public winnerManager createWinnerManager() {
         return new epsilonWinnerManager();
     }
 
-    
-    public worldManager createWorldManager() {
-        return new epsilonWorld();
+    //epsilon variant
+    public attackManager createAttackManager() {
+        return new epsilonAttackManager();
     }
 
-    
+
+
+    public actionManager createActionManager() {
+        return new alphaActionManager();
+    }
+    public ageManager createAgeManager() {
+        return new alphaAgeManager();
+    }
+    public worldManager createWorldManager() {
+        return new alphaWorld();
+    }
     public roundManager createRoundManager() {
-        return new epsilonRoundManager();
+        return new alphaRoundManager();
     }
 }
