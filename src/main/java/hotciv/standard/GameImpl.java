@@ -61,7 +61,7 @@ public class GameImpl implements Game {
     private winnerManager winner_manager;
     private worldManager world_manager;
     private actionManager action_manager;
-    public attackManager attack_manager;
+    public  attackManager attack_manager;
     private roundManager round_manager;
 
 
@@ -120,7 +120,6 @@ public class GameImpl implements Game {
 
 
     public void endOfTurn() {
-        //winnerManager.checkForWinner(this, Players.peekFirst()); TODO: implement checkForWinner
         Players.addLast(Players.removeFirst());  //rotate
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
@@ -128,6 +127,12 @@ public class GameImpl implements Game {
     }
 
     private void endOfRound() {
+        Player possibleWinner = this.getWinner();
+        if(possibleWinner != null){
+            this.Players.clear();
+            this.Players.add(possibleWinner);
+            return;
+        }
         age_manager.incrementAge(this);
         round_manager.incrementRound(this);
     }
@@ -140,22 +145,7 @@ public class GameImpl implements Game {
 
     //Move this variability stuff to a strategy file like actionManager -10/25
     public void performUnitActionAt(Position p) {
-        String unitType = getUnitAt(p).getTypeString();
-
-        switch (unitType) {
-            case SETTLER:
-                action_manager.settlerAction(this, p);
-                break;
-            case ARCHER:
-                action_manager.archerAction(this, p);
-                break;
-            case LEGION:
-                action_manager.legionAction(this, p);
-                break;
-            default:
-                //default do nothing
-                break;
-        }
+        action_manager.unitActionAt(this, p);
     }
 
     public boolean attack(Position attacker, Position defender) {
