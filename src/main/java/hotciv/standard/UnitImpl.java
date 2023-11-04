@@ -29,16 +29,8 @@ public class UnitImpl implements Unit {
         }
     }
 
-    public UnitImpl(String unitType, Player owner, int moveCount, int defense, int attack, boolean terrainTraversal) {
-        if (valid_unit_type(unitType)) {
-            this.unitType = type.valueOf(unitType);
-            this.owner = owner;
-            this.moveCount = moveCount;
-            this.defense = defense;
-            this.attack = attack;
-            this.terrainTraversal = terrainTraversal;
-            this.isFortified = false;
-        }
+    public void increment_round(){
+        this.moveCount = unit_moveCount.get(unitType.toString());
     }
 
     /**

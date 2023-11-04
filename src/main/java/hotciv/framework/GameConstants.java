@@ -47,7 +47,6 @@ public class GameConstants {
   public static final String HILLS     = "hills";
   public static final String MOUNTAINS = "mountain";
 
-  // Valid production balance types
   public static final HashMap<String, Integer> unit_cost = new HashMap<String, Integer>() {{
     put(ARCHER, 10);
     put(LEGION, 15);
@@ -86,4 +85,21 @@ public class GameConstants {
     put(SETTLER, false);
     put(UFO, true);
   }};
+
+  public static final HashMap<String, Integer> terrain_production = new HashMap<String, Integer>() {{
+    put(PLAINS, 0);
+    put(OCEANS, 0);
+    put(FOREST, 3);
+    put(HILLS, 2);
+    put(MOUNTAINS, 1);
+  }};
+
+    public static final HashMap<String, Integer> terrain_food = new HashMap<String, Integer>() {{
+        put(PLAINS, 3);
+        put(OCEANS, 1);
+        put(FOREST, 0);
+        put(HILLS, 0);
+        put(MOUNTAINS, 0);
+    }};
+
 }

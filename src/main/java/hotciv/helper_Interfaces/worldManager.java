@@ -28,9 +28,9 @@ public interface worldManager {
         Position posArcher = new Position(0,2);
         Position posSettler = new Position(3, 4);
         Position posLegion = new Position(2,3);
-        world.setUnitAt(posArcher,  ARCHER, Player.RED, g.unit_factory);
-        world.setUnitAt(posSettler, SETTLER, Player.RED, g.unit_factory);
-        world.setUnitAt(posLegion,  LEGION, Player.BLUE, g.unit_factory);
+        world.makeUnitAt(posArcher,  ARCHER, Player.RED, g.unit_factory);
+        world.makeUnitAt(posSettler, SETTLER, Player.RED, g.unit_factory);
+        world.makeUnitAt(posLegion,  LEGION, Player.BLUE, g.unit_factory);
 
         return world;
     }

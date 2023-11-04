@@ -158,7 +158,6 @@ public class GameImpl implements Game {
     }
 
     public boolean attack(Position attacker, Position defender) {
-        //numberSuccessfulAttacks[getUnitOwner(attacker).ordinal()]++; //increments attackSuccessful array for each winning attack
         return this.attack_manager.attack(attacker, defender, this);
     }
 
@@ -195,6 +194,10 @@ public class GameImpl implements Game {
         return this.getUnitAt(p).getOwner();
     }
 
+    public int getRoundNumber(){
+        return roundNumber;
+    }
+
     public int[] getNumberOfSuccessfulAttacks() {
         return this.numberSuccessfulAttacks;
     }
@@ -205,6 +208,10 @@ public class GameImpl implements Game {
 
     public int getAttackStrength(Unit unit) {
         return unit.getAttackingStrength();
+    }
+
+    public int getWorldSize() {
+        return this.world.size;
     }
 
     public GameType getVersion() {
@@ -275,9 +282,7 @@ public class GameImpl implements Game {
         numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
     }
 
-    public int getRoundNumber(){
-        return roundNumber;
-    }
+
 
     //---------------------Destructors-----------------------------//
 

@@ -1,4 +1,6 @@
 package hotciv.helpers.attackManagers;
 
-public class thetaAttackManager {
+import hotciv.helper_Interfaces.attackManager;
+
+public class thetaAttackManager implements attackManager{
 }
