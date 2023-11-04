@@ -86,6 +86,7 @@ public class GameConstants {
     put(UFO, true);
   }};
 
+  //City will need to be accounted for differently, it has 1 food + 1 production per turn
   public static final HashMap<String, Integer> terrain_production = new HashMap<String, Integer>() {{
     put(PLAINS, 0);
     put(OCEANS, 0);

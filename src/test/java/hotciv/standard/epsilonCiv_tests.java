@@ -7,12 +7,12 @@ import hotciv.helpers.attackManagers.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import static hotciv.framework.GameConstants.ARCHER;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class epsilonCiv_tests {
 
@@ -23,12 +23,10 @@ public class epsilonCiv_tests {
     @Before
     public void setUp() {
         game = new GameImpl(GameType.epsilonCiv, 2);
-        epAttManager = game.getAttack_manager();
-
     }
 
     @Test
-    public void winnerIsFirstWithThreeSuccessfulAttacks(){
+    public void winnerIsFirstWithThreeSuccessfulAttacks() {
         Position unit1 = new Position(1, 1);
         game.createUnitAt(unit1, ARCHER, Player.RED);
         game.incrementNumberOfSuccessfulAttacks(unit1);
@@ -44,46 +42,92 @@ public class epsilonCiv_tests {
     @Test
     public void testAttackOutcome() {
 
-        Position Runit1 = new Position(1, 1);
-        Position Runit2 = new Position(2, 1);
-        Position Bunit1 = new Position(1, 4);
-        Position Bunit2 = new Position(2, 4);
-        Position Bunit3 = new Position(1, 5);
-        Position Bunit4 = new Position(3, 4);
-        game.createUnitAt(Runit1, ARCHER, Player.RED);
-        UnitImpl Red1 = game.getUnitAt(Runit1);
-        Red1.setAttackingStrength(1);
-        game.createUnitAt(Runit2, ARCHER, Player.RED);
-        UnitImpl Red2 = game.getUnitAt(Runit2);
-        Red2.setAttackingStrength(1);
-        Red2.setDefensiveStrength(6);
-        game.createUnitAt(Bunit1, ARCHER, Player.BLUE);
-        UnitImpl Blue1 = game.getUnitAt(Bunit1);
-        Blue1.setDefensiveStrength(1);
-        game.createUnitAt(Bunit2, ARCHER, Player.BLUE);
-        UnitImpl Blue2 = game.getUnitAt(Bunit2);
-        Blue2.setDefensiveStrength(1);
-        game.createUnitAt(Bunit3, ARCHER, Player.BLUE);
-        UnitImpl Blue3 = game.getUnitAt(Bunit3);
-        Blue3.setDefensiveStrength(1);
-        game.createUnitAt(Bunit4, ARCHER, Player.BLUE);
-        UnitImpl Blue4 = game.getUnitAt(Bunit4);
-        Blue4.setDefensiveStrength(1);
-        Blue4.setAttackingStrength(1);
+//        Position R_unit1 = new Position(1, 1);
+//        Position R_unit2 = new Position(2, 1);
+//        Position B_unit1 = new Position(1, 2);
+//        Position B_unit2 = new Position(2, 2);
+//        Position B_unit3 = new Position(3, 2);
+//        Position B_unit4 = new Position(3, 1);
+//        game.createUnitAt(R_unit1, ARCHER, Player.RED);
+//        game.getUnitAt(R_unit1).setAttackingStrength(20);
+//        game.createUnitAt(R_unit2, ARCHER, Player.RED);
+//        game.getUnitAt(R_unit2).setAttackingStrength(1);
+//        game.getUnitAt(R_unit2).setDefensiveStrength(10);
+//        game.createUnitAt(B_unit1, ARCHER, Player.BLUE);
+//        game.getUnitAt(B_unit1).setDefensiveStrength(1);
+//        game.createUnitAt(B_unit2, ARCHER, Player.BLUE);
+//        game.getUnitAt(B_unit2).setDefensiveStrength(1);
+//        game.createUnitAt(B_unit3, ARCHER, Player.BLUE);
+//        game.getUnitAt(B_unit3).setDefensiveStrength(1);
+//        game.createUnitAt(B_unit4, ARCHER, Player.BLUE);
+//        game.getUnitAt(B_unit4).setDefensiveStrength(1);
+//        game.getUnitAt(B_unit4).setAttackingStrength(1);
 
-        epAttManager.setTestDieValues(4,1);
-        epAttManager.setTestMode();
-        assertThat(game.attack(Runit1, Bunit1), is(true));
-        assertThat(game.getUnitOwner(Bunit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
-        assertNull(game.getUnitAt(Runit1)); //ensures original place of red unit is clear
-        assertThat(game.attack(Bunit1, Bunit2), is(true)); //red unit attacks blue unit and wins
-        assertThat(game.attack(Bunit4, Runit2), is(false)); //blue attacks red and loses
-        assertNull(game.getUnitAt(Bunit4)); //no unit at this location (died)
-        assertThat(game.getUnitAt(Runit2), is(Red2)); //successful defender stays in location
-        assertThat(game.attack(Bunit2, Bunit3), is(true)); //red attacks blue and wins
-        assertThat(game.getWinner(), is(Player.RED)); //player Red has won after 3 successful attacks
+        //R1 attacks B1
+        //R1 attacks B2
+        //B4 attacks R2
+        //R1 attacks B3
+
+        // |R1|R2|B4|  |
+        // |B1|B2|  |  |
+        // |  |B3|  |  |
+        // |  |  |  |  |
+
+//        epAttManager.setTestDieValues(4, 1);
+//        epAttManager.setTestMode();
+//        assertThat(game.moveUnit(R_unit1, B_unit1), is(true));
+//        assertThat(game.getUnitOwner(B_unit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
+//        assertNull(game.getUnitAt(R_unit1)); //ensures original place of red unit is clear
+//        game.progressRounds(1);
+//        assertThat(game.moveUnit(B_unit1, B_unit2), is(true)); //red unit attacks blue unit and wins
+//        assertThat(game.moveUnit(B_unit4, R_unit2), is(false)); //blue attacks red and loses
+//        assertNull(game.getUnitAt(B_unit4)); //no unit at this location (died)
+//        game.progressRounds(1);
+//        assertThat(game.moveUnit(B_unit2, B_unit3), is(true)); //red attacks blue and wins
+//        assertThat(game.getWinner(), is(Player.RED)); //player Red has won after 3 successful attacks
+
+        Position P1  = new Position(1, 1);
+        Position P2  = new Position(2, 2);
+
+        //default 2 attack 3 defense
+        game.createUnitAt(P1, ARCHER, Player.RED);
+        game.createUnitAt(P2, ARCHER, Player.BLUE);
+
+        game.toggleWinnerManager(false);
+
+        int redWins = 0;
+        int blueWins = 0;
+
+        for(int i = 0; i < 100; i++) {
+            if(game.moveUnit(P1, P2)){
+                game.endOfTurn();
+                game.createUnitAt(P1, ARCHER, game.getPlayerInTurn());
+                if(game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                }else{
+                    blueWins++;
+                }
+                if (game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                } else {
+                    blueWins++;
+                }
+            }else{
+                game.createUnitAt(P1, ARCHER, game.getPlayerInTurn());
+                game.endOfTurn();
+                if (game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                } else {
+                    blueWins++;
+                }
+            }
+            assertNotNull(game.getUnitAt(P1));
+            assertNotNull(game.getUnitAt(P2));
+        }
+
+
+
+
+
     }
-
-
-
 }

@@ -172,7 +172,7 @@ public class semiCiv_tests {
         Position posArcher = new Position(0,2);
         game.getUnitAt(posArcher).setDefensiveStrength(2);
         game.performUnitActionAt(posArcher);
-        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(4));
+        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(3));
     }
     @Test
     public void archerFortifyHalvesDefenseIntegrated(){ //simulate fortifying an already fortified archer

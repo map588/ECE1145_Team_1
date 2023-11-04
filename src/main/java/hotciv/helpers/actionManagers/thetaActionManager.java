@@ -22,7 +22,7 @@ public class thetaActionManager implements actionManager{
             }
             //Else if there is not a city, but the tile is a FOREST, change to PLAIN
             else if(Objects.equals(g.getTileAt(p).getTypeString(), FOREST)){
-                g.getTileAt(p).setTerrain(PLAINS);
+                g.changeTileType(p, PLAINS);
             }
          }
      }

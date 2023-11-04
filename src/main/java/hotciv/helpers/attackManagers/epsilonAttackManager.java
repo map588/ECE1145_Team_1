@@ -1,6 +1,7 @@
 package hotciv.helpers.attackManagers;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 import hotciv.framework.*;
@@ -10,10 +11,12 @@ import hotciv.utility.Utility;
 
 public class epsilonAttackManager implements attackManager {
 
+    static Random random = new Random();
+
     private int CombAttackStrength;
     private int CombDefendStrength;
-    private static Position attackerPos;
-    private static Position defenderPos;
+    private  Position attackerPos;
+    private  Position defenderPos;
     public int attackerRoll;
     public int defenderRoll;
     public int attackerRollTest;
@@ -29,16 +32,16 @@ public class epsilonAttackManager implements attackManager {
         setCombAttackerStrength(g, attackingUnit);
         setCombDefenderStrength(g, defendingUnit);
 
-        dieRoll();
 
-        //**************************** Hard coded true for troubleshooting/setup
-        boolean winner = determineVictor(); //true if attacker, false if defender
+        //nexInt(6) + 1 = rand(0, 5) + 1 = rand(1, 6)
+        attackerRoll = random.nextInt(6) + 1;
+        defenderRoll = random.nextInt(6) + 1;
 
-        if (winner){
+        boolean battle_won = (CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll);
+
+        if (battle_won){
             g.incrementNumberOfSuccessfulAttacks(attackerPos);
             g.removeUnitAt(defenderPos);
-            //g.moveUnit(attackerPos, defenderPos); all battles are initiated by moving the attacker to the defender,
-            // This responsibility is now moved to the moveUnit() method in GameImpl
             return true;
         }
         else {
@@ -75,7 +78,7 @@ public class epsilonAttackManager implements attackManager {
      * calculate the additional support a unit at position p owned by a given
      * player gets from friendly units on the given game.
      *
-     * @param game
+     * @param g
      * the game to calculate on
      * @param position
      * the position of the unit whose support is wanted
@@ -86,7 +89,7 @@ public class epsilonAttackManager implements attackManager {
      */
 
 
-    public static int getFriendlySupport(GameImpl g, Position position, Player player) {
+    public int getFriendlySupport(GameImpl g, Position position, Player player) {
         Iterator<Position> neighborhood = Utility.get8neighborhoodIterator(position);
         Position p;
         int support = 0;
@@ -111,43 +114,22 @@ public class epsilonAttackManager implements attackManager {
      * @return the terrain factor
      */
 
-    public static int getTerrainFactor(Game game, Position position) {
-// cities overrule underlying terrain
+    public int getTerrainFactor(Game game, Position position) {
+        // cities overrule underlying terrain
         if ( game.getCityAt(position) != null ) { return 3; }
         Tile t = game.getTileAt(position);
-        if ( t.getTypeString() == GameConstants.FOREST ||
-                t.getTypeString() == GameConstants.HILLS ) {
+        if (Objects.equals(t.getTypeString(), GameConstants.FOREST) ||
+                Objects.equals(t.getTypeString(), GameConstants.HILLS)) {
             return 2;
         }
         return 1;
     }
 
-    @Override
-    public void dieRoll(){
-        if (isTestCase){
-            attackerRoll = attackerRollTest;
-            defenderRoll = defenderRollTest;
-        }
-        else {
-            Random random = new Random();
-            // Simulate a six-sided die roll
-
-            //nexInt(6) + 1 = rand(0, 5) + 1 = rand(1, 6)
-            attackerRoll = random.nextInt(6) + 1;
-            defenderRoll = random.nextInt(6) + 1;
-
-        }
-    }
 
     @Override
     public void setTestDieValues(int attacker, int defender){
         attackerRollTest = attacker;
         defenderRollTest = defender;
-    }
-
-    @Override
-    public boolean determineVictor(){
-        return (CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll);
     }
 
     @Override

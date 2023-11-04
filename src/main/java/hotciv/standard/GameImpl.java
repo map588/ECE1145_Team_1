@@ -6,6 +6,7 @@ import hotciv.manager_factories.*;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import static hotciv.framework.GameConstants.*;
 
@@ -47,6 +48,7 @@ public class GameImpl implements Game {
     private GameType version;
     private int[] numberSuccessfulAttacks;
     private int roundNumber;
+    private Player winner;
 
     private ManagerFactory manager_factory;
 
@@ -65,7 +67,7 @@ public class GameImpl implements Game {
 
         this.numberOfPlayers = numPlayers;
         this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
-
+        for(int i = 0; i < numPlayers; i++){this.numberSuccessfulAttacks[i] = 0;}
         this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
         this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
         this.firstPlayer = this.Players.peekFirst();
@@ -126,9 +128,16 @@ public class GameImpl implements Game {
     private void endOfRound() {
         Player possibleWinner = this.getWinner();
         if(possibleWinner != null){
-            this.Players.clear();
-            this.Players.add(possibleWinner);
-            return;
+            this.winner = possibleWinner;
+            System.out.println("Game Over, "+ this.winner.toString() +" won at round: " + this.roundNumber);
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Press Enter to continue...");
+
+            scanner.nextLine(); // Pause until enter is pressed
+
+            System.out.println("Continuing execution.");
+            scanner.close();
+            System.exit(0);
         }
         age_manager.incrementAge(this);
         round_manager.incrementRound(this);
@@ -282,8 +291,13 @@ public class GameImpl implements Game {
         numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
     }
 
+    public void changeCityOwner(Position p, Player player) {
+        this.getCityAt(p).setOwner(player);
+    }
 
-
+    public void changeTileType(Position p, String terrain) {
+        this.world.setTileAt(p, terrain);
+    }
     //---------------------Destructors-----------------------------//
 
     public void removeUnitAt(Position position) {
@@ -349,7 +363,7 @@ public class GameImpl implements Game {
         for (int i = 0; i < (n * numberOfPlayers); i++) {
             this.endOfTurn();
         }
-        roundNumber = n + 1;
+        roundNumber += n;
     }
 
     public attackManager getAttack_manager(){
@@ -359,5 +373,19 @@ public class GameImpl implements Game {
 
     public void forceUnitTo(Position from, Position to){
         this.world.moveUnitTo(from, to);
+    }
+
+    public void toggleWinnerManager(boolean enable){
+        if(!enable){
+        this.winner_manager = new winnerManager() {
+            @Override
+            public Player getWinner(GameImpl game) {
+                return null;
+            }
+        };
+    }
+        else{
+            this.winner_manager = manager_factory.createWinnerManager();
+        }
     }
 }

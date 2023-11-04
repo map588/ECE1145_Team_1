@@ -83,10 +83,6 @@ public class World {
         cities[p.getColumn()][p.getRow()] = null;
     }
 
-    public void removeTileAt(Position p) {
-        tiles[p.getColumn()][p.getRow()] = null;
-    }
-
 
 
     public void moveUnitTo(Position from, Position to) {

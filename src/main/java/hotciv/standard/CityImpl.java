@@ -98,13 +98,9 @@ public class CityImpl implements City {
 
     /**
      * @param p player to set as owner
-     * @param game game to check if player is in
      */
-    public void setOwner(Player p, GameImpl game) {
-        if(game.isPlayerInGame(p))
+    public void setOwner(Player p) {
             this.owner = p;
-        else
-            throw new IllegalArgumentException("Player not in game");
     }
 
 
