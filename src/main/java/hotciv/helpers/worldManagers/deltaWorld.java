@@ -3,6 +3,8 @@ package hotciv.helpers.worldManagers;
 import hotciv.framework.Position;
 import hotciv.helper_Interfaces.worldManager;
 import static hotciv.framework.GameConstants.*;
+
+import hotciv.standard.GameImpl;
 import hotciv.standard.World;
 import hotciv.framework.Player;
 
@@ -11,7 +13,7 @@ public class deltaWorld implements worldManager{
 
     //We will pass in only the world object, unless a later implementation requires more information.
     @Override
-    public World createWorld() {
+    public World createWorld(GameImpl g) {
         World world = new World();
         String type;
         String[] layout =

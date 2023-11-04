@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
-import static hotciv.framework.GameConstants.ARCHER;
+import static hotciv.framework.GameConstants.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;

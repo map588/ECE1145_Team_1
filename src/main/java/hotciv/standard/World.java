@@ -65,7 +65,7 @@ public class World {
         tiles[p.getColumn()][p.getRow()].setTerrain(terrain);
     }
 
-    public void setUnitAt(Position p, String unitType, Player owner, UnitFactory unitFactory) {
+    public void makeUnitAt(Position p, String unitType, Player owner, UnitFactory unitFactory) {
         units[p.getColumn()][p.getRow()] = unitFactory.createUnit(unitType, owner);
     }
 
@@ -90,6 +90,15 @@ public class World {
 
 
     public void moveUnitTo(Position from, Position to) {
+        if(to.getColumn() < 0 || to.getColumn() >= size || to.getRow() < 0 || to.getRow() >= size) {
+            throw new IllegalArgumentException("Position out of bounds: " + to);
+        }
+        if(from.getColumn() < 0 || from.getColumn() >= size || from.getRow() < 0 || from.getRow() >= size) {
+            throw new IllegalArgumentException("Position out of bounds: " + from);
+        }
+        if(units[from.getColumn()][from.getRow()] == null) {
+            throw new IllegalArgumentException("No unit at position: " + from);
+        }
         units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
         units[from.getColumn()][from.getRow()] = null;
     }

@@ -107,7 +107,7 @@ public class gameTests {
   public void archerDoesNothing(){
     Position posArcher = new Position(0,2);
     game.performUnitActionAt(posArcher);
-    assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(0));
+    assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(3));
     assertThat(game.getUnitAt(posArcher).getMoveCount(), is(1));
   }
 

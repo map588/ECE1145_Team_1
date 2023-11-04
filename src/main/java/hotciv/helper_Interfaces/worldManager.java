@@ -3,12 +3,13 @@ package hotciv.helper_Interfaces;
 import hotciv.framework.*;
 import static hotciv.framework.GameConstants.*;
 import hotciv.framework.Position;
+import hotciv.standard.GameImpl;
 import hotciv.standard.World;
 import hotciv.framework.Tile;
 
 public interface worldManager {
 
-    default World createWorld() {
+    default World createWorld(GameImpl g) {
         World world = new World();
 
         Position ocean = new Position(1, 0);
@@ -27,9 +28,9 @@ public interface worldManager {
         Position posArcher = new Position(0,2);
         Position posSettler = new Position(3, 4);
         Position posLegion = new Position(2,3);
-        world.setUnitAt(posArcher,  ARCHER, Player.RED);
-        world.setUnitAt(posSettler, SETTLER, Player.RED);
-        world.setUnitAt(posLegion,  LEGION, Player.BLUE);
+        world.setUnitAt(posArcher,  ARCHER, Player.RED, g.unit_factory);
+        world.setUnitAt(posSettler, SETTLER, Player.RED, g.unit_factory);
+        world.setUnitAt(posLegion,  LEGION, Player.BLUE, g.unit_factory);
 
         return world;
     }

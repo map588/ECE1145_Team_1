@@ -37,7 +37,8 @@ public class epsilonAttackManager implements attackManager {
         if (winner){
             g.incrementNumberOfSuccessfulAttacks(attackerPos);
             g.removeUnitAt(defenderPos);
-            g.moveUnit(attackerPos, defenderPos);
+            //g.moveUnit(attackerPos, defenderPos); all battles are initiated by moving the attacker to the defender,
+            // This responsibility is now moved to the moveUnit() method in GameImpl
             return true;
         }
         else {
@@ -130,10 +131,10 @@ public class epsilonAttackManager implements attackManager {
         else {
             Random random = new Random();
             // Simulate a six-sided die roll
-            int min = 1;
-            int max = 6;
-            attackerRoll = random.nextInt(max - min + 1) + min;
-            defenderRoll = random.nextInt(max - min + 1) + min;
+
+            //nexInt(6) + 1 = rand(0, 5) + 1 = rand(1, 6)
+            attackerRoll = random.nextInt(6) + 1;
+            defenderRoll = random.nextInt(6) + 1;
 
         }
     }
@@ -146,10 +147,7 @@ public class epsilonAttackManager implements attackManager {
 
     @Override
     public boolean determineVictor(){
-        if ((CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll)){
-            return true;
-        }
-        return false;
+        return (CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll);
     }
 
     @Override

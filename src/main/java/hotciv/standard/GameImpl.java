@@ -112,7 +112,7 @@ public class GameImpl implements Game {
 
 
         this.age = this.age_manager.START_AGE;
-        this.world = world_manager.createWorld();
+        this.world = world_manager.createWorld(this);
     }
 
 
@@ -218,9 +218,16 @@ public class GameImpl implements Game {
     }
 
     public void createUnitAt(Position p, String unit, Player owner) {
-        this.world.setUnitAt(p, unit, owner, this.unit_factory);
+        this.world.makeUnitAt(p, unit, owner, this.unit_factory);
     }
 
+    /**
+     * Moves a unit from one position to another, checks if the position has an enemy
+     * and attacks if it does.
+     * @param from the position that the unit has now
+     * @param to   the position the unit should move to
+     * @return
+     */
     public boolean moveUnit(Position from, Position to) {
         UnitImpl unit_toMove = this.getUnitAt(from);
         UnitImpl unit_onTile = this.getUnitAt(to);
@@ -235,15 +242,25 @@ public class GameImpl implements Game {
 
 
         if (unit_exists            &&
-            destination_is_empty   &&
             is_within_one_tile     &&
             unit_belongs_to_player &&
             isTraversable          &&
             isWithinBounds) {
-            //decrementMoveCountreturns true if moveCount is > 0 and removes 1 from moveCount
+            //If the tile is occuplied by a friendly unit, return false
+            if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
+
             if (unit_toMove.decrementMoveCount()) {
-                this.world.moveUnitTo(from, to);
-                return true;
+
+                if(destination_is_empty) {
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+                else if(this.attack(from, to)){
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+
+                return false;
             }
         }
 
@@ -332,5 +349,10 @@ public class GameImpl implements Game {
 
     public attackManager getAttack_manager(){
         return this.attack_manager;
+    }
+
+
+    public void forceUnitTo(Position from, Position to){
+        this.world.moveUnitTo(from, to);
     }
 }
