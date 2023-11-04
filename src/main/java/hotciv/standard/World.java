@@ -10,7 +10,7 @@ public class World {
     private CityImpl[][] cities;
     private UnitImpl[][] units;
 
-    private final int size;
+    final int size;
 
     public World() {
 
@@ -65,8 +65,8 @@ public class World {
         tiles[p.getColumn()][p.getRow()].setTerrain(terrain);
     }
 
-    public void setUnitAt(Position p, String unitType, Player owner) {
-        units[p.getColumn()][p.getRow()] = new UnitImpl(unitType, owner);
+    public void setUnitAt(Position p, String unitType, Player owner, UnitFactory unitFactory) {
+        units[p.getColumn()][p.getRow()] = unitFactory.createUnit(unitType, owner);
     }
 
     public void setCityAt(Position p, Player owner) {

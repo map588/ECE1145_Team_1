@@ -21,7 +21,7 @@ public interface actionManager {
                 this.legionAction(g, p);
                 break;
             default:
-                //default do nothing
+                this.customActions(g, p, unitType);
                 break;
         }
     }
@@ -31,5 +31,7 @@ public interface actionManager {
     default public void archerAction(GameImpl g, Position p){}
 
     default public void legionAction(GameImpl g, Position p){}
+
+    default public void customActions(GameImpl g, Position p, String unitType){}
 
 }

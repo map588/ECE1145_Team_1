@@ -2,15 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
-import hotciv.helpers.ageManagers.*;
-import hotciv.helpers.actionManagers.*;
-import hotciv.helpers.winnerManagers.*;
-import hotciv.helpers.worldManagers.*;
-import hotciv.helpers.attackManagers.*;
-import hotciv.helpers.roundManagers.*;
-import hotciv.factories.*;
+import hotciv.manager_factories.*;
 
-import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 
@@ -56,6 +49,9 @@ public class GameImpl implements Game {
     private int roundNumber;
 
     private ManagerFactory manager_factory;
+
+    //I am going to assign these in the manager factory
+    public UnitFactory unit_factory;
 
     private ageManager age_manager;
     private winnerManager winner_manager;
@@ -112,6 +108,7 @@ public class GameImpl implements Game {
         this.action_manager = manager_factory.createActionManager();
         this.attack_manager = manager_factory.createAttackManager();
         this.round_manager = manager_factory.createRoundManager();
+        this.unit_factory = manager_factory.createUnitFactory();
 
 
         this.age = this.age_manager.START_AGE;
@@ -137,10 +134,22 @@ public class GameImpl implements Game {
         round_manager.incrementRound(this);
     }
 
+    /**
+     *
+     * @param p       the position of the city whose focus
+     *                should be changed.
+     * @param balance a string defining the focus of the work
+     *                force in a city. Valid values are at least
+     *                GameConstants.productionFocus and
+     *                GameConstants.foodFocus.
+     *
+     */
     public void changeWorkForceFocusInCityAt(Position p, String balance) {
+        this.getCityAt(p).changeWorkForceFocusInCity(balance);
     }
 
     public void changeProductionInCityAt(Position p, String unitType) {
+        this.getCityAt(p).changeProductionInCity(unitType);
     }
 
     //Move this variability stuff to a strategy file like actionManager -10/25
@@ -166,7 +175,7 @@ public class GameImpl implements Game {
         return this.world.getUnitAt(p);
     }
 
-    public City getCityAt(Position p) {
+    public CityImpl getCityAt(Position p) {
         return this.world.getCityAt(p);
     }
 
@@ -203,21 +212,41 @@ public class GameImpl implements Game {
     }
 
     //---------------------Setters--------------------------------//
-    //This will be changed later to account for the conditions needed to buy and place units -MAP
     public boolean setCityAt(Position p, Player owner) {
         this.world.setCityAt(p, owner);
         return true;
     }
 
     public void createUnitAt(Position p, String unit, Player owner) {
-        this.world.setUnitAt(p, unit, owner);
+        this.world.setUnitAt(p, unit, owner, this.unit_factory);
     }
 
     public boolean moveUnit(Position from, Position to) {
-        if (this.getUnitAt(from) != null && this.getUnitAt(to) == null && this.getUnitAt(from).getOwner() == this.getPlayerInTurn()) {
-            this.world.moveUnitTo(from, to);
-            return true;
+        UnitImpl unit_toMove = this.getUnitAt(from);
+        UnitImpl unit_onTile = this.getUnitAt(to);
+        String terrain = this.getTileAt(to).getTypeString();
+
+        boolean unit_exists = unit_toMove != null;
+        boolean destination_is_empty = unit_onTile == null;
+        boolean is_within_one_tile = isWithinOneTile(from, to);
+        boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
+        boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
+        boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
+
+
+        if (unit_exists            &&
+            destination_is_empty   &&
+            is_within_one_tile     &&
+            unit_belongs_to_player &&
+            isTraversable          &&
+            isWithinBounds) {
+            //decrementMoveCountreturns true if moveCount is > 0 and removes 1 from moveCount
+            if (unit_toMove.decrementMoveCount()) {
+                this.world.moveUnitTo(from, to);
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -238,6 +267,9 @@ public class GameImpl implements Game {
     public void removeUnitAt(Position position) {
         this.world.removeUnitAt(position);
     }
+    public void removeCityAt(Position position) {
+        this.world.removeCityAt(position);
+    }
 
     //----------------- Queries ---------------------//
 
@@ -248,6 +280,12 @@ public class GameImpl implements Game {
     public boolean isUnitAt(Position p) {
         return this.getUnitAt(p) != null;
     }
+
+    public boolean isWithinOneTile(Position from, Position to) {
+        return Math.abs(from.getColumn() - to.getColumn()) <= 1 &&
+                Math.abs(from.getRow() - to.getRow()) <= 1;
+    }
+
 
     public Position findProductionPosition(Position p) {
 

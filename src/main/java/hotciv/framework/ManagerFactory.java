@@ -9,4 +9,5 @@ public interface ManagerFactory {
     public winnerManager createWinnerManager();
     public worldManager  createWorldManager();
     public roundManager  createRoundManager();
+    public UnitFactory   createUnitFactory();
 }

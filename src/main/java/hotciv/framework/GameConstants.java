@@ -38,7 +38,7 @@ public class GameConstants {
   public static final String ARCHER    = "archer";
   public static final String LEGION    = "legion";
   public static final String SETTLER   = "settler";
-  public static final String UFO   = "ufo";
+  public static final String UFO       = "ufo";
 
   // Valid terrain types
   public static final String PLAINS    = "plains";
@@ -46,11 +46,44 @@ public class GameConstants {
   public static final String FOREST    = "forest";
   public static final String HILLS     = "hills";
   public static final String MOUNTAINS = "mountain";
+
   // Valid production balance types
   public static final HashMap<String, Integer> unit_cost = new HashMap<String, Integer>() {{
     put(ARCHER, 10);
     put(LEGION, 15);
     put(SETTLER, 30);
     put(UFO, 60);
+  }};
+
+    //Attack strength
+  public static final HashMap<String, Integer> unit_attack = new HashMap<String, Integer>() {{
+    put(ARCHER, 2);
+    put(LEGION, 4);
+    put(SETTLER, 0);
+    put(UFO, 1);
+  }};
+
+  //Defense strength
+  public static final HashMap<String, Integer> unit_defense = new HashMap<String, Integer>() {{
+    put(ARCHER, 3);
+    put(LEGION, 2);
+    put(SETTLER, 3);
+    put(UFO, 8);
+  }};
+
+  //Move count
+  public static final HashMap<String, Integer> unit_moveCount = new HashMap<String, Integer>() {{
+    put(ARCHER, 1);
+    put(LEGION, 1);
+    put(SETTLER, 1);
+    put(UFO, 2);
+  }};
+
+  //Terrain
+  public static final HashMap<String, Boolean> unit_terrainTraversal = new HashMap<String, Boolean>() {{
+    put(ARCHER, false);
+    put(LEGION, false);
+    put(SETTLER, false);
+    put(UFO, true);
   }};
 }

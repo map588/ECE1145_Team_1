@@ -1,13 +1,12 @@
 package hotciv.standard;
 import hotciv.framework.*;
-
-import java.util.regex.Matcher;
+import static hotciv.framework.GameConstants.*;
 
 
 public class UnitImpl implements Unit {
 
     private enum type {
-        archer, legion, settler
+        archer, legion, settler, ufo
     }
 
     private type unitType;
@@ -16,16 +15,28 @@ public class UnitImpl implements Unit {
     private int defense;
     private int attack;
     private boolean isFortified;
-    private Position position;
-
+    private boolean terrainTraversal;
 
     public UnitImpl(String unitType, Player owner) {
         if (valid_unit_type(unitType)) {
             this.unitType = type.valueOf(unitType);
             this.owner = owner;
-            this.moveCount = 1;
-            this.defense = 0;
-            this.attack = 0;
+            this.moveCount = unit_moveCount.get(unitType);
+            this.defense = unit_defense.get(unitType);
+            this.attack = unit_attack.get(unitType);
+            this.terrainTraversal = unit_terrainTraversal.get(unitType);
+            this.isFortified = false;
+        }
+    }
+
+    public UnitImpl(String unitType, Player owner, int moveCount, int defense, int attack, boolean terrainTraversal) {
+        if (valid_unit_type(unitType)) {
+            this.unitType = type.valueOf(unitType);
+            this.owner = owner;
+            this.moveCount = moveCount;
+            this.defense = defense;
+            this.attack = attack;
+            this.terrainTraversal = terrainTraversal;
             this.isFortified = false;
         }
     }
@@ -84,9 +95,11 @@ public class UnitImpl implements Unit {
     }
 
 
+    public boolean getTerrainTraversal(){
+        return this.terrainTraversal;
+    }
 
 
-    //---------------------Setters---------------------//
     public void fortify(){
         if(this.unitType == type.archer){
             if(isFortified){
@@ -101,6 +114,22 @@ public class UnitImpl implements Unit {
         }
     }
 
+    /**
+     * Decrements the move count of the unit
+     * @return true if the unit has moves left, false if not
+     */
+    public boolean decrementMoveCount() {
+        if(moveCount <= 0){
+            return false;
+        }
+
+        this.moveCount--;
+        return true;
+    }
+
+    //---------------------Setters---------------------//
+
+
     public void setDefensiveStrength(int newDefensiveStr){
         this.defense = newDefensiveStr;
     }
@@ -113,16 +142,10 @@ public class UnitImpl implements Unit {
         this.moveCount = numOfMoves;
     }
 
-    public boolean isInCity(Game g, Position p){
-        if (g.getCityAt(p) != null){
-            return true;
-        }
-        return false;
-    }
 //-------- Validity check functions --------//
 
 
-//Every type equality will need this annoying check so I pulled it out into a method -MAP
+//Every type equality will need this annoying check, so I pulled it out into a method -MAP
 public static boolean valid_unit_type(String unitType){
     try{
         type.valueOf(unitType);
@@ -131,5 +154,4 @@ public static boolean valid_unit_type(String unitType){
     }
         return true;
     }
-
 }

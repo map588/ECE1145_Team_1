@@ -83,16 +83,6 @@ public class CityImpl implements City {
         return this.growth_rate;
     }
 
-    /**
-     * @param p player to set as owner
-     * @param game game to check if player is in
-     */
-    public void setOwner(Player p, GameImpl game) {
-        if(game.isPlayerInGame(p))
-            this.owner = p;
-        else
-            throw new IllegalArgumentException("Player not in game");
-    }
 
     /**
      * return the work force's focus in this city.
@@ -107,6 +97,18 @@ public class CityImpl implements City {
     // --------------------- Mutator methods ------------------------------
 
     /**
+     * @param p player to set as owner
+     * @param game game to check if player is in
+     */
+    public void setOwner(Player p, GameImpl game) {
+        if(game.isPlayerInGame(p))
+            this.owner = p;
+        else
+            throw new IllegalArgumentException("Player not in game");
+    }
+
+
+    /**
      * change the production of this city.
      *
      * @param unitType a string type defining the unit under production,
@@ -118,6 +120,10 @@ public class CityImpl implements City {
         }
     }
 
+    public boolean decrementPopulation() {
+        this.population--;
+        return (this.population != 0);
+    }
     /**
      * change the focus of this city.
      *
