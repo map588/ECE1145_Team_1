@@ -8,5 +8,6 @@ public enum GameType {
     epsilonCiv,
     zetaCiv,
     etaCiv,
-    semiCiv
+    semiCiv,
+    thetaCiv
 }

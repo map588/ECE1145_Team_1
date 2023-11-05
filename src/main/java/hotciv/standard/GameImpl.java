@@ -103,6 +103,10 @@ public class GameImpl implements Game {
                 this.manager_factory = new semiManagerFactory();
                 break;
 
+            case thetaCiv:
+                this.manager_factory = new thetaManagerFactory();
+                break;
+
             default:
                 this.manager_factory = new alphaManagerFactory();
                 break;
