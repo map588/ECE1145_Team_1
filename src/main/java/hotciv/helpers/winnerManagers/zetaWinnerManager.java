@@ -11,7 +11,7 @@ public class zetaWinnerManager implements winnerManager {
     public Player getWinner(GameImpl game) {
         winnerManager subStrategy;
 
-        if (game.getRoundNumber() <= 20) {
+        if (game.getRoundNumber() < 20) {
             subStrategy = new betaWinnerManager();
         } else {
             subStrategy = new epsilonWinnerManager();

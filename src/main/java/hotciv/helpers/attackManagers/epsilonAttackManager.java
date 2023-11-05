@@ -32,10 +32,17 @@ public class epsilonAttackManager implements attackManager {
         setCombAttackerStrength(g, attackingUnit);
         setCombDefenderStrength(g, defendingUnit);
 
-
+        if (isTestCase){
+            attackerRoll = attackerRollTest;
+            defenderRoll = defenderRollTest;
+        }
+        else {
+            attackerRoll = random.nextInt(6) + 1;
+            defenderRoll = random.nextInt(6) + 1;
+        }
         //nexInt(6) + 1 = rand(0, 5) + 1 = rand(1, 6)
-        attackerRoll = random.nextInt(6) + 1;
-        defenderRoll = random.nextInt(6) + 1;
+        //attackerRoll = random.nextInt(6) + 1;
+        //defenderRoll = random.nextInt(6) + 1;
 
         boolean battle_won = (CombAttackStrength * attackerRoll) > (CombDefendStrength * defenderRoll);
 

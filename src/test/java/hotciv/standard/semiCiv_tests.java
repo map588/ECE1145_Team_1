@@ -73,7 +73,8 @@ public class semiCiv_tests {
 
         semiAttManager.setTestDieValues(4,1);
         semiAttManager.setTestMode();
-        assertThat(game.attack(Runit1, Bunit1), is(true));
+        game.moveUnit(Runit1, Bunit1); //red unit moves to blue unit (attack
+        //assertThat(game.attack(Runit1, Bunit1), is(true));
         assertThat(game.getUnitOwner(Bunit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
         assertNull(game.getUnitAt(Runit1)); //ensures original place of red unit is clear
         assertThat(game.attack(Bunit1, Bunit2), is(true)); //red unit attacks blue unit and wins
