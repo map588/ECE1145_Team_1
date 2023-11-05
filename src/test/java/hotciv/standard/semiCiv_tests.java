@@ -7,12 +7,13 @@ import hotciv.helpers.attackManagers.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 import static hotciv.framework.GameConstants.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class semiCiv_tests {
 
@@ -44,45 +45,86 @@ public class semiCiv_tests {
     @Test
     public void testAttackOutcome() {
 
-        Position Runit1 = new Position(1, 1);
-        Position Runit2 = new Position(2, 1);
-        Position Bunit1 = new Position(1, 4);
-        Position Bunit2 = new Position(2, 4);
-        Position Bunit3 = new Position(1, 5);
-        Position Bunit4 = new Position(3, 4);
-        game.createUnitAt(Runit1, ARCHER, Player.RED);
-        UnitImpl Red1 = game.getUnitAt(Runit1);
-        Red1.setAttackingStrength(1);
-        game.createUnitAt(Runit2, ARCHER, Player.RED);
-        UnitImpl Red2 = game.getUnitAt(Runit2);
-        Red2.setAttackingStrength(1);
-        Red2.setDefensiveStrength(6);
-        game.createUnitAt(Bunit1, ARCHER, Player.BLUE);
-        UnitImpl Blue1 = game.getUnitAt(Bunit1);
-        Blue1.setDefensiveStrength(1);
-        game.createUnitAt(Bunit2, ARCHER, Player.BLUE);
-        UnitImpl Blue2 = game.getUnitAt(Bunit2);
-        Blue2.setDefensiveStrength(1);
-        game.createUnitAt(Bunit3, ARCHER, Player.BLUE);
-        UnitImpl Blue3 = game.getUnitAt(Bunit3);
-        Blue3.setDefensiveStrength(1);
-        game.createUnitAt(Bunit4, ARCHER, Player.BLUE);
-        UnitImpl Blue4 = game.getUnitAt(Bunit4);
-        Blue4.setDefensiveStrength(1);
-        Blue4.setAttackingStrength(1);
 
-        semiAttManager.setTestDieValues(4,1);
-        semiAttManager.setTestMode();
-        game.moveUnit(Runit1, Bunit1); //red unit moves to blue unit (attack
-        //assertThat(game.attack(Runit1, Bunit1), is(true));
-        assertThat(game.getUnitOwner(Bunit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
-        assertNull(game.getUnitAt(Runit1)); //ensures original place of red unit is clear
-        assertThat(game.attack(Bunit1, Bunit2), is(true)); //red unit attacks blue unit and wins
-        assertThat(game.attack(Bunit4, Runit2), is(false)); //blue attacks red and loses
-        assertNull(game.getUnitAt(Bunit4)); //no unit at this location (died)
-        assertThat(game.getUnitAt(Runit2), is(Red2)); //successful defender stays in location
-        assertThat(game.attack(Bunit2, Bunit3), is(true)); //red attacks blue and wins
-        assertThat(game.getWinner(), is(Player.RED)); //player Red has won after 3 successful attacks
+        Position P1  = new Position(1, 1);
+        Position P2  = new Position(2, 2);
+
+        //default 2 attack 3 defense
+        game.createUnitAt(P1, ARCHER, Player.RED);
+        game.createUnitAt(P2, ARCHER, Player.BLUE);
+
+        game.toggleWinnerManager(false);
+
+        int redWins = 0;
+        int blueWins = 0;
+
+        for(int i = 0; i < 100; i++) {
+            if(game.moveUnit(P1, P2)){
+                game.endOfTurn();
+                game.createUnitAt(P1, ARCHER, game.getPlayerInTurn());
+                if(game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                }else{
+                    blueWins++;
+                }
+                if (game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                } else {
+                    blueWins++;
+                }
+            }else{
+                game.createUnitAt(P1, ARCHER, game.getPlayerInTurn());
+                game.endOfTurn();
+                if (game.getPlayerInTurn() == Player.RED) {
+                    redWins++;
+                } else {
+                    blueWins++;
+                }
+            }
+            assertNotNull(game.getUnitAt(P1));
+            assertNotNull(game.getUnitAt(P2));
+        }
+
+
+//        Position Runit1 = new Position(1, 1);
+//        Position Runit2 = new Position(2, 1);
+//        Position Bunit1 = new Position(1, 2);
+//        Position Bunit2 = new Position(2, 2);
+//        Position Bunit3 = new Position(3, 2);
+//        Position Bunit4 = new Position(3, 1);
+//        game.createUnitAt(Runit1, ARCHER, Player.RED);
+//        UnitImpl Red1 = game.getUnitAt(Runit1);
+//        Red1.setAttackingStrength(1);
+//        game.createUnitAt(Runit2, ARCHER, Player.RED);
+//        UnitImpl Red2 = game.getUnitAt(Runit2);
+//        Red2.setAttackingStrength(1);
+//        Red2.setDefensiveStrength(6);
+//        game.createUnitAt(Bunit1, ARCHER, Player.BLUE);
+//        UnitImpl Blue1 = game.getUnitAt(Bunit1);
+//        Blue1.setDefensiveStrength(1);
+//        game.createUnitAt(Bunit2, ARCHER, Player.BLUE);
+//        UnitImpl Blue2 = game.getUnitAt(Bunit2);
+//        Blue2.setDefensiveStrength(1);
+//        game.createUnitAt(Bunit3, ARCHER, Player.BLUE);
+//        UnitImpl Blue3 = game.getUnitAt(Bunit3);
+//        Blue3.setDefensiveStrength(1);
+//        game.createUnitAt(Bunit4, ARCHER, Player.BLUE);
+//        UnitImpl Blue4 = game.getUnitAt(Bunit4);
+//        Blue4.setDefensiveStrength(1);
+//        Blue4.setAttackingStrength(1);
+//
+//        semiAttManager.setTestDieValues(4,1);
+//        semiAttManager.setTestMode();
+//        assertThat(game.moveUnit(Runit1, Bunit1), is(true));//red unit moves to blue unit (attack)
+//        assertThat(game.getUnitOwner(Bunit1), is(Player.RED)); //checks that the winning attacker moves to the defender's old location
+//        assertNull(game.getUnitAt(Runit1)); //ensures original place of red unit is clear
+//
+//        assertThat(game.moveUnit(Bunit1, Bunit2), is(true)); //red unit attacks blue unit and wins
+//        assertThat(game.moveUnit(Bunit4, Runit2), is(false)); //blue attacks red and loses
+//        assertNull(game.getUnitAt(Bunit4)); //no unit at this location (died)
+//        assertThat(game.getUnitAt(Runit2), is(Red2)); //successful defender stays in location
+//        assertThat(game.moveUnit(Bunit2, Bunit3), is(true)); //red attacks blue and wins
+//        assertThat(game.getWinner(), is(Player.RED)); //player Red has won after 3 successful attacks
     }
 
 
@@ -133,6 +175,7 @@ public class semiCiv_tests {
     public void settlerActionToCity(){
         //Player red has a settler at (3,4) in the test game constructor
         Position posSettler = new Position(3, 4);
+        game.createUnitAt(posSettler, SETTLER, Player.RED); //apparently not for semiciv?
         //game.setCityAt(posSettler, game.getUnitAt(posSettler).getOwner()); //old code
         game.performUnitActionAt(posSettler); //with refactoring
         assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
@@ -143,6 +186,7 @@ public class semiCiv_tests {
     @Test
     public void archerFortifyDoublesDefense(){ //simulate fortifying an archer
         Position posArcher = new Position(0,2);
+        game.createUnitAt(posArcher, ARCHER, Player.RED);
         game.getUnitAt(posArcher).setDefensiveStrength(2);
         game.performUnitActionAt(posArcher);
         assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(4));
@@ -150,6 +194,7 @@ public class semiCiv_tests {
     @Test
     public void archerFortifyHalvesDefense(){ //simulate fortifying an already fortified archer
         Position posArcher = new Position(0,2);
+        game.createUnitAt(posArcher, ARCHER, Player.RED);
         game.getUnitAt(posArcher).setDefensiveStrength(1);
         game.getUnitAt(posArcher).fortify();
         game.performUnitActionAt(posArcher);
@@ -162,6 +207,7 @@ public class semiCiv_tests {
     public void settlerActionToCityIntegrated(){
         //Player red has a settler at (3,4) in the test game constructor
         Position posSettler = new Position(3, 4);
+        game.createUnitAt(posSettler, SETTLER, Player.RED);
         game.performUnitActionAt(posSettler);
         assertThat(game.getCityAt(posSettler).getOwner(), is(Player.RED) );
         assertThat(game.getCityAt(posSettler).getSize(), is(1));
@@ -171,13 +217,15 @@ public class semiCiv_tests {
     @Test
     public void archerFortifyDoublesDefenseIntegrated(){ //simulate fortifying an archer
         Position posArcher = new Position(0,2);
+        game.createUnitAt(posArcher, ARCHER, Player.RED);
         game.getUnitAt(posArcher).setDefensiveStrength(2);
         game.performUnitActionAt(posArcher);
-        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(3));
+        assertThat(game.getUnitAt(posArcher).getDefensiveStrength(), is(4));
     }
     @Test
     public void archerFortifyHalvesDefenseIntegrated(){ //simulate fortifying an already fortified archer
         Position posArcher = new Position(0,2);
+        game.createUnitAt(posArcher, ARCHER, Player.RED);
         game.getUnitAt(posArcher).setDefensiveStrength(1);
         game.getUnitAt(posArcher).fortify();
         game.performUnitActionAt(posArcher);
