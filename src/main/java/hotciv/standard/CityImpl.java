@@ -166,4 +166,12 @@ public class CityImpl implements City {
         return UnitImpl.valid_unit_type(unitType);
     }
 
+    //....................testing functions....................//
+    public void setPopulation(int population) {
+        this.population = population;
+    }
+
+    public void setProductionRate(int production_rate) {
+        this.production_rate = production_rate;
+    }
 }
