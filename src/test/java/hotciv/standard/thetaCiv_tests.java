@@ -84,7 +84,7 @@ public class thetaCiv_tests {
     }
 
     @Test
-    public void ufoWillBatlleEnemyUnitOnEnemyCity(){
+    public void ufoWillBattleEnemyUnitOnEnemyCity(){
         Position posUFO = new Position(3, 4);
         game.createUnitAt(posUFO, UFO, Player.RED);
         Position posCity = new Position(4, 4);
