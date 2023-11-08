@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -14,14 +15,13 @@ import hotciv.object_factories.alphaUnitFactory;
 public class deltaManagerFactory implements ManagerFactory {
 
     // delta variant
+    public GameType getGameRules() {return GameType.deltaCiv;}
     public worldManager createWorldManager() {
         return new deltaWorld();
     }
 
-
     //Unit Factory
     public UnitFactory createUnitFactory() { return new alphaUnitFactory();}
-
 
     public actionManager createActionManager() {
         return new alphaActionManager();

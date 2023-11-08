@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.manager_factories.gammaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class gammaCiv_tests {
      */
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.gammaCiv, 2);
+        game = new GameImpl(new gammaManagerFactory(), 2);
     }
 
     //..........Unit Tests...........//

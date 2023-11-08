@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
+import hotciv.manager_factories.etaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ public class etaCiv_tests {
 
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.etaCiv, 2);
+        game = new GameImpl(new etaManagerFactory(), 2);
     }
 
     // CITY WORKFORCE FOCUS TESTS...

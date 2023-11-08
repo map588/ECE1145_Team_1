@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.GameType;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
+import hotciv.manager_factories.alphaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class gameTests {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl(GameType.alphaCiv, 2);
+    game = new GameImpl(new alphaManagerFactory(), 2);
   }
 
   // FRS p. 455 states that 'Red is the first player to take a turn'.

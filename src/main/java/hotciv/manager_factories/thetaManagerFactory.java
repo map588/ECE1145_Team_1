@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -12,13 +13,15 @@ import hotciv.helpers.worldManagers.*;
 import hotciv.object_factories.*;
 
 public class thetaManagerFactory implements ManagerFactory {
-    //gamma variant
+
+    //theta variant
+    public GameType getGameRules() {return GameType.thetaCiv;}
     public actionManager createActionManager() {
         return new thetaActionManager();
     }
+
     //Unit Factory
     public UnitFactory createUnitFactory() { return new thetaUnitFactory();}
-
 
     public attackManager createAttackManager() {
         return new alphaAttackManager();

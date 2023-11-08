@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.Game;
 import hotciv.framework.Position;
 import hotciv.framework.GameType;
+import hotciv.manager_factories.alphaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ public class tile_tests {
   /** Fixture for alphaciv testing. */
   @Before
   public void setUp() {
-    game = new GameImpl(GameType.alphaCiv, 2);
+    game = new GameImpl(new alphaManagerFactory(), 2);
   }
 
     @Test

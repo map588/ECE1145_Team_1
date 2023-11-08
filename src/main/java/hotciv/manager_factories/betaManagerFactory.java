@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -14,16 +15,14 @@ import hotciv.object_factories.alphaUnitFactory;
 public class betaManagerFactory implements ManagerFactory {
 
     //beta variant
+    public GameType getGameRules() {return GameType.betaCiv;}
     public ageManager createAgeManager() {return new betaAgeManager();}
-
-    //beta variant
     public winnerManager createWinnerManager() {
         return new betaWinnerManager();
     }
 
     //Unit Factory
     public UnitFactory createUnitFactory() { return new alphaUnitFactory();}
-
 
     public actionManager createActionManager() {
         return new alphaActionManager();

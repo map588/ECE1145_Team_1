@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -14,12 +15,11 @@ import hotciv.object_factories.alphaUnitFactory;
 
 public class etaManagerFactory implements ManagerFactory {
 
-
+    // Eta Variant
+    public GameType getGameRules() {return GameType.etaCiv;}
 
     //Unit Factory
     public UnitFactory createUnitFactory() { return new alphaUnitFactory();}
-
-
 
     public actionManager createActionManager() {
         return new etaActionManager();

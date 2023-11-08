@@ -63,7 +63,7 @@ public class GameImpl implements Game {
     private roundManager round_manager;
 
 
-    public GameImpl(GameType ruleSet, int numPlayers) {
+    public GameImpl(ManagerFactory ruleSet, int numPlayers) {
 
         this.numberOfPlayers = numPlayers;
         this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
@@ -72,45 +72,10 @@ public class GameImpl implements Game {
         this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
         this.firstPlayer = this.Players.peekFirst();
 
-        this.version = ruleSet;
 
-        switch (version) {
-            case alphaCiv:
-                this.manager_factory = new alphaManagerFactory();
-                break;
+        this.manager_factory = ruleSet;
 
-            case betaCiv:
-                this.manager_factory = new betaManagerFactory();
-                break;
-
-            case gammaCiv:
-                this.manager_factory = new gammaManagerFactory();
-                break;
-
-            case deltaCiv:
-                this.manager_factory = new deltaManagerFactory();
-                break;
-
-            case epsilonCiv:
-                this.manager_factory = new epsilonManagerFactory();
-                break;
-
-            case zetaCiv:
-                this.manager_factory = new zetaManagerFactory();
-                break;
-
-            case semiCiv:
-                this.manager_factory = new semiManagerFactory();
-                break;
-
-            case thetaCiv:
-                this.manager_factory = new thetaManagerFactory();
-                break;
-
-            default:
-                this.manager_factory = new alphaManagerFactory();
-                break;
-        }
+        this.version = manager_factory.getGameRules();
 
         this.world_manager = manager_factory.createWorldManager();
         this.age_manager = manager_factory.createAgeManager();

@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -15,6 +16,7 @@ public class gammaManagerFactory implements ManagerFactory {
 
 
     //gamma variant
+    public GameType getGameRules() {return GameType.gammaCiv;}
     public actionManager createActionManager() {
         return new gammaActionManager();
     }

@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.manager_factories.thetaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class thetaCiv_tests {
      */
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.thetaCiv, 2);
+        game = new GameImpl(new thetaManagerFactory(), 2);
     }
 
     //............Unique Theta Stuff............//

@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -14,6 +15,7 @@ import hotciv.object_factories.alphaUnitFactory;
 
 public class semiManagerFactory implements ManagerFactory {
 
+    public GameType getGameRules() {return GameType.semiCiv;}
     //Unit Factory
     public UnitFactory createUnitFactory() { return new alphaUnitFactory();}
 

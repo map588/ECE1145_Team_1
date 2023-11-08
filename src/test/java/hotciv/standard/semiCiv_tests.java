@@ -4,6 +4,7 @@ import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
 import hotciv.helpers.attackManagers.*;
 
+import hotciv.manager_factories.semiManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,7 +24,7 @@ public class semiCiv_tests {
 
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.semiCiv, 2);
+        game = new GameImpl(new semiManagerFactory(), 2);
         semiAttManager = game.getAttack_manager();
 
     }

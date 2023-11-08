@@ -10,8 +10,11 @@ import hotciv.helpers.winnerManagers.*;
 import hotciv.helpers.worldManagers.*;
 import hotciv.helpers.roundManagers.*;
 import hotciv.object_factories.*;
+import hotciv.framework.GameType;
 
 public class alphaManagerFactory implements ManagerFactory {
+
+    public GameType getGameRules() {return GameType.alphaCiv;}
 
     //Unit Factory
     public UnitFactory createUnitFactory() { return new alphaUnitFactory();}

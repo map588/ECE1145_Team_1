@@ -1,5 +1,6 @@
 package hotciv.manager_factories;
 
+import hotciv.framework.GameType;
 import hotciv.framework.ManagerFactory;
 import hotciv.framework.UnitFactory;
 import hotciv.helper_Interfaces.*;
@@ -15,6 +16,7 @@ import hotciv.object_factories.alphaUnitFactory;
 public class zetaManagerFactory implements ManagerFactory {
 
     //zeta variant
+    public GameType getGameRules() {return GameType.zetaCiv;}
     public winnerManager createWinnerManager() {
         return new zetaWinnerManager();
     }

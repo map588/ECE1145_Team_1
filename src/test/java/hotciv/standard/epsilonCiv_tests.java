@@ -4,6 +4,7 @@ import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
 import hotciv.helpers.attackManagers.*;
 
+import hotciv.manager_factories.epsilonManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,7 +23,7 @@ public class epsilonCiv_tests {
 
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.epsilonCiv, 2);
+        game = new GameImpl(new epsilonManagerFactory(), 2);
     }
 
     @Test

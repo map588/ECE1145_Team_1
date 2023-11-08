@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import hotciv.manager_factories.zetaManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class zetaCiv_tests {
      */
     @Before
     public void setUp() {
-        game = new GameImpl(GameType.zetaCiv, 2);
+        game = new GameImpl(new zetaManagerFactory(), 2);
     }
 
     @Test
