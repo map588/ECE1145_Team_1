@@ -46,6 +46,7 @@ public class thetaCiv_tests {
         Position posUFO = new Position(3, 4);
         game.createUnitAt(posUFO, UFO, Player.RED);
         Position posOcean = new Position(3, 5);
+
         assertThat(game.getUnitAt(posUFO).getMoveCount(), is(2));
         game.moveUnit(posUFO, posOcean);
         assertThat(game.getUnitAt(posOcean).getTypeString(), is(UFO));
