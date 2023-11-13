@@ -6,19 +6,18 @@ import hotciv.standard.*;
 
 
 public class GlobalObserver implements Observer{
-    private  UnitObserver unitObserver;
-    private  CityObserver cityObserver;
-    private  TileObserver tileObserver;
+    private final UnitObserver unitObserver;
+    private final CityObserver cityObserver;
+    private final TileObserver tileObserver;
     private boolean globalEnabled;
 
     public GlobalObserver(GameImpl g){
-        this.unitObserver = new UnitObserver();
-        this.cityObserver = new CityObserver();
-        this.tileObserver = new TileObserver();
+        this.unitObserver = new UnitObserver(g);
+        this.cityObserver = new CityObserver(g);
+        this.tileObserver = new TileObserver(g);
     }
 
 
-    @Override
     public void update(GameImpl g) {
         if(!globalEnabled){
             return;
@@ -28,7 +27,6 @@ public class GlobalObserver implements Observer{
         tileObserver.update(g);
     }
 
-    @Override
     public void setObserverEnabled(boolean observerEnabled) {
         this.globalEnabled = observerEnabled;
     }

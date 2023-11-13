@@ -11,7 +11,7 @@ public class UnitObserver implements Observer{
     private UnitImpl[][] units;
     boolean enabled;
 
-    public UnitObserver(GameImpl g, Position position){
+    public UnitObserver(GameImpl g){
         this.units = g.getWorld().getUnits();
     }
 
