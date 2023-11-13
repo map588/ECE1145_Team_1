@@ -50,6 +50,8 @@ public class GameImpl implements Game {
     private int roundNumber;
     private Player winner;
 
+    private boolean observerEnabled = false;
+
     private ManagerFactory manager_factory;
 
     //I am going to assign these in the manager factory
@@ -198,6 +200,10 @@ public class GameImpl implements Game {
 
     public GameType getVersion() {
         return this.version;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     //---------------------Setters--------------------------------//

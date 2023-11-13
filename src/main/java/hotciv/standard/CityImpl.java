@@ -2,7 +2,6 @@ package hotciv.standard;
 import hotciv.framework.GameConstants;
 import hotciv.framework.Player;
 import hotciv.framework.City;
-import hotciv.framework.Game;
 import hotciv.framework.Position;
 
 
@@ -28,6 +27,29 @@ public class CityImpl implements City {
         growth_rate = 0; //temp
     }
 
+    @Override
+    public int hashCode() {
+        return (this.owner.hashCode() +
+                this.city_position.hashCode() +
+                this.production_rate +
+                this.treasury +
+                this.population +
+                this.growth_rate +
+                this.current_production_type.hashCode() +
+                this.workforce_focus.hashCode());
+    }
+
+
+     public boolean equals(CityImpl A) {
+        return (this.owner == A.owner &&
+                this.city_position == A.city_position &&
+                this.production_rate == A.production_rate &&
+                this.treasury == A.treasury &&
+                this.population == A.population &&
+                this.growth_rate == A.growth_rate &&
+                this.current_production_type == A.current_production_type &&
+                this.workforce_focus == A.workforce_focus);
+    }
     /**
      * return the owner of this city.
      *

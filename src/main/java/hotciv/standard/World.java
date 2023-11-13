@@ -59,6 +59,17 @@ public class World {
         return cities[p.getColumn()][p.getRow()];
     }
 
+    public UnitImpl[][] getUnits() {
+        return units;
+    }
+
+    public CityImpl[][] getCities() {
+        return cities;
+    }
+
+    public TileImpl[][] getTiles() {
+        return tiles;
+    }
 
     //-------------Setters---------------//
     public void setTileAt(Position p, String terrain) {
