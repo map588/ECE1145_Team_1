@@ -3,6 +3,7 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
 import hotciv.manager_factories.*;
+import hotciv.helpers.Observers.*;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -49,7 +50,7 @@ public class GameImpl implements Game {
     private int[] numberSuccessfulAttacks;
     private int roundNumber;
     private Player winner;
-
+    private GlobalObserver global_observer;
     private boolean observerEnabled = false;
 
     private ManagerFactory manager_factory;
@@ -98,6 +99,7 @@ public class GameImpl implements Game {
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
         }
+        global_observer.update(this);
     }
 
     private void endOfRound() {
@@ -301,6 +303,9 @@ public class GameImpl implements Game {
                 Math.abs(from.getRow() - to.getRow()) <= 1;
     }
 
+    public void enableObserver(boolean enable){
+        this.observerEnabled = enable;
+    }
 
     public Position findProductionPosition(Position p) {
 
