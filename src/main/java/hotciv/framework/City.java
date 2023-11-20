@@ -1,4 +1,5 @@
 package hotciv.framework;
+import hotciv.standard.CityImpl;
 import hotciv.standard.GameImpl;
 /** Represents a city in the game.
 
@@ -31,7 +32,8 @@ Responsibilities:
 
 */
 public interface City {
-  /**
+
+    /**
    * return the owner of this city.
    *
    * @return the player that controls this city.
