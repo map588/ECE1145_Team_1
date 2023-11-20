@@ -90,6 +90,7 @@ public class GameImpl implements Game {
         this.world = world_manager.createWorld(this);
     }
 
+    //-------------Mutators------------------//
 
     public void endOfTurn() {
         Players.addLast(Players.removeFirst());  //rotate
@@ -142,6 +143,79 @@ public class GameImpl implements Game {
     public boolean attack(Position attacker, Position defender) {
         return this.attack_manager.attack(attacker, defender, this);
     }
+
+    public void createUnitAt(Position p, String unit, Player owner) {
+        this.world.makeUnitAt(p, unit, owner, this.unit_factory);
+    }
+
+    /**
+     * Moves a unit from one position to another, checks if the position has an enemy
+     * and attacks if it does.
+     * @param from the position that the unit has now
+     * @param to   the position the unit should move to
+     * @return
+     */
+    public boolean moveUnit(Position from, Position to) {
+        UnitImpl unit_toMove = this.getUnitAt(from);
+        UnitImpl unit_onTile = this.getUnitAt(to);
+        String terrain = this.getTileAt(to).getTypeString();
+
+        boolean unit_exists = unit_toMove != null;
+        boolean destination_is_empty = unit_onTile == null;
+        boolean is_within_one_tile = isWithinOneTile(from, to);
+        boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
+        boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
+        boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
+
+
+        if (unit_exists            &&
+                is_within_one_tile     &&
+                unit_belongs_to_player &&
+                isTraversable          &&
+                isWithinBounds) {
+            //If the tile is occuplied by a friendly unit, return false
+            if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
+
+            if (unit_toMove.decrementMoveCount()) {
+
+                if(destination_is_empty) {
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+                else if(this.attack(from, to)){
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    public void changeCityOwner(Position p, Player player) {
+        this.getCityAt(p).setOwner(player);
+    }
+
+    public void changeTileType(Position p, String terrain) {
+        this.world.setTileAt(p, terrain);
+    }
+
+    public boolean setCityAt(Position p, Player owner) {
+        this.world.setCityAt(p, owner);
+        return true;
+    }
+
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void incrementNumberOfSuccessfulAttacks(Position p) {
+        numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
+    }
+
 
     //---------------------- Getters -----------------------------//
     public int getNumberOfPlayers() {
@@ -200,77 +274,6 @@ public class GameImpl implements Game {
         return this.version;
     }
 
-    //---------------------Setters--------------------------------//
-    public boolean setCityAt(Position p, Player owner) {
-        this.world.setCityAt(p, owner);
-        return true;
-    }
-
-    public void createUnitAt(Position p, String unit, Player owner) {
-        this.world.makeUnitAt(p, unit, owner, this.unit_factory);
-    }
-
-    /**
-     * Moves a unit from one position to another, checks if the position has an enemy
-     * and attacks if it does.
-     * @param from the position that the unit has now
-     * @param to   the position the unit should move to
-     * @return
-     */
-    public boolean moveUnit(Position from, Position to) {
-        UnitImpl unit_toMove = this.getUnitAt(from);
-        UnitImpl unit_onTile = this.getUnitAt(to);
-        String terrain = this.getTileAt(to).getTypeString();
-
-        boolean unit_exists = unit_toMove != null;
-        boolean destination_is_empty = unit_onTile == null;
-        boolean is_within_one_tile = isWithinOneTile(from, to);
-        boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
-        boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
-        boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
-
-
-        if (unit_exists            &&
-            is_within_one_tile     &&
-            unit_belongs_to_player &&
-            isTraversable          &&
-            isWithinBounds) {
-            //If the tile is occuplied by a friendly unit, return false
-            if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
-
-            if (unit_toMove.decrementMoveCount()) {
-
-                if(destination_is_empty) {
-                    this.world.moveUnitTo(from, to);
-                    return true;
-                }
-                else if(this.attack(from, to)){
-                    this.world.moveUnitTo(from, to);
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void incrementNumberOfSuccessfulAttacks(Position p) {
-        numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
-    }
-
-    public void changeCityOwner(Position p, Player player) {
-        this.getCityAt(p).setOwner(player);
-    }
-
-    public void changeTileType(Position p, String terrain) {
-        this.world.setTileAt(p, terrain);
-    }
     //---------------------Destructors-----------------------------//
 
     public void removeUnitAt(Position position) {
