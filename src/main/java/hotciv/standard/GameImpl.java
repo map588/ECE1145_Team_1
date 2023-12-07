@@ -140,15 +140,7 @@ public class GameImpl implements Game {
         action_manager.unitActionAt(this, p);
     }
 
-    @Override
-    public void addObserver(GameObserver observer) {
 
-    }
-
-    @Override
-    public void setTileFocus(Position position) {
-
-    }
 
     public boolean attack(Position attacker, Position defender) {
         return this.attack_manager.attack(attacker, defender, this);
@@ -226,6 +218,15 @@ public class GameImpl implements Game {
         numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
     }
 
+    @Override
+    public void addObserver(GameObserver observer) {
+
+    }
+
+    @Override
+    public void setTileFocus(Position position) {
+
+    }
 
     //---------------------- Getters -----------------------------//
     public int getNumberOfPlayers() {
