@@ -112,7 +112,6 @@ public class GfxConstants {
    * graphical view.
    */
   public static Position getPositionFromXY( int x, int y ) {
-    return new Position( (y - MAP_OFFSET_Y) / TILESIZE, 
-        (x - MAP_OFFSET_X) / TILESIZE );
+    return new Position( ((x - MAP_OFFSET_X) / TILESIZE ),(y - MAP_OFFSET_Y) / TILESIZE);
   } 
 }

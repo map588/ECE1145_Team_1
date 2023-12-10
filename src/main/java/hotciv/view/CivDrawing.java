@@ -49,6 +49,8 @@ public class CivDrawing
   /** store all moveable figures visible in this drawing = units */
   protected Map<Unit,UnitFigure> unitFigureMap;
 
+  protected Position currentFocusedTile;
+
   /** the Game instance that this CivDrawing is going to render units
    * from */
   protected Game game;
@@ -182,6 +184,10 @@ public class CivDrawing
     defineUnitMap();
     defineIcons();
     // TODO: Cities pending
+  }
+
+  public Position getCurrentFocusedTile() {
+    return currentFocusedTile;
   }
 
   @Override

@@ -55,13 +55,14 @@ public class GameImpl implements Game {
 
     //I am going to assign these in the manager factory
     public UnitFactory unit_factory;
-
     private ageManager age_manager;
     private winnerManager winner_manager;
     private worldManager world_manager;
     private actionManager action_manager;
     public  attackManager attack_manager;
     private roundManager round_manager;
+
+
 
 
     public GameImpl(ManagerFactory ruleSet, int numPlayers) {
@@ -90,6 +91,7 @@ public class GameImpl implements Game {
         this.age = this.age_manager.START_AGE;
         this.world = world_manager.createWorld(this);
     }
+
     public GameImpl(GameType ruleSet, int numPlayers) {
 
         this.numberOfPlayers = numPlayers;
