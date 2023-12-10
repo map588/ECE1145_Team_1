@@ -50,6 +50,7 @@ public class GameImpl implements Game {
     private int roundNumber;
     private Player winner;
 
+    private ManagerFactoryFactory manager_manager;
     private ManagerFactory manager_factory;
 
     //I am going to assign these in the manager factory
@@ -74,6 +75,32 @@ public class GameImpl implements Game {
 
 
         this.manager_factory = ruleSet;
+
+        this.version = manager_factory.getGameRules();
+
+        this.world_manager = manager_factory.createWorldManager();
+        this.age_manager = manager_factory.createAgeManager();
+        this.winner_manager = manager_factory.createWinnerManager();
+        this.action_manager = manager_factory.createActionManager();
+        this.attack_manager = manager_factory.createAttackManager();
+        this.round_manager = manager_factory.createRoundManager();
+        this.unit_factory = manager_factory.createUnitFactory();
+
+
+        this.age = this.age_manager.START_AGE;
+        this.world = world_manager.createWorld(this);
+    }
+    public GameImpl(GameType ruleSet, int numPlayers) {
+
+        this.numberOfPlayers = numPlayers;
+        this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
+        for(int i = 0; i < numPlayers; i++){this.numberSuccessfulAttacks[i] = 0;}
+        this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
+        this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
+        this.firstPlayer = this.Players.peekFirst();
+
+        this.manager_manager = new ManagerFactoryFactory();
+        this.manager_factory = manager_manager.getManagerFactory(ruleSet.name());
 
         this.version = manager_factory.getGameRules();
 

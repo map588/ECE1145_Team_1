@@ -42,3 +42,8 @@ public class ShowMove {
     editor.setTool( new SelectionTool(editor) );
   }
 }
+
+
+class UnitMoveTool extends NullTool {
+  
+}
