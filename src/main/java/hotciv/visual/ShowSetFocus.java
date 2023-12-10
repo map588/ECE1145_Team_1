@@ -65,7 +65,7 @@ class ShowSetFocusTool extends NullTool{
 
   public void mouseDown(MouseEvent e, int x, int y) {
     selected = false;
-    focusPosition = GfxConstants.getPositionFromXY(y, x);
+    focusPosition = GfxConstants.getPositionFromXY(x, y);
     if(!focusPosition.equals(currentFocus)){
       editor.showStatus( "Tile focus " + focusPosition.getColumn() + ", " + focusPosition.getRow());
       game.setTileFocus(focusPosition);
@@ -73,10 +73,9 @@ class ShowSetFocusTool extends NullTool{
   }
 
   public void mouseDrag(MouseEvent e, int x, int y) {
-    focusPosition = GfxConstants.getPositionFromXY(y, x);
+    focusPosition = GfxConstants.getPositionFromXY(x, y);
     if(!focusPosition.equals(currentFocus)) {
       editor.showStatus( "Tile focus " + focusPosition.getColumn() + ", " + focusPosition.getRow());
-      game.setTileFocus(focusPosition);
     }
   }
 

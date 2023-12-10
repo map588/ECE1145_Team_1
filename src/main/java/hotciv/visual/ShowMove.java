@@ -81,7 +81,7 @@ class UnitMoveTool extends NullTool {
     next = GfxConstants.getPositionFromXY(x, y);
     String status = String.format("Mouse Drag at position %d, %d release to confirm location.", start.getColumn(), start.getRow());
     editor.showStatus(status);
-    game.moveUnit(previous, next);
+    //game.forceUnitTo(previous, next);
     previous = next;
   }
 
@@ -90,8 +90,8 @@ class UnitMoveTool extends NullTool {
   public void mouseUp(MouseEvent e, int x, int y) {
     end = GfxConstants.getPositionFromXY(x, y);
 
-    if(game.getUnitAt(end) != null)
-        game.moveUnit(end, start);
+    //if(game.getUnitAt(end) != null)
+        //game.forceUnitTo(end, start);
 
     if (game.getUnitAt(start) != null) {
       boolean successfulMove = game.moveUnit(start, end);

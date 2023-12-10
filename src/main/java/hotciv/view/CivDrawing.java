@@ -143,27 +143,27 @@ public class CivDrawing
   protected void defineIcons() {
     // TODO: Further development to include rest of figures needed
     Player p = game.getPlayerInTurn();
-    ImageFigure selection;
+    ImageFigure shield;
 
     switch (p) {
       case RED:
-        selection = new ImageFigure(RED_SHIELD,
+        shield = new ImageFigure(RED_SHIELD,
                 new Point(GfxConstants.TURN_SHIELD_X,
                         GfxConstants.TURN_SHIELD_Y));
         break;
       case BLUE:
-        selection = new ImageFigure(BLUE_SHIELD,
+        shield = new ImageFigure(BLUE_SHIELD,
                 new Point(GfxConstants.TURN_SHIELD_X,
                         GfxConstants.TURN_SHIELD_Y));
         break;
       default:
-        selection = new ImageFigure(NOTHING,
+        shield = new ImageFigure(NOTHING,
                 new Point(GfxConstants.TURN_SHIELD_X,
                         GfxConstants.TURN_SHIELD_Y));
 
     }
 
-    turnShieldIcon = selection;
+    turnShieldIcon = shield;
 
     // insert in delegate figure list to ensure graphical
     // rendering.
@@ -175,10 +175,37 @@ public class CivDrawing
 
   public void worldChangedAt(Position pos) {
     // TODO: Remove system.out debugging output
-    System.out.println( "CivDrawing: world changes at "+pos);
+    System.out.println("CivDrawing: world changes at " + pos);
     // this is a really brute-force algorithm: destroy
     // all known units and build up the entire set again
     defineUnitMap();
+
+    Unit gameUnit = game.getUnitAt(pos);
+    Unit mapUnit = unitFigureMap.get(gameUnit).;
+
+
+    if (game.getUnitAt(pos) == null && unitFigureMap.get(game.getUnitAt(pos)) != null){
+      delegate.remove(unitFigureMap.get(game.getUnitAt(pos)));
+      unitFigureMap.remove(game.getUnitAt(pos));
+  }
+
+    if(game.getUnitAt(pos) != null && unitFigureMap.get(game.getUnitAt(pos)) == null) {
+      Unit unit = game.getUnitAt(pos);
+      String type = unit.getTypeString();
+      // convert the unit's Position to (x,y) coordinates
+      Point point = new Point( GfxConstants.getXFromColumn(pos.getColumn()),
+              GfxConstants.getYFromRow(pos.getRow()) );
+      UnitFigure unitFigure =
+              new UnitFigure( type, point, unit );
+      unitFigure.addFigureChangeListener(this);
+      unitFigureMap.put(unit, unitFigure);
+
+      // also insert in delegate list as it is
+      // this list that is iterated by the
+      // graphics rendering algorithms
+      delegate.add(unitFigure);
+    }
+
 
     // TODO: Cities may change on position as well
   }

@@ -102,11 +102,10 @@ public class GameImpl implements Game {
         this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
         this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
         this.firstPlayer = this.Players.peekFirst();
+        this.version = ruleSet;
 
         this.manager_manager = new ManagerFactoryFactory();
         this.manager_factory = manager_manager.getManagerFactory(ruleSet.name());
-
-        this.version = manager_factory.getGameRules();
 
         this.world_manager = manager_factory.createWorldManager();
         this.age_manager = manager_factory.createAgeManager();
@@ -219,54 +218,14 @@ public class GameImpl implements Game {
 
                 if(destination_is_empty) {
                     this.world.moveUnitTo(from, to);
+                    gameObserver.worldChangedAt(from);
+                    gameObserver.worldChangedAt(to);
                     return true;
                 }
                 else if(this.attack(from, to)){
                     this.world.moveUnitTo(from, to);
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean moveUnitPending(Position from, Position to) {
-        UnitImpl unit_toMove = this.getUnitAt(from);
-        UnitImpl unit_onTile = this.getUnitAt(to);
-        String terrain = this.getTileAt(to).getTypeString();
-
-        Position previousPosition;
-
-        boolean unit_exists = unit_toMove != null;
-        boolean destination_is_empty = unit_onTile == null;
-        boolean is_within_range = isWithinUnitRange(getUnitAt(from).getTypeString(), from, to);
-        boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
-        boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
-        boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
-
-
-        if (unit_exists            &&
-                is_within_range        &&
-                unit_belongs_to_player &&
-                isTraversable          &&
-                isWithinBounds) {
-
-            int moveCount = unit_toMove.getMoveCount();
-            int distance = distance(from, to);
-            //If the tile is occuplied by a friendly unit, return false
-            if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
-
-            if (moveCount <= distance) {
-
-                if(destination_is_empty) {
-                    this.world.moveUnitTo(from, to);
-                    return true;
-                }
-                else if(this.attack(from, to)){
-                    this.world.moveUnitTo(from, to);
+                    gameObserver.worldChangedAt(from);
+                    gameObserver.worldChangedAt(to);
                     return true;
                 }
 

@@ -51,8 +51,7 @@ public class ShowCity {
 }
 
 class ChangeCityTool extends NullTool {
-  //private CityStub city;
-  //private CityFigure cityFigure;
+
   private DrawingEditor editor;
   private Game game;
   private City city;

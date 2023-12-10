@@ -78,6 +78,7 @@ class ChangeAgeTool extends NullTool{
   private Game game;
   private DrawingEditor editor;
   private TextFigure textFigure;
+  final private Point textPosition = new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y);
 
   public ChangeAgeTool(DrawingEditor e, Game g) {
     editor = e;
@@ -92,12 +93,12 @@ class ChangeAgeTool extends NullTool{
 
     if (game.getAge() < 0) {
       String AgeText = String.format("%d BC", abs(game.getAge()));
-      textFigure = new TextFigure(AgeText, new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y) );
+      textFigure = new TextFigure(AgeText, textPosition );
       editor.showStatus( "Age displayed.");
     }
     else {
       String AgeText = String.format("%d AD", abs(game.getAge()));
-      textFigure = new TextFigure(AgeText, new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y));
+      textFigure = new TextFigure(AgeText, textPosition);
       editor.showStatus( "Age displayed.");
     }
     textFigure.draw(editor.view().getGraphics());
