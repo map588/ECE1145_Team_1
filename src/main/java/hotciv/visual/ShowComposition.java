@@ -33,7 +33,7 @@ import static hotciv.view.GfxConstants.*;
 public class ShowComposition {
   
   public static void main(String[] args) {
-    Game game = new GameImpl(GameType.deltaCiv, 2);
+    Game game = new GameImpl(GameType.alphaCiv, 2);
 
     DrawingEditor editor = 
       new MiniDrawApplication( "Click and/or drag any item to see all game actions",  
@@ -96,50 +96,11 @@ class CompTool extends NullTool {
 
     if(tool != null)
         tool.mouseDrag(e, x, y);
-
-
-//    unitMoveTool.mouseDrag(e, x, y);
-//    endTurnTool.mouseDrag(e, x, y);
-//    actionTool.mouseDrag(e, x, y);
-    //changeCityTool.mouseDrag(e, x, y);
-//    setFocusTool.mouseDrag(e, x, y);
-    // ChangeAgeTool.mouseDrag(e, x, y);
-    //showWorldTool ?
   }
 
   public void mouseUp(MouseEvent e, int x, int y) {
         contents = getTileContents(x,y);
-//    switch (contents) {
-//        case UNIT:
-//          if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
-//            tool = actionTool;
-//            status = "action tool";
-//          } else {
-//            tool = unitMoveTool;
-//            status = "unit move tool";
-//          }
-//            break;
-//        case CITY:
-//            tool = actionTool;
-//            status = "action tool";
-//            break;
-//        case TILE:
-//            tool = setFocusTool;
-//            status = "focus tool";
-//            break;
-//        case SHEILD:
-//            tool = endTurnTool;
-//            status = "end turn tool";
-//            break;
-//        case NOTHING:
-//            tool = nullTool;
-//            status = "focus tool";
-//            break;
-//        default:
-//            tool = nullTool;
-//            status = "focus tool";
-//            break;
-//        }
+
         editor.showStatus(status);
         if(tool != null)
             tool.mouseUp(e, x, y);
@@ -205,3 +166,36 @@ class CompTool extends NullTool {
   }
 
 }
+
+
+//    switch (contents) {
+//        case UNIT:
+//          if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
+//            tool = actionTool;
+//            status = "action tool";
+//          } else {
+//            tool = unitMoveTool;
+//            status = "unit move tool";
+//          }
+//            break;
+//        case CITY:
+//            tool = actionTool;
+//            status = "action tool";
+//            break;
+//        case TILE:
+//            tool = setFocusTool;
+//            status = "focus tool";
+//            break;
+//        case SHEILD:
+//            tool = endTurnTool;
+//            status = "end turn tool";
+//            break;
+//        case NOTHING:
+//            tool = nullTool;
+//            status = "focus tool";
+//            break;
+//        default:
+//            tool = nullTool;
+//            status = "focus tool";
+//            break;
+//        }

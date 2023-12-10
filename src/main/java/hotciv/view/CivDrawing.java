@@ -285,6 +285,8 @@ public class CivDrawing
       delegate.add(cityFigure);
     }
 
+    defineUnitMap();
+
   }
 
   public void turnEnds(Player nextPlayer, int age) {

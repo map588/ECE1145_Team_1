@@ -75,11 +75,5 @@ class ActionTool extends NullTool {
     editor.showStatus(status);
   }
 
-  public boolean getShiftDown() {
-    return shiftdown;
-  }
 
-  public void setShiftDown(boolean s) {
-    shiftdown = true;
-  }
 }

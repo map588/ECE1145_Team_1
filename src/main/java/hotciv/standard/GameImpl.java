@@ -259,6 +259,7 @@ public class GameImpl implements Game {
 
     public boolean setCityAt(Position p, Player owner) {
         this.world.setCityAt(p, owner);
+        this.gameObserver.worldChangedAt(p);
         return true;
     }
 
