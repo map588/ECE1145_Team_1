@@ -39,6 +39,34 @@ public class ShowEndOfTurn {
     editor.showStatus("Click to shield to see Game's endOfTurn method being called.");
 
     // TODO: Replace the setting of the tool with your EndOfTurnTool implementation.
-    editor.setTool( new NullTool() );
+    //editor.setTool( new NullTool() );
+
+    editor.setTool( new EndTurnTool(editor, game) );
   }
 }
+
+
+class EndTurnTool extends NullTool {
+  private Game game;
+  private DrawingEditor editor;
+
+  public EndTurnTool(DrawingEditor e, Game g) {
+    editor = e;
+    game = g;
+  }
+
+  public void mouseDown(MouseEvent e, int x, int y) {
+    String status;
+
+    if (x > 559 && x < 587 && y > 64 && y < 103) {
+      status = "Turn Ended.";
+      game.endOfTurn();
+    }
+    else {
+      status = "Click on Turn Shield to end turn.";
+    }
+    editor.showStatus(status);
+  }
+}
+
+

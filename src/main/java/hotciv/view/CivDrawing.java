@@ -9,6 +9,8 @@ import java.util.List;
 import minidraw.framework.*;
 import minidraw.standard.*;
 
+import static hotciv.view.GfxConstants.*;
+
 /** CivDrawing is a specialized Drawing (model component) from
  * MiniDraw that dynamically builds the list of Figures for MiniDraw
  * to render the Unit and other information objects that are visible
@@ -46,6 +48,7 @@ public class CivDrawing
   implements Drawing, GameObserver {
   
   protected Drawing delegate;
+
   /** store all moveable figures visible in this drawing = units */
   protected Map<Unit,UnitFigure> unitFigureMap;
 
@@ -139,13 +142,33 @@ public class CivDrawing
   protected ImageFigure turnShieldIcon;
   protected void defineIcons() {
     // TODO: Further development to include rest of figures needed
-    turnShieldIcon = 
-      new ImageFigure( "redshield",
-                       new Point( GfxConstants.TURN_SHIELD_X,
-                                  GfxConstants.TURN_SHIELD_Y ) ); 
+    Player p = game.getPlayerInTurn();
+    ImageFigure selection;
+
+    switch (p) {
+      case RED:
+        selection = new ImageFigure(RED_SHIELD,
+                new Point(GfxConstants.TURN_SHIELD_X,
+                        GfxConstants.TURN_SHIELD_Y));
+        break;
+      case BLUE:
+        selection = new ImageFigure(BLUE_SHIELD,
+                new Point(GfxConstants.TURN_SHIELD_X,
+                        GfxConstants.TURN_SHIELD_Y));
+        break;
+      default:
+        selection = new ImageFigure(NOTHING,
+                new Point(GfxConstants.TURN_SHIELD_X,
+                        GfxConstants.TURN_SHIELD_Y));
+
+    }
+
+    turnShieldIcon = selection;
+
     // insert in delegate figure list to ensure graphical
     // rendering.
-    delegate.add(turnShieldIcon);
+    //turnShieldIcon
+  delegate.add(turnShieldIcon);
   }
  
   // === Observer Methods ===
@@ -168,11 +191,14 @@ public class CivDrawing
     turnShieldIcon.set( playername+"shield",
                         new Point( GfxConstants.TURN_SHIELD_X,
                                    GfxConstants.TURN_SHIELD_Y ) );
+
     // TODO: Age output pending
+
   }
 
   public void tileFocusChangedAt(Position position) {
-    // TODO: Implementation pending
+//    delegate.
+
     System.out.println( "Fake it: tileFocusChangedAt "+position );
   }
 

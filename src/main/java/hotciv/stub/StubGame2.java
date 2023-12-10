@@ -86,6 +86,7 @@ public class StubGame2 implements Game {
 
   // === Observer handling ===
   protected GameObserver gameObserver;
+
   // observer list is only a single one...
   public void addObserver(GameObserver observer) {
     gameObserver = observer;

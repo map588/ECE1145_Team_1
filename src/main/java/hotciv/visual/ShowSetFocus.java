@@ -86,8 +86,5 @@ class ShowSetFocusTool extends NullTool{
         currentFocus = focusPosition;
         editor.showStatus("Tile focus locked at " + currentFocus.getColumn() + ", " + currentFocus.getRow());
       }
-      else {
-        editor.showStatus("Focus not changed.");
-      }
     }
 }

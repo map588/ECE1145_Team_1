@@ -49,6 +49,7 @@ public class GameImpl implements Game {
     private int[] numberSuccessfulAttacks;
     private int roundNumber;
     private Player winner;
+    private Position currentTileFocus;
 
     private ManagerFactoryFactory manager_manager;
     private ManagerFactory manager_factory;
@@ -62,6 +63,7 @@ public class GameImpl implements Game {
     public  attackManager attack_manager;
     private roundManager round_manager;
 
+    protected GameObserver gameObserver;
 
 
 
@@ -191,23 +193,29 @@ public class GameImpl implements Game {
         UnitImpl unit_onTile = this.getUnitAt(to);
         String terrain = this.getTileAt(to).getTypeString();
 
+        Position previousPosition;
+
         boolean unit_exists = unit_toMove != null;
         boolean destination_is_empty = unit_onTile == null;
-        boolean is_within_one_tile = isWithinOneTile(from, to);
+        boolean is_within_range = isWithinUnitRange(getUnitAt(from).getTypeString(), from, to);
         boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
         boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
         boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
 
 
         if (unit_exists            &&
-                is_within_one_tile     &&
-                unit_belongs_to_player &&
-                isTraversable          &&
-                isWithinBounds) {
+            is_within_range        &&
+            unit_belongs_to_player &&
+            isTraversable          &&
+            isWithinBounds) {
+
+            int moveCount = unit_toMove.getMoveCount();
+            int distance = distance(from, to);
             //If the tile is occuplied by a friendly unit, return false
             if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
 
-            if (unit_toMove.decrementMoveCount()) {
+            if (moveCount <= distance) {
+                unit_toMove.setMoveCount(moveCount - distance);
 
                 if(destination_is_empty) {
                     this.world.moveUnitTo(from, to);
@@ -223,6 +231,63 @@ public class GameImpl implements Game {
         }
 
         return false;
+    }
+
+    public boolean moveUnitPending(Position from, Position to) {
+        UnitImpl unit_toMove = this.getUnitAt(from);
+        UnitImpl unit_onTile = this.getUnitAt(to);
+        String terrain = this.getTileAt(to).getTypeString();
+
+        Position previousPosition;
+
+        boolean unit_exists = unit_toMove != null;
+        boolean destination_is_empty = unit_onTile == null;
+        boolean is_within_range = isWithinUnitRange(getUnitAt(from).getTypeString(), from, to);
+        boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
+        boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
+        boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
+
+
+        if (unit_exists            &&
+                is_within_range        &&
+                unit_belongs_to_player &&
+                isTraversable          &&
+                isWithinBounds) {
+
+            int moveCount = unit_toMove.getMoveCount();
+            int distance = distance(from, to);
+            //If the tile is occuplied by a friendly unit, return false
+            if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
+
+            if (moveCount <= distance) {
+
+                if(destination_is_empty) {
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+                else if(this.attack(from, to)){
+                    this.world.moveUnitTo(from, to);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isOwnedByUser(Position p) {
+        return (this.getUnitAt(p).getOwner() == this.getPlayerInTurn());
+    }
+
+    public boolean isWithinUnitRange(Position from, Position to) {
+        return (Math.abs(from.getColumn() - to.getColumn()) <= this.getUnitAt(from).getMoveCount() &&
+                Math.abs(from.getRow() - to.getRow()) <= this.getUnitAt(from).getMoveCount());
+    }
+
+    public int distance(Position p1, Position p2) {
+        return (Math.max(Math.abs(p1.getColumn() - p2.getColumn()), Math.abs(p1.getRow() - p2.getRow())));
     }
 
     public void changeCityOwner(Position p, Player player) {
@@ -249,12 +314,13 @@ public class GameImpl implements Game {
 
     @Override
     public void addObserver(GameObserver observer) {
-
+        this.gameObserver = observer;
     }
 
     @Override
     public void setTileFocus(Position position) {
-
+        currentTileFocus = position;
+        this.gameObserver.tileFocusChangedAt(position);
     }
 
     //---------------------- Getters -----------------------------//
@@ -333,10 +399,12 @@ public class GameImpl implements Game {
         return this.getUnitAt(p) != null;
     }
 
-    public boolean isWithinOneTile(Position from, Position to) {
-        return Math.abs(from.getColumn() - to.getColumn()) <= 1 &&
-                Math.abs(from.getRow() - to.getRow()) <= 1;
+    public boolean isWithinUnitRange(String UnitType, Position from, Position to) {
+        boolean b = Math.abs(from.getColumn() - to.getColumn()) <= unit_moveCount.get(UnitType) &&
+                Math.abs(from.getRow() - to.getRow()) <= unit_moveCount.get(UnitType);
+        return b;
     }
+
 
 
     public Position findProductionPosition(Position p) {

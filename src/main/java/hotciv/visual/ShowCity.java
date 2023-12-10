@@ -44,26 +44,28 @@ public class ShowCity {
       new MiniDrawApplication( "Click to see city graphics update...",  
                                new HotCivFactory3(game) );
     editor.open();
-    CityStub city = new CityStub();
 
-    CityFigure cf = new CityFigure( city,
-                                    new Point( GfxConstants.getXFromColumn(4),
-                                               GfxConstants.getYFromRow(7) ) );
-    editor.drawing().add(cf);
-    editor.setTool( new ChangeCityTool(city, cf) );
+    editor.setTool( new ChangeCityTool(editor, game) );
 
   }
 }
 
 class ChangeCityTool extends NullTool {
-  private CityStub city;
+  //private CityStub city;
+  //private CityFigure cityFigure;
+  private DrawingEditor editor;
+  private Game game;
+  private City city;
   private CityFigure cityFigure;
-  public ChangeCityTool(CityStub c, CityFigure cf) {
-    city = c;
-    cityFigure = cf;
+
+  public ChangeCityTool(DrawingEditor e, Game g) {
+    game = g;
+    editor = e;
   }
+
   public void mouseDown(MouseEvent e, int x, int y) {
-    city.makeAChange();
+    Position pos = GfxConstants.getPositionFromXY(x,y);
+    game.changeProductionInCityAt(pos, "legion");
     cityFigure.changed();
   }
 }

@@ -60,6 +60,8 @@ class UnitMoveTool extends NullTool {
   private DrawingEditor editor;
 
   Position start, end;
+  Position previous;
+  Position next;
 
   public UnitMoveTool(DrawingEditor d, Game g) {
     editor = d;
@@ -69,21 +71,28 @@ class UnitMoveTool extends NullTool {
   @Override
   public void mouseDown(MouseEvent e, int x, int y) {
     start = GfxConstants.getPositionFromXY(x, y);
+    previous = start;
     String status = String.format("Mouse Down at position %d, %d release to confirm location.", start.getColumn(), start.getRow() );
     editor.showStatus(status);
   }
 
-//  @Override
-//  public void mouseDrag(MouseEvent e, int x, int y){
-//    start = GfxConstants.getPositionFromXY(y, x);
-//    String status = String.format("Mouse Drag at position %d, %d release to confirm location.", start.getColumn(), start.getRow());
-//    editor.showStatus(status);
-//  }
+  @Override
+  public void mouseDrag(MouseEvent e, int x, int y){
+    next = GfxConstants.getPositionFromXY(x, y);
+    String status = String.format("Mouse Drag at position %d, %d release to confirm location.", start.getColumn(), start.getRow());
+    editor.showStatus(status);
+    game.moveUnit(previous, next);
+    previous = next;
+  }
 
 
   @Override
   public void mouseUp(MouseEvent e, int x, int y) {
     end = GfxConstants.getPositionFromXY(x, y);
+
+    if(game.getUnitAt(end) != null)
+        game.moveUnit(end, start);
+
     if (game.getUnitAt(start) != null) {
       boolean successfulMove = game.moveUnit(start, end);
         String status;

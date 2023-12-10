@@ -97,6 +97,7 @@ public class World {
         }
         units[to.getColumn()][to.getRow()] = units[from.getColumn()][from.getRow()];
         units[from.getColumn()][from.getRow()] = null;
+
     }
 
 }
