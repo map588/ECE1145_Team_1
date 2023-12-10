@@ -127,6 +127,7 @@ public class GameImpl implements Game {
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
         }
+        gameObserver.turnEnds(Players.peekFirst(), getAge());
     }
 
     private void endOfRound() {

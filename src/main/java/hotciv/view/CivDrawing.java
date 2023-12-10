@@ -244,8 +244,7 @@ public class CivDrawing
       unitFigureMap.remove(mapUnit);
       unitPositionMap.remove(pos);
     }
-    else
-    if(new_unit_exits && !old_unit_exits) {
+    else if(new_unit_exits && !old_unit_exits) {
       Point point = new Point( GfxConstants.getXFromColumn(pos.getColumn()),
                                GfxConstants.getYFromRow(pos.getRow()) );
 

@@ -147,8 +147,8 @@ class CompTool extends NullTool {
                 }
               break;
           case CITY:
-              tool = actionTool;
-              status = "action tool";
+              tool = setFocusTool;
+              status = "focus tool (City)";
               break;
           case TILE:
               tool = setFocusTool;

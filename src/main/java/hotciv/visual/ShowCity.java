@@ -57,12 +57,15 @@ class ChangeCityTool extends NullTool {
   private CityStub city;
   private CityFigure cityFigure;
   private Game game;
+
+  private DrawingEditor editor;
   final private Position p = new Position(4,7);
   public ChangeCityTool(CityStub c, CityFigure cf, Game g) {
     city = c;
     cityFigure = cf;
     game = g;
   }
+
   public void mouseDown(MouseEvent e, int x, int y) {
     if(GfxConstants.getPositionFromXY(x, y).equals(p)){
       city.makeAChange();
