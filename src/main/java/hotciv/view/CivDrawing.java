@@ -51,6 +51,9 @@ public class CivDrawing
 
   /** store all moveable figures visible in this drawing = units */
   protected Map<Unit,UnitFigure> unitFigureMap;
+  protected Map<Position, Unit> unitPositionMap;
+  protected Map<City, CityFigure>  cityFigureMap;
+  protected Map<Position, City> cityPositionMap;
 
   protected Position currentFocusedTile;
 
@@ -63,6 +66,9 @@ public class CivDrawing
     this.delegate = new StandardDrawing();
     this.game = game;
     this.unitFigureMap = new HashMap<>();
+    this.unitPositionMap = new HashMap<>();
+    this.cityFigureMap = new HashMap<>();
+    this.cityPositionMap = new HashMap<>();
 
     // register this unit drawing as listener to any game state
     // changes...
@@ -70,6 +76,7 @@ public class CivDrawing
     // ... and build up the set of figures associated with
     // units in the game.
     defineUnitMap();
+    defineCityMap();
     // and the set of 'icons' in the status panel
     defineIcons();
   }
@@ -115,6 +122,7 @@ public class CivDrawing
             new UnitFigure( type, point, unit );
           unitFigure.addFigureChangeListener(this);
           unitFigureMap.put(unit, unitFigure);
+          unitPositionMap.put(p, unit);
 
           // also insert in delegate list as it is
           // this list that is iterated by the
@@ -137,38 +145,80 @@ public class CivDrawing
       delegate.remove(uf);
     }
     unitFigureMap.clear();
+    unitPositionMap.clear();
   }
+
+  protected void defineCityMap() {
+
+    removeCityFigures();
+
+    Position p;
+
+    for ( int r = 0; r < GameConstants.WORLDSIZE; r++ ) {
+      for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
+        p = new Position(r,c);
+        City city = game.getCityAt(p);
+        if ( city != null ) {
+          Point point = new Point( GfxConstants.getXFromColumn(p.getColumn()),
+                                   GfxConstants.getYFromRow(p.getRow()) );
+          CityFigure cityFigure =
+            new CityFigure( city, point );
+          cityFigure.addFigureChangeListener(this);
+          cityFigureMap.put(city, cityFigure);
+          cityPositionMap.put(p, city);
+          delegate.add(cityFigure);
+        }
+      }
+    }
+  }
+
+  protected void removeCityFigures() {
+    for (City c : cityFigureMap.keySet()) {
+      CityFigure cf = cityFigureMap.get(c);
+      delegate.remove(cf);
+    }
+    cityFigureMap.clear();
+    cityPositionMap.clear();
+  }
+
 
   protected ImageFigure turnShieldIcon;
   protected void defineIcons() {
     // TODO: Further development to include rest of figures needed
-    Player p = game.getPlayerInTurn();
-    ImageFigure shield;
 
-    switch (p) {
-      case RED:
-        shield = new ImageFigure(RED_SHIELD,
-                new Point(GfxConstants.TURN_SHIELD_X,
-                        GfxConstants.TURN_SHIELD_Y));
-        break;
-      case BLUE:
-        shield = new ImageFigure(BLUE_SHIELD,
-                new Point(GfxConstants.TURN_SHIELD_X,
-                        GfxConstants.TURN_SHIELD_Y));
-        break;
-      default:
-        shield = new ImageFigure(NOTHING,
-                new Point(GfxConstants.TURN_SHIELD_X,
-                        GfxConstants.TURN_SHIELD_Y));
+    //Shield icon
+    {
+      Player p = game.getPlayerInTurn();
+      ImageFigure shield;
 
+      switch (p) {
+        case RED:
+          shield = new ImageFigure(RED_SHIELD,
+                  new Point(GfxConstants.TURN_SHIELD_X,
+                          GfxConstants.TURN_SHIELD_Y));
+          break;
+        case BLUE:
+          shield = new ImageFigure(BLUE_SHIELD,
+                  new Point(GfxConstants.TURN_SHIELD_X,
+                          GfxConstants.TURN_SHIELD_Y));
+          break;
+        default:
+          shield = new ImageFigure(NOTHING,
+                  new Point(GfxConstants.TURN_SHIELD_X,
+                          GfxConstants.TURN_SHIELD_Y));
+
+      }
+
+      turnShieldIcon = shield;
+
+      // insert in delegate figure list to ensure graphical
+      // rendering.
+      //turnShieldIcon
+      delegate.add(turnShieldIcon);
     }
 
-    turnShieldIcon = shield;
 
-    // insert in delegate figure list to ensure graphical
-    // rendering.
-    //turnShieldIcon
-  delegate.add(turnShieldIcon);
+
   }
  
   // === Observer Methods ===
@@ -178,36 +228,63 @@ public class CivDrawing
     System.out.println("CivDrawing: world changes at " + pos);
     // this is a really brute-force algorithm: destroy
     // all known units and build up the entire set again
-    defineUnitMap();
+    //defineUnitMap();
 
     Unit gameUnit = game.getUnitAt(pos);
-    Unit mapUnit = unitFigureMap.get(gameUnit).;
+    Unit mapUnit = unitPositionMap.get(pos);
+    City gameCity = game.getCityAt(pos);
+    City mapCity = cityPositionMap.get(pos);
 
 
-    if (game.getUnitAt(pos) == null && unitFigureMap.get(game.getUnitAt(pos)) != null){
-      delegate.remove(unitFigureMap.get(game.getUnitAt(pos)));
-      unitFigureMap.remove(game.getUnitAt(pos));
-  }
+    boolean new_unit_exits = (gameUnit != null);
+    boolean old_unit_exits = (mapUnit != null);
 
-    if(game.getUnitAt(pos) != null && unitFigureMap.get(game.getUnitAt(pos)) == null) {
-      Unit unit = game.getUnitAt(pos);
-      String type = unit.getTypeString();
-      // convert the unit's Position to (x,y) coordinates
+    if (!new_unit_exits && old_unit_exits) {
+      delegate.remove(unitFigureMap.get(mapUnit));
+      unitFigureMap.remove(mapUnit);
+      unitPositionMap.remove(pos);
+    }
+    else
+    if(new_unit_exits && !old_unit_exits) {
       Point point = new Point( GfxConstants.getXFromColumn(pos.getColumn()),
-              GfxConstants.getYFromRow(pos.getRow()) );
-      UnitFigure unitFigure =
-              new UnitFigure( type, point, unit );
-      unitFigure.addFigureChangeListener(this);
-      unitFigureMap.put(unit, unitFigure);
+                               GfxConstants.getYFromRow(pos.getRow()) );
 
-      // also insert in delegate list as it is
-      // this list that is iterated by the
-      // graphics rendering algorithms
+      UnitFigure unitFigure = new UnitFigure(gameUnit.getTypeString(), point, gameUnit );
+      unitFigure.addFigureChangeListener(this);
+
+      unitFigureMap.remove(mapUnit);
+      unitPositionMap.remove(pos);
+      delegate.remove(unitFigureMap.get(mapUnit));
+
+      unitFigureMap.put(gameUnit, unitFigure);
+      unitPositionMap.put(pos, gameUnit);
       delegate.add(unitFigure);
     }
 
+    boolean new_city_exits = (gameCity != null);
+    boolean old_city_exits = (mapCity != null);
 
-    // TODO: Cities may change on position as well
+    if(!new_city_exits && old_city_exits) {
+      delegate.remove(cityFigureMap.get(mapCity));
+      cityFigureMap.remove(mapCity);
+      cityPositionMap.remove(pos);
+    }
+    else if(new_city_exits && !old_city_exits) {
+      Point point = new Point( GfxConstants.getXFromColumn(pos.getColumn()),
+                               GfxConstants.getYFromRow(pos.getRow()) );
+
+      CityFigure cityFigure = new CityFigure(gameCity, point);
+      cityFigure.addFigureChangeListener(this);
+
+      cityFigureMap.remove(mapCity);
+      cityPositionMap.remove(pos);
+      delegate.remove(cityFigureMap.get(mapCity));
+
+      cityFigureMap.put(gameCity, cityFigure);
+      cityPositionMap.put(pos, gameCity);
+      delegate.add(cityFigure);
+    }
+
   }
 
   public void turnEnds(Player nextPlayer, int age) {

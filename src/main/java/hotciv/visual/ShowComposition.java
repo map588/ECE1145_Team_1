@@ -33,7 +33,7 @@ import static hotciv.view.GfxConstants.*;
 public class ShowComposition {
   
   public static void main(String[] args) {
-    Game game = new GameImpl(GameType.alphaCiv, 2);
+    Game game = new GameImpl(GameType.deltaCiv, 2);
 
     DrawingEditor editor = 
       new MiniDrawApplication( "Click and/or drag any item to see all game actions",  
@@ -48,6 +48,8 @@ public class ShowComposition {
   }
 }
 
+enum TileContents { UNIT, CITY, TILE, SHEILD, NOTHING };
+
 class CompTool extends NullTool {
 
   private Game game;
@@ -58,9 +60,13 @@ class CompTool extends NullTool {
   private ActionTool actionTool;
   private ChangeCityTool changeCityTool;
   private ShowSetFocusTool setFocusTool;
+  private NullTool nullTool;
 
   private Tool tool;
+  private String status;
 
+
+  TileContents contents;
 
   public CompTool(DrawingEditor e, Game g) {
     editor = e;
@@ -68,71 +74,134 @@ class CompTool extends NullTool {
     unitMoveTool = new UnitMoveTool(editor, game);
     endTurnTool = new EndTurnTool(editor, game);
     actionTool = new ActionTool(editor, game);
-    changeCityTool = new ChangeCityTool(editor, game);
+    //changeCityTool = new ChangeCityTool(editor, game);
     setFocusTool = new ShowSetFocusTool(editor, game);
   }
 
 
   @Override
   public void mouseDown(MouseEvent e, int x, int y) {
-    Position pos = getPositionFromXY(x,y);
-    City c = game.getCityAt(pos);
-    Unit u = game.getUnitAt(pos);
+      updateTool(e, x, y);
+      editor.showStatus(status);
 
-    String status;
+      if(tool != null)
+        tool.mouseDown(e, x, y);
 
-//    if (u != null) {
-//      if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
-//        tool = actionTool;
-//        status = "action tool";
-//      } else {
-//        tool = unitMoveTool;
-//        status = "unit move tool";
-//      }
-//    } else if (c != null) {
-//      tool = changeCityTool;
-//        status = "change city tool";
-//    }
-//    else if (x > 559 && x < 587 && y > 64 && y < 103) {
-//      tool = endTurnTool;
-//      status = "end turn tool";
-//    }
-//    else {
-//      tool = setFocusTool;
-//      status = "focus tool";
-//    }
-//    editor.showStatus(status);
-//   tool.mouseDown(e, x, y);
-    unitMoveTool.mouseDown(e, x, y);
-    endTurnTool.mouseDown(e, x, y);
-    actionTool.mouseDown(e, x, y);
-    changeCityTool.mouseDown(e, x, y);
-    setFocusTool.mouseDown(e, x, y);
     // ChangeAgeTool.mouseDown(e, x, y);
     //showWorldTool ?
   }
 
   public void mouseDrag(MouseEvent e, int x, int y) {
-    //tool.mouseDrag(e, x, y);
+    editor.showStatus(status);
 
-    unitMoveTool.mouseDrag(e, x, y);
-    endTurnTool.mouseDrag(e, x, y);
-    actionTool.mouseDrag(e, x, y);
-    changeCityTool.mouseDrag(e, x, y);
-    setFocusTool.mouseDrag(e, x, y);
+    if(tool != null)
+        tool.mouseDrag(e, x, y);
+
+
+//    unitMoveTool.mouseDrag(e, x, y);
+//    endTurnTool.mouseDrag(e, x, y);
+//    actionTool.mouseDrag(e, x, y);
+    //changeCityTool.mouseDrag(e, x, y);
+//    setFocusTool.mouseDrag(e, x, y);
     // ChangeAgeTool.mouseDrag(e, x, y);
     //showWorldTool ?
   }
 
   public void mouseUp(MouseEvent e, int x, int y) {
-   // tool.mouseUp(editor, game);
+        contents = getTileContents(x,y);
+//    switch (contents) {
+//        case UNIT:
+//          if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
+//            tool = actionTool;
+//            status = "action tool";
+//          } else {
+//            tool = unitMoveTool;
+//            status = "unit move tool";
+//          }
+//            break;
+//        case CITY:
+//            tool = actionTool;
+//            status = "action tool";
+//            break;
+//        case TILE:
+//            tool = setFocusTool;
+//            status = "focus tool";
+//            break;
+//        case SHEILD:
+//            tool = endTurnTool;
+//            status = "end turn tool";
+//            break;
+//        case NOTHING:
+//            tool = nullTool;
+//            status = "focus tool";
+//            break;
+//        default:
+//            tool = nullTool;
+//            status = "focus tool";
+//            break;
+//        }
+        editor.showStatus(status);
+        if(tool != null)
+            tool.mouseUp(e, x, y);
 
-    unitMoveTool.mouseUp(e, x, y);
-    endTurnTool.mouseUp(e, x, y);
-    actionTool.mouseUp(e, x, y);
-    changeCityTool.mouseUp(e, x, y);
-    setFocusTool.mouseUp(e, x, y);
+//    unitMoveTool.mouseUp(e, x, y);
+//    endTurnTool.mouseUp(e, x, y);
+//    actionTool.mouseUp(e, x, y);
+    //changeCityTool.mouseUp(e, x, y);
+//    setFocusTool.mouseUp(e, x, y);
     // ChangeAgeTool.mouseUp(e, x, y);
     //showWorldTool ?
   }
+
+  private TileContents getTileContents(int x , int y) {
+    Position pos = getPositionFromXY(x,y);
+
+    if (game.getUnitAt(pos) != null) {
+      return TileContents.UNIT;
+    }
+    else if (game.getCityAt(pos) != null) {
+      return TileContents.CITY;
+    }
+    else if (game.getTileAt(pos) != null) {
+      return TileContents.TILE;
+    }
+    else if (x > 559 && x < 587 && y > 64 && y < 103) {
+      return TileContents.SHEILD;
+    }
+    else {
+      return TileContents.NOTHING;
+    }
+  }
+
+  private void updateTool(MouseEvent e, int x ,int y) {
+
+      switch (getTileContents(x,y)) {
+          case UNIT:
+              if ((e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
+                  tool = actionTool;
+                  status = "action tool";
+                } else {
+                  tool = unitMoveTool;
+                  status = "unit move tool";
+                }
+              break;
+          case CITY:
+              tool = actionTool;
+              status = "action tool";
+              break;
+          case TILE:
+              tool = setFocusTool;
+              status = "focus tool";
+              break;
+          case SHEILD:
+              tool = endTurnTool;
+              status = "end turn tool";
+              break;
+          default:
+              tool = nullTool;
+              status = "focus tool";
+              break;
+      }
+  }
+
 }

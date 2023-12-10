@@ -2,19 +2,15 @@ package hotciv.visual;
 
 
 import hotciv.framework.*;
-import hotciv.helper_Interfaces.*;
 
-import hotciv.standard.CityImpl;
 import hotciv.standard.GameImpl;
 import minidraw.standard.*;
 import minidraw.framework.*;
-import hotciv.framework.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import hotciv.framework.*;
 import hotciv.view.*;
 import hotciv.stub.*;
 
@@ -34,38 +30,44 @@ import hotciv.stub.*;
    distribute it for non-commercial purposes. For any 
    commercial use, see http://www.baerbak.com/
  */
+
+
 public class ShowCity {
-  
+
   public static void main(String[] args) {
 
     Game game = new StubGame1();
 
-    DrawingEditor editor = 
-      new MiniDrawApplication( "Click to see city graphics update...",  
-                               new HotCivFactory3(game) );
+    DrawingEditor editor =
+            new MiniDrawApplication( "Click to see city graphics update...",
+                    new HotCivFactory3(game) );
     editor.open();
+    CityStub city = new CityStub();
 
-    editor.setTool( new ChangeCityTool(editor, game) );
+    CityFigure cf = new CityFigure( city,
+            new Point( GfxConstants.getXFromColumn(4),
+                    GfxConstants.getYFromRow(7) ) );
+    editor.drawing().add(cf);
+    editor.setTool( new ChangeCityTool(city, cf,game) );
 
   }
 }
 
 class ChangeCityTool extends NullTool {
-
-  private DrawingEditor editor;
-  private Game game;
-  private City city;
+  private CityStub city;
   private CityFigure cityFigure;
-
-  public ChangeCityTool(DrawingEditor e, Game g) {
+  private Game game;
+  final private Position p = new Position(4,7);
+  public ChangeCityTool(CityStub c, CityFigure cf, Game g) {
+    city = c;
+    cityFigure = cf;
     game = g;
-    editor = e;
   }
-
   public void mouseDown(MouseEvent e, int x, int y) {
-    Position pos = GfxConstants.getPositionFromXY(x,y);
-    game.changeProductionInCityAt(pos, "legion");
-    cityFigure.changed();
+    if(GfxConstants.getPositionFromXY(x, y).equals(p)){
+      city.makeAChange();
+      cityFigure.changed();
+    }
   }
 }
 
@@ -74,8 +76,8 @@ class HotCivFactory3 implements Factory {
   public HotCivFactory3(Game g) { game = g; }
 
   public DrawingView createDrawingView( DrawingEditor editor ) {
-    DrawingView view = 
-      new MapView(editor, game);
+    DrawingView view =
+            new MapView(editor, game);
     return view;
   }
 

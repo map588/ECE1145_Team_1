@@ -48,28 +48,46 @@ public class World {
 
     //-------------Getters---------------//
     public TileImpl getTileAt(Position p) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return null;
+        }
         return tiles[p.getColumn()][p.getRow()];
     }
 
     public UnitImpl getUnitAt(Position p) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return null;
+        }
         return units[p.getColumn()][p.getRow()];
     }
 
     public CityImpl getCityAt(Position p) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return null;
+        }
         return cities[p.getColumn()][p.getRow()];
     }
 
 
     //-------------Setters---------------//
     public void setTileAt(Position p, String terrain) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return;
+        }
         tiles[p.getColumn()][p.getRow()].setTerrain(terrain);
     }
 
     public void makeUnitAt(Position p, String unitType, Player owner, UnitFactory unitFactory) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return;
+        }
         units[p.getColumn()][p.getRow()] = unitFactory.createUnit(unitType, owner);
     }
 
     public void setCityAt(Position p, Player owner) {
+        if(p.getColumn() < 0 || p.getColumn() >= size || p.getRow() < 0 || p.getRow() >= size) {
+            return;
+        }
         cities[p.getColumn()][p.getRow()] = new CityImpl(owner, p);
     }
 

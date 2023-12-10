@@ -134,14 +134,14 @@ public class GameImpl implements Game {
         if(possibleWinner != null){
             this.winner = possibleWinner;
             System.out.println("Game Over, "+ this.winner.toString() +" won at round: " + this.roundNumber);
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Press Enter to continue...");
-
-            scanner.nextLine(); // Pause until enter is pressed
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.println("Press Enter to continue...");
+//
+//            scanner.nextLine(); // Pause until enter is pressed
 
             System.out.println("Continuing execution.");
-            scanner.close();
-            System.exit(0);
+//            scanner.close();
+//            System.exit(0);
         }
         age_manager.incrementAge(this);
         round_manager.incrementRound(this);
