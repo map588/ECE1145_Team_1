@@ -38,7 +38,7 @@ public class ObserverImpl implements GameObserver {
      */
     @Override
     public void turnEnds(Player nextPlayer, int age){
-        String text = String.format("Observer: Turn has ended. World age is %d, next player is %s", age, nextPlayer.toString());
+        String text = String.format("Observer: Turn has ended. World age is %d, next player is %s.", age, nextPlayer.toString());
         System.out.println(text);
     }
 

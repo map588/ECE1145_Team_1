@@ -38,22 +38,17 @@ public class Observer_Tests {
 
     @Test
     public void OBSworldChangedAt() {
-        game.setTileFocus(new Position(1,1));
-        assertThat(toOutput.toString(), is("Observer: Tile focus changed to 1, 1."));
+        game.moveUnit(new Position(0,2), new Position(0, 3));
+        assertThat(toOutput.toString(), is("Observer: World has been changed at position 2, 0.\r\nObserver: World has been changed at position 3, 0.\r\n"));
     }
-
-
-    @Test
-    public void OBSNullWorldChangedAt() {
-
-    }
-
 
     @Test
     public void OBSturnEnds() {}
-
     @Test
-    public void OBStileFocusChangedAt() {}
+    public void OBStileFocusChangedAt() {
+        game.setTileFocus(new Position(1,1));
+        assertThat(toOutput.toString(), is("Observer: Tile focus changed to 1, 1.\r\n"));
+    }
 
 
 
