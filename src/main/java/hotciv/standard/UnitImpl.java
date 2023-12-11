@@ -106,18 +106,6 @@ public class UnitImpl implements Unit {
         }
     }
 
-    /**
-     * Decrements the move count of the unit
-     * @return true if the unit has moves left, false if not
-     */
-    public boolean decrementMoveCount() {
-        if(moveCount <= 0){
-            return false;
-        }
-
-        this.moveCount--;
-        return true;
-    }
 
     //---------------------Setters---------------------//
 

@@ -95,12 +95,12 @@ public class GameConstants {
     put(MOUNTAINS, 1);
   }};
 
-    public static final HashMap<String, Integer> terrain_food = new HashMap<String, Integer>() {{
-        put(PLAINS, 3);
-        put(OCEANS, 1);
-        put(FOREST, 0);
-        put(HILLS, 0);
-        put(MOUNTAINS, 0);
-    }};
+  public static final HashMap<String, Integer> terrain_food = new HashMap<String, Integer>() {{
+      put(PLAINS, 3);
+      put(OCEANS, 1);
+      put(FOREST, 0);
+      put(HILLS, 0);
+      put(MOUNTAINS, 0);
+  }};
 
 }

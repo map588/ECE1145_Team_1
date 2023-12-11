@@ -66,6 +66,6 @@ public class Position {
   }
 
   public String toString() {
-    return "["+r+","+c+"]";
+    return "["+c+","+r+"]";
   }
 }

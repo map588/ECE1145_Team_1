@@ -171,7 +171,7 @@ public class CityImpl implements City {
     }
 
     // --------------------- Private validity checks ------------------------------
-    private enum focusType {
+    public enum focusType {
         production, food
     }
 

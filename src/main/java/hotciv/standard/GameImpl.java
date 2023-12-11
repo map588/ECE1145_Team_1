@@ -3,7 +3,6 @@ package hotciv.standard;
 import hotciv.framework.*;
 import hotciv.helper_Interfaces.*;
 import hotciv.manager_factories.*;
-import hotciv.helpers.Observers.*;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -50,20 +49,22 @@ public class GameImpl implements Game {
     private int[] numberSuccessfulAttacks;
     private int roundNumber;
     private Player winner;
-    private GlobalObserver global_observer;
-    private boolean observerEnabled = false;
+    private Position currentTileFocus;
 
+    private ManagerFactoryFactory manager_manager;
     private ManagerFactory manager_factory;
 
     //I am going to assign these in the manager factory
     public UnitFactory unit_factory;
-
     private ageManager age_manager;
     private winnerManager winner_manager;
     private worldManager world_manager;
     private actionManager action_manager;
     public  attackManager attack_manager;
     private roundManager round_manager;
+
+    protected GameObserver gameObserver;
+
 
 
     public GameImpl(ManagerFactory ruleSet, int numPlayers) {
@@ -88,6 +89,37 @@ public class GameImpl implements Game {
         this.round_manager = manager_factory.createRoundManager();
         this.unit_factory = manager_factory.createUnitFactory();
 
+        Position cityRed = new Position(8,12);
+        Position cityBlue = new Position(4,5);
+
+        this.changeProductionInCityAt(cityRed, ARCHER);
+        this.changeProductionInCityAt(cityBlue, LEGION);
+
+        this.age = this.age_manager.START_AGE;
+        this.world = world_manager.createWorld(this);
+    }
+
+    public GameImpl(GameType ruleSet, int numPlayers) {
+
+        this.numberOfPlayers = numPlayers;
+        this.numberSuccessfulAttacks = new int[this.numberOfPlayers];
+        for(int i = 0; i < numPlayers; i++){this.numberSuccessfulAttacks[i] = 0;}
+        this.Players = new ArrayDeque<Player>(this.numberOfPlayers);
+        this.Players.addAll(Arrays.asList(Player.values()).subList(0, this.numberOfPlayers));
+        this.firstPlayer = this.Players.peekFirst();
+        this.version = ruleSet;
+
+        this.manager_manager = new ManagerFactoryFactory();
+        this.manager_factory = manager_manager.getManagerFactory(ruleSet.name());
+
+        this.world_manager = manager_factory.createWorldManager();
+        this.age_manager = manager_factory.createAgeManager();
+        this.winner_manager = manager_factory.createWinnerManager();
+        this.action_manager = manager_factory.createActionManager();
+        this.attack_manager = manager_factory.createAttackManager();
+        this.round_manager = manager_factory.createRoundManager();
+        this.unit_factory = manager_factory.createUnitFactory();
+
 
         this.age = this.age_manager.START_AGE;
         this.world = world_manager.createWorld(this);
@@ -100,7 +132,8 @@ public class GameImpl implements Game {
         if (Players.peekFirst() == firstPlayer) {
             this.endOfRound();
         }
-        global_observer.update(this);
+        gameObserver.turnEnds(Players.peekFirst(), getAge());
+        gameObserver.worldChangedAt(new Position(0,0));
     }
 
     private void endOfRound() {
@@ -108,14 +141,14 @@ public class GameImpl implements Game {
         if(possibleWinner != null){
             this.winner = possibleWinner;
             System.out.println("Game Over, "+ this.winner.toString() +" won at round: " + this.roundNumber);
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Press Enter to continue...");
-
-            scanner.nextLine(); // Pause until enter is pressed
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.println("Press Enter to continue...");
+//
+//            scanner.nextLine(); // Pause until enter is pressed
 
             System.out.println("Continuing execution.");
-            scanner.close();
-            System.exit(0);
+//            scanner.close();
+//            System.exit(0);
         }
         age_manager.incrementAge(this);
         round_manager.incrementRound(this);
@@ -144,11 +177,14 @@ public class GameImpl implements Game {
         action_manager.unitActionAt(this, p);
     }
 
+
+
     public boolean attack(Position attacker, Position defender) {
         return this.attack_manager.attack(attacker, defender, this);
     }
 
     public void createUnitAt(Position p, String unit, Player owner) {
+        gameObserver.worldChangedAt(p);
         this.world.makeUnitAt(p, unit, owner, this.unit_factory);
     }
 
@@ -164,38 +200,64 @@ public class GameImpl implements Game {
         UnitImpl unit_onTile = this.getUnitAt(to);
         String terrain = this.getTileAt(to).getTypeString();
 
+        Position previousPosition;
+
         boolean unit_exists = unit_toMove != null;
         boolean destination_is_empty = unit_onTile == null;
-        boolean is_within_one_tile = isWithinOneTile(from, to);
+        boolean is_within_range = isWithinUnitRange(getUnitAt(from).getTypeString(), from, to);
         boolean unit_belongs_to_player = unit_toMove.getOwner() == this.getPlayerInTurn();
         boolean isTraversable = (unit_toMove.getTerrainTraversal() || (terrain != MOUNTAINS  && terrain != OCEANS));
         boolean isWithinBounds = (to.getColumn() >= 0 && to.getColumn() < world.size && to.getRow() >= 0 && to.getRow() < world.size);
 
 
         if (unit_exists            &&
-                is_within_one_tile     &&
-                unit_belongs_to_player &&
-                isTraversable          &&
-                isWithinBounds) {
+            is_within_range        &&
+            unit_belongs_to_player &&
+            isTraversable          &&
+            isWithinBounds) {
+
+            int moveCount = unit_toMove.getMoveCount();
+            int distance = distance(from, to);
             //If the tile is occuplied by a friendly unit, return false
             if(!destination_is_empty && unit_onTile.getOwner() == unit_toMove.getOwner()){return false;}
 
-            if (unit_toMove.decrementMoveCount()) {
+            if (moveCount <= distance) {
+                unit_toMove.setMoveCount(moveCount - distance);
 
                 if(destination_is_empty) {
                     this.world.moveUnitTo(from, to);
+                    gameObserver.worldChangedAt(from);
+                    gameObserver.worldChangedAt(to);
                     return true;
                 }
                 else if(this.attack(from, to)){
                     this.world.moveUnitTo(from, to);
+                    gameObserver.worldChangedAt(from);
+                    gameObserver.worldChangedAt(to);
                     return true;
                 }
 
                 return false;
             }
+            return false;
         }
 
         return false;
+    }
+
+    public boolean isOwnedByUser(Position p) {
+        return (this.getUnitAt(p).getOwner() == this.getPlayerInTurn());
+    }
+
+    public boolean isWithinUnitRange(Position from, Position to) {
+        return (Math.abs(from.getColumn() - to.getColumn()) <= this.getUnitAt(from).getMoveCount() &&
+                Math.abs(from.getRow() - to.getRow()) <= this.getUnitAt(from).getMoveCount());
+    }
+
+    public int distance(Position p1, Position p2) {
+       int d1 = Math.abs(p1.getColumn() - p2.getColumn());
+       int d2 = Math.abs(p1.getRow() - p2.getRow());
+        return Math.max(d1, d2);
     }
 
     public void changeCityOwner(Position p, Player player) {
@@ -208,6 +270,7 @@ public class GameImpl implements Game {
 
     public boolean setCityAt(Position p, Player owner) {
         this.world.setCityAt(p, owner);
+        this.gameObserver.worldChangedAt(p);
         return true;
     }
 
@@ -220,6 +283,16 @@ public class GameImpl implements Game {
         numberSuccessfulAttacks[getUnitOwner(p).ordinal()]++;
     }
 
+    @Override
+    public void addObserver(GameObserver observer) {
+        this.gameObserver = observer;
+    }
+
+    @Override
+    public void setTileFocus(Position position) {
+        currentTileFocus = position;
+        this.gameObserver.tileFocusChangedAt(position);
+    }
 
     //---------------------- Getters -----------------------------//
     public int getNumberOfPlayers() {
@@ -278,10 +351,6 @@ public class GameImpl implements Game {
         return this.version;
     }
 
-    public World getWorld() {
-        return this.world;
-    }
-
     //---------------------Destructors-----------------------------//
 
     public void removeUnitAt(Position position) {
@@ -301,14 +370,13 @@ public class GameImpl implements Game {
         return this.getUnitAt(p) != null;
     }
 
-    public boolean isWithinOneTile(Position from, Position to) {
-        return Math.abs(from.getColumn() - to.getColumn()) <= 1 &&
-                Math.abs(from.getRow() - to.getRow()) <= 1;
+    public boolean isWithinUnitRange(String UnitType, Position from, Position to) {
+        boolean b = Math.abs(from.getColumn() - to.getColumn()) <= unit_moveCount.get(UnitType) &&
+                Math.abs(from.getRow() - to.getRow()) <= unit_moveCount.get(UnitType);
+        return b;
     }
 
-    public void enableObserver(boolean enable){
-        this.observerEnabled = enable;
-    }
+
 
     public Position findProductionPosition(Position p) {
 
