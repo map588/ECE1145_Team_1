@@ -60,9 +60,13 @@ class CompTool extends NullTool {
   private ActionTool actionTool;
   private ChangeCityTool changeCityTool;
   private ShowSetFocusTool setFocusTool;
+
+  private ChangeAgeTool ageTextTool;
   private NullTool nullTool;
 
   private Tool tool;
+
+  private Tool textTool;
   private String status;
 
 
@@ -76,6 +80,7 @@ class CompTool extends NullTool {
     actionTool = new ActionTool(editor, game);
     //changeCityTool = new ChangeCityTool(editor, game);
     setFocusTool = new ShowSetFocusTool(editor, game);
+    ageTextTool = new ChangeAgeTool(editor, game);
   }
 
 
@@ -86,6 +91,10 @@ class CompTool extends NullTool {
 
       if(tool != null)
         tool.mouseDown(e, x, y);
+
+      if (tool == endTurnTool)
+        ageTextTool.mouseDown(e, x, y);
+
 
     // ChangeAgeTool.mouseDown(e, x, y);
     //showWorldTool ?
@@ -104,6 +113,8 @@ class CompTool extends NullTool {
         editor.showStatus(status);
         if(tool != null)
             tool.mouseUp(e, x, y);
+
+
 
 //    unitMoveTool.mouseUp(e, x, y);
 //    endTurnTool.mouseUp(e, x, y);

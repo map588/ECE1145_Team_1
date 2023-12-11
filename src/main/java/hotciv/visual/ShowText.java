@@ -75,30 +75,41 @@ class ChangeAgeTool extends NullTool {
  */
 
 class ChangeAgeTool extends NullTool{
+
   private Game game;
   private DrawingEditor editor;
   private TextFigure textFigure;
+  private String AgeText = "";
   final private Point textPosition = new Point(GfxConstants.AGE_TEXT_X, GfxConstants.AGE_TEXT_Y);
+
+  ImageFigure fig;
 
   public ChangeAgeTool(DrawingEditor e, Game g) {
     editor = e;
     game = g;
 
-
+    textFigure = new TextFigure(AgeText, textPosition);
   }
 
   public void mouseDown(MouseEvent e, int x, int y) {
 
     game.endOfTurn();
 
+    fig = new ImageFigure();
+    fig.set(GfxConstants.NOTHING, textPosition);
+    fig.draw(editor.view().getGraphics());
+
+
+
     if (game.getAge() < 0) {
-      String AgeText = String.format("%d BC", abs(game.getAge()));
-      textFigure = new TextFigure(AgeText, textPosition );
+      AgeText = String.format("%d BC", abs(game.getAge()));
+      textFigure.setText(AgeText);// = new TextFigure(AgeText, textPosition );
       editor.showStatus( "Age displayed.");
     }
     else {
-      String AgeText = String.format("%d AD", abs(game.getAge()));
-      textFigure = new TextFigure(AgeText, textPosition);
+      AgeText = String.format("%d AD", abs(game.getAge()));
+      textFigure.setText(AgeText);
+      //        = new TextFigure(AgeText, textPosition);
       editor.showStatus( "Age displayed.");
     }
     textFigure.draw(editor.view().getGraphics());

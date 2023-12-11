@@ -14,6 +14,8 @@ public class ObserverImpl implements GameObserver {
      */
     public void worldChangedAt() {
         worldChangedAt(null);
+        String text = "Observer: World changed.";
+        System.out.println(text);
     }
 
     /** invoked every time some change occurs on a position
@@ -24,7 +26,10 @@ public class ObserverImpl implements GameObserver {
      * @param pos the position in the world that has changed state
      */
     @Override
-    public void worldChangedAt(Position pos){}
+    public void worldChangedAt(Position pos) {
+        String text = String.format("Observer: World has been changed at position %d, %d.", pos.getRow(), pos.getColumn());
+        System.out.println(text);
+    }
 
     /** invoked just after the game's end of turn is called
      * to signal the new "player in turn" and world age state.
@@ -32,7 +37,10 @@ public class ObserverImpl implements GameObserver {
      * @param age the present age of the world
      */
     @Override
-    public void turnEnds(Player nextPlayer, int age){}
+    public void turnEnds(Player nextPlayer, int age){
+        String text = String.format("Observer: Turn has ended. World age is %d, next player is %s", age, nextPlayer.toString());
+        System.out.println(text);
+    }
 
     /** invoked whenever the user changes focus to another
      * tile (for inspecting the tile's unit and city
@@ -41,10 +49,10 @@ public class ObserverImpl implements GameObserver {
      * now inspected/has focus.
      */
     @Override
-    public void tileFocusChangedAt(Position position){}
+    public void tileFocusChangedAt(Position position){
+        String text = String.format("Observer: Tile focus changed to %d, %d.", position.getRow(), position.getColumn());
+        System.out.println(text);
+    }
 
-//    public void update (GameImpl this, Position p) {
-//        gameObserver.update(this, p);
-//    }
 
 }
