@@ -49,7 +49,7 @@ public class StubGame1 implements Game {
   public void changeProductionInCityAt( Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {}  
   public void addObserver(GameObserver observer) {} 
-  public void setTileFocus(Position position) {}
+  public void setTileFocus(Position position) { }
 
   // A simple implementation to draw the map of DeltaCiv
   protected Map<Position,Tile> world;

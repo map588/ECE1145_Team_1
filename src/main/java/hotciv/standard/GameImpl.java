@@ -89,6 +89,11 @@ public class GameImpl implements Game {
         this.round_manager = manager_factory.createRoundManager();
         this.unit_factory = manager_factory.createUnitFactory();
 
+        Position cityRed = new Position(8,12);
+        Position cityBlue = new Position(4,5);
+
+        this.changeProductionInCityAt(cityRed, ARCHER);
+        this.changeProductionInCityAt(cityBlue, LEGION);
 
         this.age = this.age_manager.START_AGE;
         this.world = world_manager.createWorld(this);
@@ -128,6 +133,7 @@ public class GameImpl implements Game {
             this.endOfRound();
         }
         gameObserver.turnEnds(Players.peekFirst(), getAge());
+        gameObserver.worldChangedAt(new Position(0,0));
     }
 
     private void endOfRound() {
@@ -178,6 +184,7 @@ public class GameImpl implements Game {
     }
 
     public void createUnitAt(Position p, String unit, Player owner) {
+        gameObserver.worldChangedAt(p);
         this.world.makeUnitAt(p, unit, owner, this.unit_factory);
     }
 
@@ -232,6 +239,7 @@ public class GameImpl implements Game {
 
                 return false;
             }
+            return false;
         }
 
         return false;
@@ -247,7 +255,9 @@ public class GameImpl implements Game {
     }
 
     public int distance(Position p1, Position p2) {
-        return (Math.max(Math.abs(p1.getColumn() - p2.getColumn()), Math.abs(p1.getRow() - p2.getRow())));
+       int d1 = Math.abs(p1.getColumn() - p2.getColumn());
+       int d2 = Math.abs(p1.getRow() - p2.getRow());
+        return Math.max(d1, d2);
     }
 
     public void changeCityOwner(Position p, Player player) {

@@ -1,6 +1,7 @@
 package hotciv.stub;
 
 import hotciv.framework.*;
+import hotciv.standard.*;
 
 import java.util.*;
 
@@ -40,6 +41,10 @@ public class StubGame2 implements Game {
   private Position pos_legion_blue;
   private Position pos_settler_red;
   private Position pos_ufo_red;
+  private Position cityPos1;
+  private Position cityPos2;
+
+  City city1;
 
   private Unit red_archer;
 
@@ -65,6 +70,7 @@ public class StubGame2 implements Game {
     if ( from.equals(pos_archer_red) ) {
       pos_archer_red = to;
     }
+
     // notify our observer(s) about the changes on the tiles
     gameObserver.worldChangedAt(from);
     gameObserver.worldChangedAt(to);
@@ -100,8 +106,9 @@ public class StubGame2 implements Game {
     pos_settler_red = new Position( 4, 3);
     pos_ufo_red = new Position( 6, 4);
 
+
     // the only one I need to store for this stub
-    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );   
+    red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
 
     inTurn = Player.RED;
   }
@@ -125,18 +132,29 @@ public class StubGame2 implements Game {
     }
   }
 
+
   // TODO: Add more stub behaviour to test MiniDraw updating
-  public City getCityAt( Position p ) { return null; }
-  public Player getWinner() { return null; }
+  public City getCityAt(Position p ) { return city1; }
+  public Player getWinner() { return Player.RED; }
   public int getAge() { return 0; }  
-  public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
-  public void changeProductionInCityAt( Position p, String unitType ) {}
-  public void performUnitActionAt( Position p ) {}  
+  public void changeWorkForceFocusInCityAt( Position p, String balance ) {
+    //city1.changeWorkForceFocusInCity(balance);
+    gameObserver.worldChangedAt(p);
+  }
+  public void changeProductionInCityAt( Position p, String unitType ) {
+    //city1.changeProductionInCity(unitType);
+    gameObserver.worldChangedAt(p);
+  }
+  public void performUnitActionAt( Position p ) {
+    System.out.println( "-- StubGame2 / performUnitActionAt called.");
+    gameObserver.worldChangedAt(p);
+  }
 
   public void setTileFocus(Position position) {
     // TODO: setTileFocus implementation pending.
     System.out.println("-- StubGame2 / setTileFocus called.");
     System.out.println(" *** IMPLEMENTATION PENDING ***");
+    gameObserver.tileFocusChangedAt(position);
   }
 
 }

@@ -51,8 +51,23 @@ public class ObserverImpl implements GameObserver {
     @Override
     public void tileFocusChangedAt(Position position){
         String text = String.format("Observer: Tile focus changed to %d, %d.", position.getRow(), position.getColumn());
+        worldChangedAt(position);
         System.out.println(text);
     }
+
+    public void cityProductionChangedAt(Position position) {
+        String text = String.format("Observer: City Production changed at %d, %d.", position.getRow(), position.getColumn());
+        worldChangedAt(position);;
+        System.out.println(text);
+    }
+
+    public void workForceFocusChangedAt(Position position) {
+        String text = String.format("Observer: City work Focus changed at %d, %d.", position.getRow(), position.getColumn());
+        worldChangedAt(position);
+        System.out.println(text);
+    }
+
+
 
 
 }

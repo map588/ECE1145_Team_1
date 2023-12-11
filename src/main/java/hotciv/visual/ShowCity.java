@@ -3,6 +3,7 @@ package hotciv.visual;
 
 import hotciv.framework.*;
 
+import hotciv.standard.CityImpl;
 import hotciv.standard.GameImpl;
 import minidraw.standard.*;
 import minidraw.framework.*;
@@ -54,7 +55,7 @@ public class ShowCity {
 }
 
 class ChangeCityTool extends NullTool {
-  private CityStub city;
+  private City city;
   private CityFigure cityFigure;
   private Game game;
 
@@ -66,10 +67,21 @@ class ChangeCityTool extends NullTool {
     game = g;
   }
 
+  protected boolean toggle = false;
   public void mouseDown(MouseEvent e, int x, int y) {
-    if(GfxConstants.getPositionFromXY(x, y).equals(p)){
-      city.makeAChange();
-      cityFigure.changed();
+
+    if(GfxConstants.getPositionFromXY(x, y).equals(p)) {
+      if(toggle) {
+        game.changeProductionInCityAt(p, GameConstants.ARCHER);
+        game.changeWorkForceFocusInCityAt(p, "production");
+        toggle = false;
+      }
+      else {
+        game.changeProductionInCityAt(p, GameConstants.LEGION);
+        game.changeWorkForceFocusInCityAt(p, "food");
+        toggle = true;
+      }
+
     }
   }
 }

@@ -78,7 +78,6 @@ class CompTool extends NullTool {
     unitMoveTool = new UnitMoveTool(editor, game);
     endTurnTool = new EndTurnTool(editor, game);
     actionTool = new ActionTool(editor, game);
-    //changeCityTool = new ChangeCityTool(editor, game);
     setFocusTool = new ShowSetFocusTool(editor, game);
     ageTextTool = new ChangeAgeTool(editor, game);
   }
@@ -95,7 +94,7 @@ class CompTool extends NullTool {
       if (tool == endTurnTool)
         ageTextTool.mouseDown(e, x, y);
 
-
+      endTurnTool.mouseDown(e, x, y);
     // ChangeAgeTool.mouseDown(e, x, y);
     //showWorldTool ?
   }

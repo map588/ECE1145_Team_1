@@ -50,6 +50,19 @@ public class Observer_Tests {
         assertThat(toOutput.toString(), is("Observer: Tile focus changed to 1, 1.\r\n"));
     }
 
+/*
+    @Test
+    public void OBSproductionChangedAt() {
+        City city1 =  game.getCityAt(new Position(1,1));
 
+        (CityImpl) cit1.changeProductionInCity(ARCHER);
+        assertThat(toOutput.toString(), is("Observer: City Production changed at 1, 1.\r\n"));
+    }
 
+    @Test
+    public void OBSworkForceFocusChangedAt() {
+        City city1 = game.getCityAt(new Position(1,1));
+        city1.changeWorkForceFocusInCity("food");
+        assertThat(toOutput.toString(), is("Observer: City work focus changed at %d, %d.\r\n"));
+    }*/
 }

@@ -1,5 +1,6 @@
 package hotciv.framework;
 
+import hotciv.standard.CityImpl;
 import hotciv.standard.UnitImpl;
 
 /** Game is the central interface allowing a client to access and

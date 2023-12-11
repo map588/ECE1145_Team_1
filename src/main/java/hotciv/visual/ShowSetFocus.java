@@ -33,7 +33,7 @@ import static hotciv.framework.GameType.*;
 public class ShowSetFocus {
   
   public static void main(String[] args) {
-      Game game = new GameImpl(alphaCiv, 2);
+      Game game = new GameImpl(GameType.alphaCiv, 2);
 
     DrawingEditor editor = 
       new MiniDrawApplication( "Click any tile to set focus",  
@@ -43,8 +43,6 @@ public class ShowSetFocus {
 
     Position currentFocus;
 
-    // TODO: Replace the setting of the tool with your SetFocusTool implementation.
-    //editor.setTool( new SelectionTool(editor) );
 
     editor.setTool( new ShowSetFocusTool(editor, game) );
   }
